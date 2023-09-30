@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: sosmed-db
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    expose:
+      - 5432
+    networks:
+      - sosmed
+  api-1:
+    container_name: sosmed-api
+    build: api
+    depends_on:
+      - db
+    networks:
+      - sosmed
+    expose:
+      - 3000
+  
+  client:
+    container_name: sosmed-client
+    build: client-current
+    ports:
+      - 40080:80
+    networks:
+      - sosmed
+    depends_on:
+      - api-1
+
+networks:
+  sosmed:
+    external: true
+    
+    

@@ -1,0 +1,12 @@
+import api from "@/api"
+import { USE_GET_POST_LIKES_NAME } from "@/fixtures/request-api"
+import { useQuery } from "@tanstack/react-query"
+
+const useGetPostLikesList = ({ postId }) => {
+  return useQuery([USE_GET_POST_LIKES_NAME, postId], async () => {
+    const res = await api.request.get(`/post/${postId}/like`)
+    return res.data
+  })
+}
+
+export default useGetPostLikesList

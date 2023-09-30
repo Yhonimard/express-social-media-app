@@ -1,0 +1,2 @@
+import ProfileDetailPostListComponent from "./ProfileDetailPostList";
+export default ProfileDetailPostListComponent
