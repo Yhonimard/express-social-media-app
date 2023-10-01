@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 const db = new PrismaClient({
-  log: ["query", "error", "warn"],
+  log: ["error", "warn", 'info'],
   errorFormat: "pretty",
 })
 

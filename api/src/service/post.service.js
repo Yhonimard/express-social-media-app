@@ -103,7 +103,7 @@ const PostService = () => {
     }
   };
 
-  const updatePost = async (postId, user, data) => {
+const updatePost = async (postId, user, data) => {
     try {
       const existingUser = await userRepo.findUnique({
         where: {

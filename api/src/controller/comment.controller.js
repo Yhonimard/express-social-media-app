@@ -34,11 +34,25 @@ const CommentController = () => {
   }
 
   const updateCommentByPostId = async (req, res, next) => {
+    const { params, user, body } = req
+
+    try {
+      const { error: errBody } = validation.updateCommentValidation.body.validate(body)
+      const { error: errParams } = validation.updateCommentValidation.params.validate(params)
+      if (errBody || errParams) throw new ApiBadRequestError(errBody?.message || errParams?.message)
+
+      const response = await commentService.updateCommentByPostId(params.postId, params.commentId, body, user)
+      res.json({ message: "success update post", data: response })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const deleteCommentByPostId = async (req, res, next) => {
     const { params, user } = req
     try {
-      const response = await commentService.updateCommentByPostId(null, params.userId)
-
-      res.json(response)
+      const response = await commentService.deleteCommentByPostId(params.postId, params.commentId, user)
+      res.json({ message: "success delete post", data: response })
     } catch (error) {
       return next(error)
     }
@@ -46,7 +60,8 @@ const CommentController = () => {
   return {
     createComment,
     getCommentByPostId,
-    updateCommentByPostId
+    updateCommentByPostId,
+    deleteCommentByPostId
   }
 }
 export default CommentController

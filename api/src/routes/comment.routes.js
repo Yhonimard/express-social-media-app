@@ -88,30 +88,99 @@ routes.route("/post/:postId/comment")
       */
   .get(commentController.getCommentByPostId)
 
-routes.route("/comment/user/:userId")
+routes.route("/post/:postId/comment/:commentId")
   /**
       * @swagger
-      * /api/v1/comment/user/{userId}:
-      *  get:
-      *    summary: get comment by post id
+      * /api/v1/post/{postId}/comment/{commentId}:
+      *  patch:
+      *    summary: update comment
       *    tags: [Comment]
-      *    description: api for get post comment by post id
+      *    description: api for update comment 
       *    parameters:
       *     - in: path
-      *       name: userId
-      *       description: for find the user
+      *       name: postId
+      *       description: for find the post
       *       required: true
       *       schema:
       *         type: string
+      *     - in: path
+      *       name: commentId
+      *       description: for find the comment
+      *       required: true
+      *       schema:
+      *         type: string
+      *    security:
+      *     - jwt-auth: [] 
+      *    requestBody:
+      *     description: data for update comment
+      *     required: true
+      *     content:
+      *       application/json:
+      *         schema:
+      *           type: object
+      *           properties:
+      *             title:
+      *               type: string
+      *           example:  
+      *             title: updated comment  
       *    responses:
       *      200:
-      *        description: success get all comment by postid
+      *        description: success update comment
+      *      400:
+      *        description: validation error / comment doesnt belong to post
+      *      401:
+      *        description: unauthorized
+      *      403:
+      *        description: you cant update this user comment
       *      404:
       *        description: post not found / comment not found 
       *      500:
       *        description: something went wrong
       */
-  .get(commentController.updateCommentByPostId)
+  .patch(jwtVerify, commentController.updateCommentByPostId)
+
+
+routes.route("/post/:postId/comment/:commentId")
+  /**
+      * @swagger
+      * /api/v1/post/{postId}/comment/{commentId}:
+      *  delete:
+      *    summary: delete comment
+      *    tags: [Comment]
+      *    description: api for delete comment 
+      *    parameters:
+      *     - in: path
+      *       name: postId
+      *       description: for find the post
+      *       required: true
+      *       schema:
+      *         type: string
+      *     - in: path
+      *       name: commentId
+      *       description: for find the comment
+      *       required: true
+      *       schema:
+      *         type: string
+      *    security:
+      *     - jwt-auth: [] 
+      *    responses:
+      *      200:
+      *        description: success get all comment by postid
+      *      400:
+      *        description: validation error / comment doesnt belong to post
+      *      401:
+      *        description: unauthorized
+      *      403:
+      *        description: you cant delete this user comment
+      *      404:
+      *        description: post not found / comment not found 
+      *      500:
+      *        description: something went wrong
+      */
+  .delete(jwtVerify, commentController.deleteCommentByPostId)
+
+
+
 
 
 

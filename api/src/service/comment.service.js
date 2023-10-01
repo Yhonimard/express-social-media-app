@@ -1,7 +1,11 @@
+import httpStatus from "http-status"
 import db from "../config/db"
+import ApiErrorResponse from "../exception/ApiErrorResponse"
 import ApiNotFoundError from "../exception/ApiNotFoundError"
 import prismaError from "../exception/prisma-error"
 import paginationHelper from "../helper/pagination.helper"
+import ApiBadRequestError from "../exception/ApiBadRequestError"
+import ApiForbiddenError from "../exception/ApiForbiddenError"
 
 const CommentService = () => {
   const userRepo = db.user
@@ -103,7 +107,7 @@ const CommentService = () => {
     }
   }
 
-  const updateCommentByPostId = async (postId, currentUser) => {
+  const updateCommentByPostId = async (postId, commentId, data, currentUser) => {
     try {
       const existingUser = await userRepo.findFirstOrThrow({
         where: {
@@ -117,18 +121,66 @@ const CommentService = () => {
         }
       })
 
-      const existingComment = await commentRepo.findMany
 
+      const transaction = await db.$transaction(async (tx) => {
+
+        const updatedComment = await tx.comment.update({
+          where: {
+            id: commentId
+          },
+          data: {
+            title: data.title,
+          }
+        })
+        if (existingUser.id !== updatedComment.authorId) throw new ApiForbiddenError("you cant update this comment user")
+        if (existingPost.id !== updatedComment.postId) throw new ApiBadRequestError("comment doesnt belong to post")
+        return updatedComment
+      }, {})
+
+      return transaction
     } catch (error) {
       throw prismaError(error)
     }
   }
 
 
+  const deleteCommentByPostId = async (postId, commentId, currentUser) => {
+    try {
+
+
+      const tr = await db.$transaction(async (tx) => {
+        const existingUser = await tx.user.findUniqueOrThrow({
+          where: {
+            id: currentUser.userId
+          }
+        })
+        const existingPost = await tx.post.findUniqueOrThrow({
+          where: {
+            id: postId
+          }
+        })
+        const deletedComment = await tx.comment.delete({
+          where: {
+            id: commentId
+          }
+        })
+
+        if (existingUser.id !== deletedComment.authorId) throw new ApiForbiddenError("you cant delete this user comment")
+        if (existingPost.id !== deletedComment.postId) throw new ApiBadRequestError("comment doesnt belong to post")
+
+        return deletedComment
+      })
+      return tr
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     createComment,
     getCommentByPostId,
-    updateCommentByPostId
+    updateCommentByPostId,
+    deleteCommentByPostId
   }
 }
 export default CommentService

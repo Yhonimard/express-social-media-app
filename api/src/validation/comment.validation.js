@@ -18,6 +18,17 @@ const createCommentValidation = {
   })
 }
 
+const updateCommentValidation = {
+  body: Joi.object().keys({
+    title: Joi.string().min(5).max(200).required().empty()
+  }),
+  params: Joi.object().keys({
+    postId: Joi.string().uuid().required().empty(),
+    commentId: Joi.string().uuid().required().empty(),
+  })
+}
+
 export default {
-  createCommentValidation
+  createCommentValidation,
+  updateCommentValidation
 }
