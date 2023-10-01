@@ -121,7 +121,7 @@ const PostService = () => {
       if (!post) throw ApiNotFoundError("post not found")
 
       if (post.authorId !== existingUser.id) throw new ApiForbiddenError("you cannot update this user post")
-      
+
       const updatedPost = await postRepo.update({
         where: {
           id: postId
@@ -145,10 +145,11 @@ const PostService = () => {
     try {
       const userExist = await userRepo.findUnique({
         where: {
-          id: user?.userId
+          id: user.userId
         }
       })
-      if (!userExist) throw ApiNotFoundError("user not found")
+      console.log('userExist', userExist)
+      if (!userExist) throw new ApiNotFoundError("user not found")
 
       const post = await postRepo.findUnique({
         where: {
@@ -166,7 +167,7 @@ const PostService = () => {
         }
       })
 
-      if (process.env.NODE_ENV != "dev") fs.unlink(deletedPost.image, () => {
+      if (process.env.NODE_ENV !== "dev") fs.unlink(deletedPost.image, () => {
       })
       return deletedPost
     } catch (error) {
@@ -185,6 +186,7 @@ const PostService = () => {
           title: true,
           content: true,
           image: true,
+          createdAt: true,
           author: {
             select: {
               username: true,

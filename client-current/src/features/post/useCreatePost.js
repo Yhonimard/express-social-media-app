@@ -1,5 +1,5 @@
 import api from '@/api'
-import { GET_ALL_POST_NAME } from '@/fixtures/api-query'
+import { GET_POST_NAME } from '@/fixtures/api-query'
 import globalReducer from '@/redux/globalReducer'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
@@ -17,7 +17,7 @@ const useCreatePost = () => {
       dispatch(globalReducer.action.showLoadingOverlay(true))
     },
     onSuccess: (postData) => {
-      queryClient.setQueryData([GET_ALL_POST_NAME], (oldData) => {
+      queryClient.setQueryData([GET_POST_NAME], (oldData) => {
         const newData = oldData?.pages?.map(p => {
           return { ...p, data: [...p.data, postData.data] }
         })

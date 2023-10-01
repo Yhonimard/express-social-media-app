@@ -10,6 +10,7 @@ import ApiUnauthorizedError from "../exception/ApiUnauthorizedError"
 const jwtVerify = (req, res, next) => {
   try {
     const token = req.headers?.authorization?.split(" ")[1]
+    console.log(req.headers.authorization);
     if (!token) return next(new ApiUnauthorizedError("Unauthorized"))
     const encoded = jwt.verify(token, process.env.JWT_KEY)
     const { username, userId } = encoded

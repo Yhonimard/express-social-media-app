@@ -14,7 +14,6 @@ const useLikeOrUnlikePostList = ({ postId }) => {
       await queryClient.cancelQueries([USE_GET_POST_LIKES_NAME, postId])
       const prevLikes = queryClient.getQueryData([USE_GET_POST_LIKES_NAME, postId])
 
-
       if (hasLike) {
         queryClient.setQueryData([USE_GET_POST_LIKES_NAME, postId], (oldData) => {
           return {

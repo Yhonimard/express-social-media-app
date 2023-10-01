@@ -16,7 +16,7 @@ const RootPage = () => {
         >
           <NavbarComponent />
         </Box>
-        <Box style={{ flexGrow: 1 }} mt={55}>
+        <Box style={{ flexGrow: 1 }} mt={75}>
           <Outlet />
         </Box>
       </Flex>

@@ -1,0 +1,2 @@
+import PostCardCommentCreateComponent from "./PostCardCommentCreate";
+export default PostCardCommentCreateComponent

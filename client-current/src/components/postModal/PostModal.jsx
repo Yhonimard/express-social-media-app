@@ -1,12 +1,11 @@
+import useCreatePost from "@/features/post/useCreatePost"
+import usePreviewImg from "@/hooks/usePreviewImg"
 import { Button, FileInput, Image, Modal, TextInput } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { IconPlus } from "@tabler/icons-react"
-import FloatingButton from "../floatingButton/FloatingButton"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import usePreviewImg from "@/hooks/usePreviewImg"
-import useCreatePost from "@/features/post/useCreatePost"
-import { useEffect } from "react"
+import FloatingButton from "../floatingButton/FloatingButton"
 
 const PostModal = () => {
   const [isOpenModal, { open, close }] = useDisclosure(false)
@@ -22,19 +21,18 @@ const PostModal = () => {
       image: yup.string().required().min(5).max(200)
     }),
     onSubmit: (data) => {
-      addPost(data)
+      addPost(data, {
+        onSuccess: () => {
+          close()
+          formik.handleReset()
+        }
+      })
     }
   })
 
   const previewImg = usePreviewImg(formik.values.image)
-  const { mutate: addPost, isSuccess } = useCreatePost()
-  useEffect(() => {
-    if (isSuccess) {
-      close()
-      formik.handleReset()
-    }
-  }, [isSuccess])
-  
+  const { mutate: addPost } = useCreatePost()
+
   return (
     <>
       <FloatingButton onClick={open} bottom={50} right={50}>

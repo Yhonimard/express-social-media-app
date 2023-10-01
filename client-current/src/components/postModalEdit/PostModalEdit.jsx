@@ -1,22 +1,6 @@
 import { Button, Modal, TextInput } from '@mantine/core'
-import { useFormik } from 'formik'
-import * as yup from "yup"
 
-const PostModalEditComponent = ({ openedModal, close, updatePost, prevData }) => {
-  const formik = useFormik({
-    initialValues: {
-      title: prevData.title,
-      content: prevData.content
-    },
-    validationSchema: yup.object({
-      title: yup.string().required().min(5).max(200),
-      content: yup.string().required().min(5).max(200)
-    }),
-    onSubmit: (data) => {
-      updatePost(data)
-    }
-  })
-
+const PostModalEditComponent = ({ openedModal, close, formik }) => {
   return (
     <Modal centered opened={openedModal} onClose={close} title="edit post">
       <form onSubmit={formik.handleSubmit}>

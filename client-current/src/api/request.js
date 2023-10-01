@@ -47,6 +47,17 @@ const deletePostByPostId = async (postId) => {
   return res.data
 }
 
+const updatePostByPostId = async (postId, data) => {
+  const res = await api.instance.request.patch(`/post/${postId}`, data)
+  return res.data
+}
+
+
+const getSinglePost = async (postId) => {
+  const res = await api.instance.request.get(`/post/${postId}`)
+  return res.data
+}
+
 const getAllCommentByPostId = async (postId, pageNo, size) => {
   const res = await api.instance.request.get(`/post/${postId}/comment`, {
     params: {
@@ -62,12 +73,26 @@ const createCommentByPostId = async (postId, data) => {
   return res.data
 }
 
+const getPostLikeList = async (postId) => {
+  const res = await api.instance.request.get(`/post/${postId}/like`)
+  return res.data
+}
+
+const likeOrUnlikePost = async (postId) => {
+  const res = await api.instance.request.post(`/post/${postId}/like`)
+  return res.data
+}
+
 export default {
   login,
   register,
   createPost,
   getAllPost,
   deletePostByPostId,
+  getSinglePost,
+  updatePostByPostId,
   getAllCommentByPostId,
-  createCommentByPostId
+  createCommentByPostId,
+  getPostLikeList,
+  likeOrUnlikePost
 }

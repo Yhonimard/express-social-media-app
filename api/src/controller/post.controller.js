@@ -61,7 +61,7 @@ const PostController = () => {
     const { params: { postId }, user } = req
     try {
       const { error: errorParam } = validation.deletePostValidation.param.validate({ postId })
-      if (errorParam) throw ApiBadRequestError(errorParam?.message)
+      if (errorParam) throw new ApiBadRequestError(errorParam?.message)
 
       const response = await postService.deletePost(postId, user)
       res.json({ message: "success delete post", data: response })
