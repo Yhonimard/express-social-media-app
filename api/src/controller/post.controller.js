@@ -83,7 +83,6 @@ const PostController = () => {
 
   const postUserLike = async (req, res, next) => {
     const { user, params } = req
-    console.log('user', user)
     try {
       const response = await postService.postUserLike(params?.postId, user)
       res.json({ message: response })

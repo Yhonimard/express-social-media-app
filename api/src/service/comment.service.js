@@ -75,6 +75,9 @@ const CommentService = () => {
         },
         take,
         skip,
+        orderBy: {
+          createdAt: "asc"
+        }
       })
       if (!comments) throw new ApiNotFoundError("post not found")
 
@@ -100,10 +103,32 @@ const CommentService = () => {
     }
   }
 
+  const updateCommentByPostId = async (postId, currentUser) => {
+    try {
+      const existingUser = await userRepo.findFirstOrThrow({
+        where: {
+          id: currentUser.userId
+        },
+      })
+
+      const existingPost = await postRepo.findUniqueOrThrow({
+        where: {
+          id: postId
+        }
+      })
+
+      const existingComment = await commentRepo.findMany
+
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
 
   return {
     createComment,
-    getCommentByPostId
+    getCommentByPostId,
+    updateCommentByPostId
   }
 }
 export default CommentService

@@ -2,6 +2,8 @@ import httpStatus from "http-status"
 import ApiBadRequestError from "../exception/ApiBadRequestError"
 import CommentService from "../service/comment.service"
 import commentValidation from "../validation/comment.validation"
+import db from "../config/db"
+import prismaError from "../exception/prisma-error"
 
 const CommentController = () => {
   const commentService = CommentService()
@@ -30,9 +32,21 @@ const CommentController = () => {
       return next(error)
     }
   }
+
+  const updateCommentByPostId = async (req, res, next) => {
+    const { params, user } = req
+    try {
+      const response = await commentService.updateCommentByPostId(null, params.userId)
+
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
   return {
     createComment,
-    getCommentByPostId
+    getCommentByPostId,
+    updateCommentByPostId
   }
 }
 export default CommentController

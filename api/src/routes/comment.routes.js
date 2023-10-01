@@ -88,6 +88,31 @@ routes.route("/post/:postId/comment")
       */
   .get(commentController.getCommentByPostId)
 
+routes.route("/comment/user/:userId")
+  /**
+      * @swagger
+      * /api/v1/comment/user/{userId}:
+      *  get:
+      *    summary: get comment by post id
+      *    tags: [Comment]
+      *    description: api for get post comment by post id
+      *    parameters:
+      *     - in: path
+      *       name: userId
+      *       description: for find the user
+      *       required: true
+      *       schema:
+      *         type: string
+      *    responses:
+      *      200:
+      *        description: success get all comment by postid
+      *      404:
+      *        description: post not found / comment not found 
+      *      500:
+      *        description: something went wrong
+      */
+  .get(commentController.updateCommentByPostId)
+
 
 
 const commentRoutes = routes

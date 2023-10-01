@@ -148,7 +148,6 @@ const PostService = () => {
           id: user.userId
         }
       })
-      console.log('userExist', userExist)
       if (!userExist) throw new ApiNotFoundError("user not found")
 
       const post = await postRepo.findUnique({

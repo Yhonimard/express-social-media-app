@@ -26,7 +26,6 @@ app.use("/api/v1", routes)
 app.use(notFoundError)
 app.use(errorHandler)
 
-console.log(process.env.DATABASE_URL);
 
 const server = app
 

@@ -5,6 +5,7 @@ import {
   ActionIcon,
   Avatar,
   Box,
+  Button,
   Card,
   CardSection,
   Divider,
@@ -18,7 +19,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconDots, IconEdit, IconHeartFilled, IconTrash } from "@tabler/icons-react";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -29,6 +30,9 @@ import PostCardCommentCreateComponent from "../postCardCommentCreate";
 import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
 import PostModalDeleteComponent from "../postModalDelete";
 import PostModalEditComponent from "../postModalEdit";
+import useGetListPostLikes from "@/features/post/useGetListPostLikes";
+import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
+import { useSelector } from "react-redux";
 
 
 const PostDetailCardComponent = ({ postData, postId }) => {
@@ -36,7 +40,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
   const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false)
 
   const navigate = useNavigate()
-  const { data: commentsData } = useGetListCommentByPostId(postId, { size: 2 })
+  const { data: commentsData, fetchNextPage, hasNextPage } = useGetListCommentByPostId(postId, { size: 2 })
 
   const handleDeletePost = (id) => {
     deletePost(id, {
@@ -67,10 +71,18 @@ const PostDetailCardComponent = ({ postData, postId }) => {
   })
   const { mutate: updatePost } = useUpdatePost(postId, true)
   const { mutate: deletePost } = useDeletePost(true)
+  const currentUser = useSelector(state => state.auth.user)
+
+  const { data: likesData } = useGetListPostLikes({ postId })
+
+  const userHasLike = likesData?.data?.some(i => i.user.id === currentUser.id)
+
+  const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId })
+
 
   return (
     <>
-      <Card>
+      <Card mb={200}>
         <CardSection inheritPadding py={`xs`}>
           <Group justify="space-between">
             <Group>
@@ -95,32 +107,34 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                 <Text size="sm">{moment(postData?.createdAt).format("DD MMMM, YYYY")}</Text>
               </Box>
             </Group>
-            <Menu position="left-start">
-              <Menu.Target>
-                <ActionIcon variant="subtle" color="gray">
-                  <IconDots />
-                </ActionIcon>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  onClick={toggleEditModal}
-                  leftSection={
-                    <IconEdit style={{ width: rem(14), height: rem(14) }} />
-                  }
-                >
-                  Edit
-                </Menu.Item>
-                <Menu.Item
-                  onClick={toggleDeleteModal}
-                  leftSection={
-                    <IconTrash style={{ width: rem(14), height: rem(14) }} />
-                  }
-                  color="red"
-                >
-                  Delete
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+            {postData.author.id === currentUser.id && (
+              <Menu position="left-start">
+                <Menu.Target>
+                  <ActionIcon variant="subtle" color="gray">
+                    <IconDots />
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    onClick={toggleEditModal}
+                    leftSection={
+                      <IconEdit style={{ width: rem(14), height: rem(14) }} />
+                    }
+                  >
+                    Edit
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={toggleDeleteModal}
+                    leftSection={
+                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                    }
+                    color="red"
+                  >
+                    Delete
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            )}
           </Group>
         </CardSection>
         <CardSection mt={`sm`}>
@@ -134,11 +148,16 @@ const PostDetailCardComponent = ({ postData, postId }) => {
           <Title order={4}>{postData?.title}</Title>
           <Text lineClamp={3}>{postData?.content}</Text>
         </Stack>
-
+        <Divider mt={`sm`} />
+        <Group mt={`sm`}>
+          <ActionIcon variant="transparent" color={userHasLike ? "red" : "gray"} onClick={() => likeOrUnlike(null)}>
+            <IconHeartFilled />
+          </ActionIcon>
+        </Group>
         <Divider mt={"sm"} />
-        <PostCardCommentCreateComponent postId={postData?.postId} />
+        <PostCardCommentCreateComponent postId={postId} />
         <Divider mt={`md`} />
-        <CardSection inheritPadding>
+        <CardSection inheritPadding mah={`392.2px`} style={{ overflowY: "auto" }}>
           {commentsData?.pages.map(p => {
             return (
               <Fragment key={p.data}>
@@ -155,6 +174,9 @@ const PostDetailCardComponent = ({ postData, postId }) => {
 
             )
           })}
+          {hasNextPage && (
+            <Button onClick={fetchNextPage} mb={`xs`} fullWidth variant="subtle" color="gray" size="xs"> see more comment</Button>
+          )}
         </CardSection>
       </Card>
       <PostModalDeleteComponent close={toggleDeleteModal} openedModal={isOpenDeleteModal} deletePost={handleDeletePost} postId={postId} />

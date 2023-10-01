@@ -1,5 +1,7 @@
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePost from "@/features/post/useDeletePost";
+import useGetListPostLikes from "@/features/post/useGetListPostLikes";
+import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
 import useUpdatePost from "@/features/post/useUpdatePost";
 import {
   ActionIcon,
@@ -21,7 +23,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconDots, IconEdit, IconHeartFilled, IconTrash } from "@tabler/icons-react";
 import { useFormik } from "formik";
 import moment from "moment";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
@@ -30,8 +32,6 @@ import PostCardCommentCreateComponent from "../postCardCommentCreate";
 import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
 import PostModalDeleteComponent from "../postModalDelete";
 import PostModalEditComponent from "../postModalEdit";
-import useGetListPostLikes from "@/features/post/useGetListPostLikes";
-import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
 
 const PostCardComponent = ({
   author,
@@ -107,7 +107,7 @@ const PostCardComponent = ({
                 <Text size="sm">{moment(createdAt).format("DD MMMM, YYYY")}</Text>
               </Box>
             </Group>
-            {author.username === currentUser.username && (
+            {author.id === currentUser.id && (
               <Menu position="left-start">
                 <Menu.Target>
                   <ActionIcon variant="subtle" color="gray">
@@ -161,7 +161,7 @@ const PostCardComponent = ({
         <Divider mt={"sm"} />
         <PostCardCommentCreateComponent postId={postId} />
         <Divider mt={`md`} />
-        <CardSection inheritPadding>
+        <CardSection inheritPadding >
           {commentsData?.pages?.map(p => {
             return (
               <Fragment key={p.data}>

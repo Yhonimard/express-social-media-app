@@ -7,6 +7,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import redux from "./redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@mantine/core/styles.css";
+import "./index.css"
 
 const queryClient = new QueryClient();
 
