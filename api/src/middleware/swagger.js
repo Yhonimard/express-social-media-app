@@ -28,7 +28,7 @@ const spec = swaggerJsdoc({
         description: "Stg server",
       },
       {
-        url: "http://localhost:2000",
+        url: "http://192.168.1.101:2000",
         description: "Development server",
       },
     ],
