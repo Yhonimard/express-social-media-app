@@ -4,35 +4,27 @@ import globalReducer from "@/redux/globalReducer"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
 
-const useUpdateComment = (postId, commentId) => {
+const useDeleteComment = (postId, commentId) => {
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
-
-  return useMutation(async (data) => {
-    const res = await api.request.updateComment(postId, commentId, data)
+  return useMutation(async () => {
+    const res = await api.request.deleteComment(postId, commentId)
     return res
   }, {
-    onMutate: async (newData) => {
-      const prevData = queryClient.getQueryData([GET_COMMENT_NAME, postId])
+    onMutate: async () => {
       await queryClient.cancelQueries([GET_COMMENT_NAME, postId])
+      const prevData = queryClient.getQueryData([GET_COMMENT_NAME, postId])
 
       queryClient.setQueryData([GET_COMMENT_NAME, postId], (oldData) => {
-        const newCommentData = oldData?.pages.map(p => {
-          const dataWillUpdateIndex = p.data.findIndex(i => i.id === commentId)
-          const updatedComment = {
-            ...p.data[dataWillUpdateIndex],
-            title: newData.title
-          }
-          const updatedComments = [...p.data]
-          updatedComments[dataWillUpdateIndex] = updatedComment
+        const newPagesData = oldData.pages.map(p => {
           return {
             ...p,
-            data: updatedComments
+            data: p.data.filter(i => i.id !== commentId)
           }
         })
         return {
           ...oldData,
-          pages: newCommentData
+          pages: newPagesData
         }
       })
 
@@ -44,13 +36,14 @@ const useUpdateComment = (postId, commentId) => {
       const message = err?.response?.data?.message
       queryClient.setQueryData([GET_COMMENT_NAME, postId], context.prevData)
       dispatch(globalReducer.action.showNotification({ message, status: "error" }))
-
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries([GET_COMMENT_NAME, postId])
     },
     onSuccess: () => {
-      queryClient.invalidateQueries([GET_COMMENT_NAME, postId])
-      dispatch(globalReducer.action.showNotification({ message: "success update comment", status: "success" }))
+      dispatch(globalReducer.action.showNotification({ message: "success delete this comment", status: "success" }))
     }
   })
 }
 
-export default useUpdateComment
+export default useDeleteComment

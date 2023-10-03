@@ -16,7 +16,7 @@ const App = () => {
     <>
       <LoadingOverlay
         visible={isOpenLoadingOverlay}
-        overlayProps={{ zIndex: 1000, radius: "sm", blur: 2 }}
+        overlayProps={{ zIndex: 10000, radius: "sm", blur: 2 }}
       />
       <RouterProvider router={routes} />
     </>

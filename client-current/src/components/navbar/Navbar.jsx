@@ -1,24 +1,19 @@
-import { useState } from "react";
 import {
-  Center,
+  Stack,
   Tooltip,
   UnstyledButton,
-  Stack,
-  rem,
-  Box,
+  rem
 } from "@mantine/core";
 import {
-  IconHome2,
-  IconGauge,
+  IconCalendarStats,
   IconDeviceDesktopAnalytics,
   IconFingerprint,
-  IconCalendarStats,
-  IconUser,
+  IconGauge,
+  IconHome2,
   IconSettings,
-  IconLogout,
-  IconSwitchHorizontal,
+  IconUser
 } from "@tabler/icons-react";
-// import { MantineLogo } from "@mantine/ds";
+import { useState } from "react";
 import classes from "./Navbar.module.css";
 
 function NavbarLink({ icon: Icon, label, active, onClick }) {

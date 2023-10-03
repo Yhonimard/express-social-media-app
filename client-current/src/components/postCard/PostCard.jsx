@@ -71,7 +71,6 @@ const PostCardComponent = ({
   const { mutate: updatePost } = useUpdatePost(postId)
   const { data: commentsData, isSuccess: isSuccessFetchComment } = useGetListCommentByPostId(postId, { size: 1 })
   const { mutate: deletePost } = useDeletePost()
-  const updateCommentState = useSelector(state => state.comment.updateComment)
 
   const currentUser = useSelector(state => state.auth.user)
 
@@ -160,7 +159,7 @@ const PostCardComponent = ({
           </ActionIcon>
         </Group>
         <Divider mt={"sm"} />
-        <PostCardCommentCreateComponent postId={postId} updateCommentState={updateCommentState} />
+        <PostCardCommentCreateComponent postId={postId} />
         <Divider mt={`md`} />
         <CardSection inheritPadding >
           {isSuccessFetchComment && commentsData?.pages?.map(p => {
@@ -174,6 +173,7 @@ const PostCardComponent = ({
                     createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
                     title={c.title}
                     commentId={c.id}
+                    postId={postId}
                   />
                 ))}
               </Fragment>

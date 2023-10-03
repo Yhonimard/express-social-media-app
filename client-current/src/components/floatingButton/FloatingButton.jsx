@@ -1,4 +1,4 @@
-import { ActionIcon, Box } from "@mantine/core"
+import { ActionIcon } from "@mantine/core"
 
 const FloatingButton = ({ children, bottom, right, onClick }) => {
   return (

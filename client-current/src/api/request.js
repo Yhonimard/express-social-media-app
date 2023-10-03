@@ -88,6 +88,11 @@ const updateComment = async (postId, commentId, data) => {
   return res.data
 }
 
+const deleteComment = async (postId, commentId) => {
+  const res = await api.instance.request.delete(`/post/${postId}/comment/${commentId}`)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -100,5 +105,6 @@ export default {
   createCommentByPostId,
   getPostLikeList,
   likeOrUnlikePost,
-  updateComment
+  updateComment,
+  deleteComment
 }

@@ -3,7 +3,6 @@ import { GET_POST_NAME } from "@/fixtures/api-query"
 import globalReducer from "@/redux/globalReducer"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
 
 const useDeletePost = (single = false) => {
   const queryClient = useQueryClient()

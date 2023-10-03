@@ -1,6 +1,6 @@
 import HeaderComponent from "@/components/header";
 import NavbarComponent from "@/components/navbar";
-import { Box, Flex, Grid, Group } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import { Outlet } from "react-router-dom";
 
 const RootPage = () => {

@@ -11,13 +11,13 @@ import {
 import PostCardCommentMenuComponent from "../postCardCommentMenu";
 import { useSelector } from "react-redux";
 
-const PostCardCommentComponent = ({ author, createdAt, title, commentId }) => {
+const PostCardCommentComponent = ({ author, createdAt, title, commentId, postId }) => {
 
   const currentUser = useSelector(state => state.auth.user)
 
   return (
     <>
-      <Group>
+      <Group style={{ flexWrap: "nowrap" }}>
         <Group styles={{ root: { flexWrap: "nowrap", flexGrow: 1 } }} my={10}>
           <ActionIcon
             radius={`xl`}
@@ -32,14 +32,14 @@ const PostCardCommentComponent = ({ author, createdAt, title, commentId }) => {
           </ActionIcon>
           <Stack>
             <Box>
-              <Text>{author.username}</Text>
-              <Text size="sm">{createdAt}</Text>
+              <Text truncate="end">{author.username}</Text>
+              <Text size="sm" truncate="end">{createdAt}</Text>
             </Box>
-            <Text>{title}</Text>
+            <Text lineClamp={3}>{title}</Text>
           </Stack>
         </Group>
         {currentUser.id === author.id && (
-          <PostCardCommentMenuComponent data={{ title, commentId }} />
+          <PostCardCommentMenuComponent data={{ title, commentId }} postId={postId} />
         )}
       </Group>
       <Divider my={`sm`} />

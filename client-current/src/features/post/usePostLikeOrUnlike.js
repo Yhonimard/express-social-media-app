@@ -10,7 +10,7 @@ const usePostLikeOrUnlike = ({ userHasLike, postId }) => {
     const res = await api.request.likeOrUnlikePost(postId)
     return res
   }, {
-    onMutate: async (_var) => {
+    onMutate: async () => {
       const prevData = queryClient.getQueryData([GET_POST_LIKE_NAME, postId])
       await queryClient.cancelQueries([GET_POST_LIKE_NAME, postId])
 

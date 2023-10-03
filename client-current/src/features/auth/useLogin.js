@@ -25,7 +25,7 @@ const useLogin = (resetField) => {
       navigate("/")
       dispatch(globalReducer.action.showLoadingOverlay(false))
     },
-    onError: (err, _var) => {
+    onError: (err,) => {
       const message = err?.response?.data?.message
       dispatch(globalReducer.action.showNotification({ message, status: "error" }))
       dispatch(globalReducer.action.showLoadingOverlay(false))

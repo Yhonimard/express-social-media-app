@@ -13,9 +13,6 @@ const useCreatePost = () => {
     const res = await api.request.createPost(data)
     return res
   }, {
-    onMutate: async () => {
-      dispatch(globalReducer.action.showLoadingOverlay(true))
-    },
     onSuccess: (postData) => {
       queryClient.setQueryData([GET_POST_NAME], (oldData) => {
         const newData = oldData?.pages?.map(p => {
@@ -27,10 +24,10 @@ const useCreatePost = () => {
         }
       })
       dispatch(globalReducer.action.showNotification({ message: "successfully creating new post", status: "success" }))
-      dispatch(globalReducer.action.showLoadingOverlay(false))
     },
-    onError: () => {
-
+    onError: (_err) => {
+      const message = _err?.response?.data?.message
+      dispatch(globalReducer.action.showNotification({ message, status: "error" }))
     }
   })
 }

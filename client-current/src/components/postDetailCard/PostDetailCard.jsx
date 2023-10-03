@@ -1,5 +1,7 @@
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePost from "@/features/post/useDeletePost";
+import useGetListPostLikes from "@/features/post/useGetListPostLikes";
+import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
 import useUpdatePost from "@/features/post/useUpdatePost";
 import {
   ActionIcon,
@@ -16,13 +18,14 @@ import {
   Stack,
   Text,
   Title,
-  Tooltip,
+  Tooltip
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconDots, IconEdit, IconHeartFilled, IconTrash } from "@tabler/icons-react";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import PostCardCommentComponent from "../postCardComment";
@@ -30,9 +33,6 @@ import PostCardCommentCreateComponent from "../postCardCommentCreate";
 import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
 import PostModalDeleteComponent from "../postModalDelete";
 import PostModalEditComponent from "../postModalEdit";
-import useGetListPostLikes from "@/features/post/useGetListPostLikes";
-import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
-import { useSelector } from "react-redux";
 
 
 const PostDetailCardComponent = ({ postData, postId }) => {
@@ -168,6 +168,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                     author={c?.author}
                     createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
                     title={c.title}
+                    postId={postId}
                   />
                 ))}
               </Fragment>
