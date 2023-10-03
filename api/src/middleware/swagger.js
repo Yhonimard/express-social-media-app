@@ -24,7 +24,11 @@ const spec = swaggerJsdoc({
         description: "Development server",
       },
       {
-        url: "https://socialmedia.yhonimard.online/api",
+        url: "https://sosmed.yhonimard.online/api",
+        description: "Stg server",
+      },
+      {
+        url: "http://localhost:2000",
         description: "Development server",
       },
     ],
