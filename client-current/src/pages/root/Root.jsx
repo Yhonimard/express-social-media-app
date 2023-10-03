@@ -19,7 +19,7 @@ const RootPage = () => {
         <Box style={{ flexGrow: 1 }} mt={75}>
           <Outlet />
         </Box>
-      </Flex>
+      </Flex >
     </>
   );
 };

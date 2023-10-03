@@ -8,7 +8,7 @@ import * as yup from "yup"
 import FloatingButton from "../floatingButton/FloatingButton"
 
 const PostModal = () => {
-  const [isOpenModal, { open, close }] = useDisclosure(false)
+  const [isOpenModal, { open, close, toggle }] = useDisclosure(false)
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -31,7 +31,7 @@ const PostModal = () => {
   })
 
   const previewImg = usePreviewImg(formik.values.image)
-  const { mutate: addPost } = useCreatePost()
+  const { mutate: addPost } = useCreatePost(toggle)
 
   return (
     <>

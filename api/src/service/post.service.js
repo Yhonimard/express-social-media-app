@@ -103,7 +103,7 @@ const PostService = () => {
     }
   };
 
-const updatePost = async (postId, user, data) => {
+  const updatePost = async (postId, user, data) => {
     try {
       const existingUser = await userRepo.findUnique({
         where: {
@@ -168,6 +168,7 @@ const updatePost = async (postId, user, data) => {
 
       if (process.env.NODE_ENV !== "dev") fs.unlink(deletedPost.image, () => {
       })
+
       return deletedPost
     } catch (error) {
       throw prismaError(error)

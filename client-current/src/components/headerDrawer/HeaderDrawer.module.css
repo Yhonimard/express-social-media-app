@@ -1,0 +1,18 @@
+.link {
+  border-radius: var(--mantine-radius-md);
+  display: flex;
+  align-items: center;
+  padding: 15px 10px;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  &:hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-5)
+    );
+  }
+}
+
+.link_active {
+  background-color: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-light-color);
+}

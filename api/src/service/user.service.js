@@ -1,7 +1,4 @@
-import httpStatus from "http-status"
 import db from "../config/db"
-import ApiBadRequestError from "../exception/ApiBadRequestError"
-import ApiErrorResponse from "../exception/ApiErrorResponse"
 import ApiNotFoundError from "../exception/ApiNotFoundError"
 import prismaError from "../exception/prisma-error"
 

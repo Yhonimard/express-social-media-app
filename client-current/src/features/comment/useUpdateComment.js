@@ -4,7 +4,7 @@ import globalReducer from "@/redux/globalReducer"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
 
-const useUpdateComment = (postId, commentId) => {
+const useUpdateComment = (postId, commentId, toggleModal) => {
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
 
@@ -13,6 +13,7 @@ const useUpdateComment = (postId, commentId) => {
     return res
   }, {
     onMutate: async (newData) => {
+      toggleModal()
       const prevData = queryClient.getQueryData([GET_COMMENT_NAME, postId])
       await queryClient.cancelQueries([GET_COMMENT_NAME, postId])
 
@@ -43,6 +44,7 @@ const useUpdateComment = (postId, commentId) => {
     onError: (err, _var, context) => {
       const message = err?.response?.data?.message
       queryClient.setQueryData([GET_COMMENT_NAME, postId], context.prevData)
+      toggleModal()
       dispatch(globalReducer.action.showNotification({ message, status: "error" }))
 
     },

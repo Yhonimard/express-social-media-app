@@ -121,7 +121,6 @@ const CommentService = () => {
         }
       })
 
-
       const transaction = await db.$transaction(async (tx) => {
 
         const updatedComment = await tx.comment.update({

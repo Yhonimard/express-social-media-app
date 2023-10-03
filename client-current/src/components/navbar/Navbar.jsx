@@ -1,19 +1,7 @@
-import {
-  Stack,
-  Tooltip,
-  UnstyledButton,
-  rem
-} from "@mantine/core";
-import {
-  IconCalendarStats,
-  IconDeviceDesktopAnalytics,
-  IconFingerprint,
-  IconGauge,
-  IconHome2,
-  IconSettings,
-  IconUser
-} from "@tabler/icons-react";
+import { listNavbar } from "@/fixtures/global";
+import { Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import classes from "./Navbar.module.css";
 
 function NavbarLink({ icon: Icon, label, active, onClick }) {
@@ -30,25 +18,22 @@ function NavbarLink({ icon: Icon, label, active, onClick }) {
   );
 }
 
-const mockdata = [
-  { icon: IconHome2, label: "Home" },
-  { icon: IconUser, label: "Account" },
-  { icon: IconGauge, label: "Dashboard" },
-  { icon: IconDeviceDesktopAnalytics, label: "Analytics" },
-  { icon: IconCalendarStats, label: "Releases" },
-  { icon: IconFingerprint, label: "Security" },
-  { icon: IconSettings, label: "Settings" },
-];
-
 export default function NavbarComponent() {
-  const [active, setActive] = useState(2);
+  const [active, setActive] = useState(0);
 
-  const links = mockdata.map((link, index) => (
+  const navigate = useNavigate();
+
+  const navigateHandler = ({ index, to }) => {
+    setActive(index);
+    navigate(to);
+  };
+
+  const links = listNavbar.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
       active={index === active}
-      onClick={() => setActive(index)}
+      onClick={() => navigateHandler({ index, to: link.to })}
     />
   ));
 

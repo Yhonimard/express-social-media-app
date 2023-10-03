@@ -24,12 +24,11 @@ const PostCardCommentMenuComponent = ({ data, postId }) => {
       updateComment(data, {
         onSuccess: () => {
           updateCommentFormik.handleReset()
-          toggleEditModal()
         }
       })
     }
   })
-  const { mutate: updateComment } = useUpdateComment(postId, data.commentId)
+  const { mutate: updateComment } = useUpdateComment(postId, data.commentId, toggleEditModal)
 
   const deletePost = (postId) => {
     deleteComment(postId)

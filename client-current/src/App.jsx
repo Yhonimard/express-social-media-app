@@ -1,4 +1,4 @@
-import { LoadingOverlay } from "@mantine/core";
+import { Box, LoadingOverlay } from "@mantine/core";
 import { useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import api from "./api";
@@ -14,11 +14,11 @@ const App = () => {
 
   return (
     <>
+      <RouterProvider router={routes} />
       <LoadingOverlay
         visible={isOpenLoadingOverlay}
-        overlayProps={{ zIndex: 10000, radius: "sm", blur: 2 }}
+        overlayProps={{ zIndex: 1000, radius: "sm", blur: 2 }}
       />
-      <RouterProvider router={routes} />
     </>
   );
 };

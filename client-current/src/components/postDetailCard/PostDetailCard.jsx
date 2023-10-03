@@ -81,7 +81,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
 
   return (
     <>
-      <Card mb={200}>
+      <Card>
         <CardSection inheritPadding py={`xs`}>
           <Group justify="space-between">
             <Group>
