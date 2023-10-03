@@ -7,5 +7,14 @@ module.exports = {
       ignore_watch: ["node_modules", "storage"],
       watch: true,
     },
+    {
+      name: "sosmed-dev",
+      script: "npm",
+      args: "run dev",
+      cwd: ".",
+      interpreter: "./node_modules/.bin/babel-node",
+      ignore_watch: ["node_modules", "storage"],
+      watch: true,
+    }
   ],
 };

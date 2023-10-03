@@ -149,7 +149,6 @@ const PostDetailCard = ({
             })
           }
           {hasNextPage && (
-
             <Stack my={2} width="100%" justifyContent="center" px={2}>
               <Button variant="contained" color="inherit" sx={{ justifySelf: "center" }} onClick={fetchNextPage}>Load more</Button>
             </Stack>

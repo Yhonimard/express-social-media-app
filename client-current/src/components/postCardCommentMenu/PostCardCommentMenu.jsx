@@ -1,7 +1,15 @@
+import commentReducer from "@/redux/commentReducer"
 import { ActionIcon, Menu, rem } from "@mantine/core"
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react"
+import { memo } from "react"
+import { useDispatch } from "react-redux"
 
-const PostCardCommentMenuComponent = () => {
+const PostCardCommentMenuComponent = ({ data }) => {
+  const dispatch = useDispatch()
+  const updateMenu = ({ commentId, title }) => {
+    dispatch(commentReducer.action.setUpdateComment({ id: commentId, title, isUpdate: true }))
+  }
+
   return (
     <Menu position="left-start">
       <Menu.Target>
@@ -14,6 +22,7 @@ const PostCardCommentMenuComponent = () => {
           leftSection={
             <IconEdit style={{ width: rem(14), height: rem(14) }} />
           }
+          onClick={() => updateMenu(data)}
         >
           Edit
         </Menu.Item>
@@ -30,4 +39,5 @@ const PostCardCommentMenuComponent = () => {
   )
 }
 
-export default PostCardCommentMenuComponent
+
+export default memo(PostCardCommentMenuComponent)

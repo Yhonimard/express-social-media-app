@@ -69,8 +69,9 @@ const PostCardComponent = ({
   })
 
   const { mutate: updatePost } = useUpdatePost(postId)
-  const { data: commentsData } = useGetListCommentByPostId(postId, { size: 1 })
+  const { data: commentsData, isSuccess: isSuccessFetchComment } = useGetListCommentByPostId(postId, { size: 1 })
   const { mutate: deletePost } = useDeletePost()
+  const updateCommentState = useSelector(state => state.comment.updateComment)
 
   const currentUser = useSelector(state => state.auth.user)
 
@@ -159,10 +160,10 @@ const PostCardComponent = ({
           </ActionIcon>
         </Group>
         <Divider mt={"sm"} />
-        <PostCardCommentCreateComponent postId={postId} />
+        <PostCardCommentCreateComponent postId={postId} updateCommentState={updateCommentState} />
         <Divider mt={`md`} />
         <CardSection inheritPadding >
-          {commentsData?.pages?.map(p => {
+          {isSuccessFetchComment && commentsData?.pages?.map(p => {
             return (
               <Fragment key={p.data}>
                 {p.data.length < 1 && <PostCardCommentNotFound />}
@@ -172,6 +173,7 @@ const PostCardComponent = ({
                     author={c?.author}
                     createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
                     title={c.title}
+                    commentId={c.id}
                   />
                 ))}
               </Fragment>

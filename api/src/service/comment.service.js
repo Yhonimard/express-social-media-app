@@ -92,7 +92,7 @@ const CommentService = () => {
       })
       const totalPages = Math.ceil(totalData / size)
       const currentPageData = comments.length
-      const isLast = pageNo === totalPages
+      const isLast = comments.length >= 1 ? pageNo === totalPages : true
 
       return {
         currentPage: pageNo,

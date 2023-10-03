@@ -40,7 +40,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
   const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false)
 
   const navigate = useNavigate()
-  const { data: commentsData, fetchNextPage, hasNextPage } = useGetListCommentByPostId(postId, { size: 2 })
+  const { data: commentsData, fetchNextPage, hasNextPage, isSuccess: isFetchCommentSuccess } = useGetListCommentByPostId(postId, { size: 2 })
 
   const handleDeletePost = (id) => {
     deletePost(id, {
@@ -78,7 +78,6 @@ const PostDetailCardComponent = ({ postData, postId }) => {
   const userHasLike = likesData?.data?.some(i => i.user.id === currentUser.id)
 
   const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId })
-
 
   return (
     <>
@@ -158,13 +157,14 @@ const PostDetailCardComponent = ({ postData, postId }) => {
         <PostCardCommentCreateComponent postId={postId} />
         <Divider mt={`md`} />
         <CardSection inheritPadding mah={`392.2px`} style={{ overflowY: "auto" }}>
-          {commentsData?.pages.map(p => {
+          {isFetchCommentSuccess && commentsData?.pages.map(p => {
             return (
               <Fragment key={p.data}>
                 {p.data.length < 1 && <PostCardCommentNotFound />}
                 {p.data.length >= 1 && p.data.map(c => (
                   <PostCardCommentComponent
                     key={c?.id}
+                    commentId={c?.id}
                     author={c?.author}
                     createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
                     title={c.title}
@@ -174,6 +174,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
 
             )
           })}
+
           {hasNextPage && (
             <Button onClick={fetchNextPage} mb={`xs`} fullWidth variant="subtle" color="gray" size="xs"> see more comment</Button>
           )}

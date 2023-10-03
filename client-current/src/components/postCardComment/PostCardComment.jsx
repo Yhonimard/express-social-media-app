@@ -11,7 +11,7 @@ import {
 import PostCardCommentMenuComponent from "../postCardCommentMenu";
 import { useSelector } from "react-redux";
 
-const PostCardCommentComponent = ({ author, createdAt, title }) => {
+const PostCardCommentComponent = ({ author, createdAt, title, commentId }) => {
 
   const currentUser = useSelector(state => state.auth.user)
 
@@ -38,9 +38,9 @@ const PostCardCommentComponent = ({ author, createdAt, title }) => {
             <Text>{title}</Text>
           </Stack>
         </Group>
-        {/* {currentUser.id === author.id && ( */}
-          <PostCardCommentMenuComponent />
-        {/* )} */}
+        {currentUser.id === author.id && (
+          <PostCardCommentMenuComponent data={{ title, commentId }} />
+        )}
       </Group>
       <Divider my={`sm`} />
     </>

@@ -10,7 +10,6 @@ import "@mantine/core/styles.css";
 import "./index.css"
 
 const queryClient = new QueryClient();
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <Provider store={redux.store}>

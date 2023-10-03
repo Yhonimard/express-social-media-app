@@ -83,6 +83,11 @@ const likeOrUnlikePost = async (postId) => {
   return res.data
 }
 
+const updateComment = async (postId, commentId, data) => {
+  const res = await api.instance.request.patch(`/post/${postId}/comment/${commentId}`, data)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -94,5 +99,6 @@ export default {
   getAllCommentByPostId,
   createCommentByPostId,
   getPostLikeList,
-  likeOrUnlikePost
+  likeOrUnlikePost,
+  updateComment
 }
