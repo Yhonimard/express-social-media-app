@@ -332,6 +332,46 @@ const PostService = () => {
     }
   }
 
+  const updatePostByUser = async (currentUser, pid, data) => {
+    try {
+      const trx = await db.$transaction(async (tr) => {
+        const user = await tr.user.findUniqueOrThrow({
+          where: {
+            id: currentUser.userId
+          }
+        })
+
+        const post = await tr.post.update({
+          where: {
+            id: pid
+          },
+          data: {
+            title: {
+              set: data.title
+            },
+            content: {
+              set: data.content
+            }
+          }
+        })
+
+        if (user.id !== post.authorId) throw new ApiForbiddenError('you cant update this specific user post')
+        return post
+      })
+      return trx
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const deletePostByUser = (pid, currUser) => {
+    try {
+
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     createPost,
     getAllPost,
@@ -340,7 +380,9 @@ const PostService = () => {
     getPostById,
     postUserLike,
     getAllPostLikesByPostId,
-    getAllPostByUserId
+    getAllPostByUserId,
+    updatePostByUser,
+    deletePostByUser
   };
 };
 

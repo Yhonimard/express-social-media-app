@@ -20,7 +20,12 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconDots, IconEdit, IconHeartFilled, IconTrash } from "@tabler/icons-react";
+import {
+  IconDots,
+  IconEdit,
+  IconHeartFilled,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -41,44 +46,48 @@ const PostCardComponent = ({
   createdAt,
   postId,
 }) => {
-  const [isOpenDeleteModal, { toggle: toggleDeleteModal }] = useDisclosure(false)
-  const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false)
-  const navigate = useNavigate()
+  const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
+    useDisclosure(false);
+  const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false);
+  const navigate = useNavigate();
 
   const handleDeletePost = () => {
-    deletePost(postId)
-  }
+    deletePost(postId);
+  };
 
   const updateFormik = useFormik({
     initialValues: {
       title: title,
-      content: content
+      content: content,
     },
     validationSchema: yup.object({
       title: yup.string().required().min(5).max(200),
-      content: yup.string().required().min(5).max(200)
+      content: yup.string().required().min(5).max(200),
     }),
     onSubmit: (data) => {
       updatePost(data, {
         onSuccess: () => {
-          updateFormik.handleReset()
-          toggleEditModal()
-        }
-      })
-    }
-  })
+          updateFormik.handleReset();
+          toggleEditModal();
+        },
+      });
+    },
+  });
 
-  const { mutate: updatePost } = useUpdatePost(postId)
-  const { data: commentsData, isSuccess: isSuccessFetchComment } = useGetListCommentByPostId(postId, { size: 1 })
-  const { mutate: deletePost } = useDeletePost()
+  const { mutate: updatePost } = useUpdatePost(postId);
+  const { data: commentsData, isSuccess: isSuccessFetchComment } =
+    useGetListCommentByPostId(postId, { size: 1 });
+  const { mutate: deletePost } = useDeletePost(false, postId);
 
-  const currentUser = useSelector(state => state.auth.user)
+  const currentUser = useSelector((state) => state.auth.user);
 
-  const { data: likesData } = useGetListPostLikes({ postId })
+  const { data: likesData } = useGetListPostLikes({ postId });
 
-  const userHasLike = likesData?.data?.some(i => i.user.id === currentUser.id)
+  const userHasLike = likesData?.data?.some(
+    (i) => i.user.id === currentUser.id
+  );
 
-  const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId })
+  const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId });
 
   return (
     <>
@@ -94,8 +103,9 @@ const PostCardComponent = ({
               >
                 <Tooltip withArrow label={author.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${author.photoProfile
-                      }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${
+                      author.photoProfile
+                    }`}
                     alt={author.username}
                     radius="xl"
                     size="md"
@@ -104,7 +114,9 @@ const PostCardComponent = ({
               </ActionIcon>
               <Box>
                 <Text>{author.username}</Text>
-                <Text size="sm">{moment(createdAt).format("DD MMMM, YYYY")}</Text>
+                <Text size="sm">
+                  {moment(createdAt).format("DD MMMM, YYYY")}
+                </Text>
               </Box>
             </Group>
             {author.id === currentUser.id && (
@@ -137,7 +149,10 @@ const PostCardComponent = ({
             )}
           </Group>
         </CardSection>
-        <Box style={{ cursor: "pointer" }} onClick={() => navigate(`/post/${postId}`)}>
+        <Box
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(`/post/${postId}`)}
+        >
           <CardSection mt={`sm`}>
             <Image
               src={`${import.meta.env.VITE_API_BASE_URL}/${image}`}
@@ -154,38 +169,51 @@ const PostCardComponent = ({
           <Divider mt={"sm"} />
         </Box>
         <Group mt={`sm`}>
-          <ActionIcon variant="transparent" color={userHasLike ? "red" : "gray"} onClick={() => likeOrUnlike(null)}>
+          <ActionIcon
+            variant="transparent"
+            color={userHasLike ? "red" : "gray"}
+            onClick={() => likeOrUnlike(null)}
+          >
             <IconHeartFilled />
           </ActionIcon>
         </Group>
         <Divider mt={"sm"} />
         <PostCardCommentCreateComponent postId={postId} />
         <Divider mt={`md`} />
-        <CardSection inheritPadding >
-          {isSuccessFetchComment && commentsData?.pages?.map(p => {
-            return (
-              <Fragment key={p.data}>
-                {p.data.length < 1 && <PostCardCommentNotFound />}
-                {p.data.length > 0 && p?.data?.map(c => (
-                  <PostCardCommentComponent
-                    key={c?.id}
-                    author={c?.author}
-                    createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
-                    title={c.title}
-                    commentId={c.id}
-                    postId={postId}
-                  />
-                ))}
-              </Fragment>
-
-            )
-          })}
+        <CardSection inheritPadding>
+          {isSuccessFetchComment &&
+            commentsData?.pages?.map((p) => {
+              return (
+                <Fragment key={p.data}>
+                  {p.data.length < 1 && <PostCardCommentNotFound />}
+                  {p.data.length > 0 &&
+                    p?.data?.map((c) => (
+                      <PostCardCommentComponent
+                        key={c?.id}
+                        author={c?.author}
+                        createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
+                        title={c.title}
+                        commentId={c.id}
+                        postId={postId}
+                      />
+                    ))}
+                </Fragment>
+              );
+            })}
         </CardSection>
       </Card>
-      <PostModalDeleteComponent close={toggleDeleteModal} openedModal={isOpenDeleteModal} deletePost={handleDeletePost} />
-      <PostModalEditComponent openedModal={isOpenEditModal} close={toggleEditModal} formik={updateFormik} />
+      <PostModalDeleteComponent
+        close={toggleDeleteModal}
+        openedModal={isOpenDeleteModal}
+        deletePost={handleDeletePost}
+      />
+      <PostModalEditComponent
+        openedModal={isOpenEditModal}
+        close={toggleEditModal}
+        formik={updateFormik}
+      />
     </>
   );
 };
-// 
+//
 export default PostCardComponent;

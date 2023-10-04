@@ -268,6 +268,49 @@ routes.route(`/user/post`)
       */
   .get(jwtVerify, postController.getAllPostByUserId)
 
+routes.route(`/user/post/:pid`)
+  /**
+     * @swagger
+     * /api/v1/user/post/{pid}:
+     *  patch:
+     *    summary: update post by user
+     *    tags: [Post]
+     *    description: api for update post by user
+     *    parameters:
+     *      - in: path
+     *        name: pid
+     *        description: for get the post
+     *    security:
+     *      - jwt-auth: []
+     *    requestBody:
+    *       content:
+    *         application/json:
+    *           schema:
+    *            type: object
+    *            properties:
+    *              title:
+    *                type: string
+    *              content:
+    *                type: string
+    *            example:
+    *              title: update title
+    *              content: update content  
+     *    responses:
+     *      200:
+     *        description: success update post
+     *      400:
+     *        description: validation error
+     *      401:
+     *        description: unauthorized
+     *      404:
+     *        description: user not found / post not found
+     *      403:
+     *        description: cannot update this user post
+     *      500:
+     *        description: something went wrong
+     */
+  .patch(jwtVerify, postController.updatePostByUser)
+
 
 const postRoutes = routes
 export default postRoutes

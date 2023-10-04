@@ -93,6 +93,21 @@ const deleteComment = async (postId, commentId) => {
   return res.data
 }
 
+const getPostByUser = async (pageNo) => {
+  const res = await api.instance.request.get(`/user/post`, {
+    params: {
+      pageNo,
+      size: 4
+    }
+  })
+  return res.data
+}
+
+const updatePostByUser = async (pid, data) => {
+  const res = await api.instance.request.patch(`/user/post/${pid}`, data)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -106,5 +121,7 @@ export default {
   getPostLikeList,
   likeOrUnlikePost,
   updateComment,
-  deleteComment
+  deleteComment,
+  getPostByUser,
+  updatePostByUser
 }

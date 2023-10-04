@@ -1,6 +1,6 @@
 import PostCardComponent from "@/components/postCard";
 import PostModal from "@/components/postModal/PostModal";
-import post from "@/features/post";
+import useGetAllPost from "@/features/post/useGetAllPost";
 import globalReducer from "@/redux/globalReducer";
 import { Button, Container, Stack } from "@mantine/core";
 import { Fragment, useEffect } from "react";
@@ -14,31 +14,36 @@ const HomePage = () => {
     isFetchingNextPage,
     hasNextPage,
     isSuccess,
-  } = post.useGetAllPost();
+  } = useGetAllPost();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (isFetchingNextPage || isLoading) dispatch(globalReducer.action.showLoadingOverlay(true));
-    if (!isFetchingNextPage || !isLoading) dispatch(globalReducer.action.showLoadingOverlay(false))
+    if (isFetchingNextPage || isLoading)
+      dispatch(globalReducer.action.showLoadingOverlay(true));
+    if (!isFetchingNextPage || !isLoading)
+      dispatch(globalReducer.action.showLoadingOverlay(false));
   }, [isFetchingNextPage, isLoading, dispatch]);
 
   return (
-    <Container >
+    <Container>
       <Stack gap={`sm`}>
-        {isSuccess && postDatas.pages.map((pages) => {
-          return isSuccess && pages.data.map((p) => {
+        {isSuccess &&
+          postDatas.pages.map((pages) => {
             return (
-              <Fragment key={p.id}>
-                <PostCardComponent {...p} postId={p.id} />
-              </Fragment>
+              isSuccess &&
+              pages.data.map((p) => {
+                return (
+                  <Fragment key={p.id}>
+                    <PostCardComponent {...p} postId={p.id} />
+                  </Fragment>
+                );
+              })
             );
-          });
-        })}
-        {
-          hasNextPage && !isFetchingNextPage && (
-            <Button my={100} onClick={fetchNextPage}>
-              Load More
-            </Button>
-          )}
+          })}
+        {hasNextPage && !isFetchingNextPage && (
+          <Button my={100} onClick={fetchNextPage}>
+            Load More
+          </Button>
+        )}
       </Stack>
       <PostModal />
     </Container>

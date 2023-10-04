@@ -1,3 +1,8 @@
+import PostCardCommentComponent from "@/components/postCardComment";
+import PostCardCommentCreateComponent from "@/components/postCardCommentCreate";
+import PostCardCommentNotFound from "@/components/postCardCommentNotFound/PostCardCommentNotFound";
+import PostModalDeleteComponent from "@/components/postModalDelete";
+import PostModalEditComponent from "@/components/postModalEdit";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePost from "@/features/post/useDeletePost";
 import useGetListPostLikes from "@/features/post/useGetListPostLikes";
@@ -7,7 +12,6 @@ import {
   ActionIcon,
   Avatar,
   Box,
-  Button,
   Card,
   CardSection,
   Divider,
@@ -33,42 +37,36 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import PostCardCommentComponent from "../postCardComment";
-import PostCardCommentCreateComponent from "../postCardCommentCreate";
-import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
-import PostModalDeleteComponent from "../postModalDelete";
-import PostModalEditComponent from "../postModalEdit";
+import ProfilePostCommentComponent from "./profilePostComment";
+import useUpdatePostByUser from "@/features/post/useUpdatePostByUser";
 
-const PostDetailCardComponent = ({ postData, postId }) => {
+const ProfilePostComponent = ({
+  author,
+  content,
+  title,
+  image,
+  createdAt,
+  postId,
+}) => {
   const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
     useDisclosure(false);
   const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false);
-
   const navigate = useNavigate();
-  const {
-    data: commentsData,
-    fetchNextPage,
-    hasNextPage,
-    isSuccess: isFetchCommentSuccess,
-  } = useGetListCommentByPostId(postId, { size: 2 });
+  const currentUser = useSelector((state) => state.auth.user);
 
-  const handleDeletePost = (id) => {
-    deletePost(id, {
-      onSuccess: () => navigate("../.."),
-    });
+  const handleDeletePost = () => {
+    deletePost(postId);
   };
 
   const updateFormik = useFormik({
     initialValues: {
-      title: postData?.title && postData.title,
-      content: postData?.content && postData.content,
+      title: title,
+      content: content,
     },
-
     validationSchema: yup.object({
       title: yup.string().required().min(5).max(200),
       content: yup.string().required().min(5).max(200),
     }),
-
     onSubmit: (data) => {
       updatePost(data, {
         onSuccess: () => {
@@ -78,9 +76,11 @@ const PostDetailCardComponent = ({ postData, postId }) => {
       });
     },
   });
-  const { mutate: updatePost } = useUpdatePost(postId, true);
-  const { mutate: deletePost } = useDeletePost(true, postId);
-  const currentUser = useSelector((state) => state.auth.user);
+
+  const { mutate: updatePost } = useUpdatePostByUser(currentUser.id, postId);
+  const { data: commentsData, isSuccess: isSuccessFetchComment } =
+    useGetListCommentByPostId(postId, { size: 1 });
+  const { mutate: deletePost } = useDeletePost(false, currentUser.id);
 
   const { data: likesData } = useGetListPostLikes({ postId });
 
@@ -102,25 +102,25 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                 color="gray"
                 size={`xl`}
               >
-                <Tooltip withArrow label={postData?.author.username}>
+                <Tooltip withArrow label={author.username}>
                   <Avatar
                     src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      postData?.author.photoProfile
+                      author.photoProfile
                     }`}
-                    alt={postData?.author.username}
+                    alt={author.username}
                     radius="xl"
                     size="md"
                   />
                 </Tooltip>
               </ActionIcon>
               <Box>
-                <Text>{postData?.author.username}</Text>
+                <Text>{author.username}</Text>
                 <Text size="sm">
-                  {moment(postData?.createdAt).format("DD MMMM, YYYY")}
+                  {moment(createdAt).format("DD MMMM, YYYY")}
                 </Text>
               </Box>
             </Group>
-            {postData.author.id === currentUser.id && (
+            {author.id === currentUser.id && (
               <Menu position="left-start">
                 <Menu.Target>
                   <ActionIcon variant="subtle" color="gray">
@@ -150,18 +150,25 @@ const PostDetailCardComponent = ({ postData, postId }) => {
             )}
           </Group>
         </CardSection>
-        <CardSection mt={`sm`}>
-          <Image
-            src={`${import.meta.env.VITE_API_BASE_URL}/${postData?.image}`}
-            width={`100%`}
-            mah={`500px`}
-          />
-        </CardSection>
-        <Stack mt={"md"}>
-          <Title order={4}>{postData?.title}</Title>
-          <Text lineClamp={3}>{postData?.content}</Text>
-        </Stack>
-        <Divider mt={`sm`} />
+        <Box
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(`/post/${postId}`)}
+        >
+          <CardSection mt={`sm`}>
+            <Image
+              src={`${import.meta.env.VITE_API_BASE_URL}/${image}`}
+              width={`100%`}
+              mah={`500px`}
+              loading="lazy"
+            />
+          </CardSection>
+          <Stack mt={"md"}>
+            <Title order={4}>{title}</Title>
+            <Text lineClamp={3}>{content}</Text>
+          </Stack>
+
+          <Divider mt={"sm"} />
+        </Box>
         <Group mt={`sm`}>
           <ActionIcon
             variant="transparent"
@@ -174,51 +181,32 @@ const PostDetailCardComponent = ({ postData, postId }) => {
         <Divider mt={"sm"} />
         <PostCardCommentCreateComponent postId={postId} />
         <Divider mt={`md`} />
-        <CardSection
-          inheritPadding
-          mah={`392.2px`}
-          style={{ overflowY: "auto" }}
-        >
-          {isFetchCommentSuccess &&
-            commentsData?.pages.map((p) => {
+        <CardSection inheritPadding>
+          {isSuccessFetchComment &&
+            commentsData?.pages?.map((p) => {
               return (
                 <Fragment key={p.data}>
                   {p.data.length < 1 && <PostCardCommentNotFound />}
-                  {p.data.length >= 1 &&
-                    p.data.map((c) => (
-                      <PostCardCommentComponent
+                  {p.data.length > 0 &&
+                    p?.data?.map((c) => (
+                      <ProfilePostCommentComponent
                         key={c?.id}
-                        commentId={c?.id}
                         author={c?.author}
                         createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
                         title={c.title}
+                        commentId={c.id}
                         postId={postId}
                       />
                     ))}
                 </Fragment>
               );
             })}
-
-          {hasNextPage && (
-            <Button
-              onClick={fetchNextPage}
-              mb={`xs`}
-              fullWidth
-              variant="subtle"
-              color="gray"
-              size="xs"
-            >
-              {" "}
-              see more comment
-            </Button>
-          )}
         </CardSection>
       </Card>
       <PostModalDeleteComponent
         close={toggleDeleteModal}
         openedModal={isOpenDeleteModal}
         deletePost={handleDeletePost}
-        postId={postId}
       />
       <PostModalEditComponent
         openedModal={isOpenEditModal}
@@ -228,5 +216,5 @@ const PostDetailCardComponent = ({ postData, postId }) => {
     </>
   );
 };
-
-export default PostDetailCardComponent;
+//
+export default ProfilePostComponent;

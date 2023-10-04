@@ -4,12 +4,15 @@ import {
   Box,
   Divider,
   Group,
+  Menu,
   Stack,
   Text,
-  Tooltip
+  Tooltip,
+  rem
 } from "@mantine/core";
 import PostCardCommentMenuComponent from "../postCardCommentMenu";
 import { useSelector } from "react-redux";
+import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 
 const PostCardCommentComponent = ({ author, createdAt, title, commentId, postId }) => {
 
@@ -39,9 +42,32 @@ const PostCardCommentComponent = ({ author, createdAt, title, commentId, postId 
           </Stack>
         </Group>
         {currentUser.id === author.id && (
-          <PostCardCommentMenuComponent data={{ title, commentId }} postId={postId} />
+          <Menu>
+            <Menu.Target>
+              <ActionIcon>
+                <IconDots />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={
+                  <IconEdit style={{ width: rem(14), height: rem(14) }} />
+                }
+              >
+                Edit
+              </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                }
+                color="red"
+              >
+                Delete
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         )}
-      </Group>
+      </Group >
       <Divider my={`sm`} />
     </>
   );

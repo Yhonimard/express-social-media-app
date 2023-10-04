@@ -4,7 +4,7 @@ import globalReducer from "@/redux/globalReducer"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
 
-const useDeletePost = (single = false) => {
+const useDeletePost = (single = false, id) => {
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
 
@@ -12,7 +12,7 @@ const useDeletePost = (single = false) => {
     const res = await api.request.deletePostByPostId(postId)
     return res
   }, {
-    onMutate: async (postId) => {
+    onMutate: async () => {
       dispatch(globalReducer.action.showLoadingOverlay(true))
 
 
@@ -21,7 +21,7 @@ const useDeletePost = (single = false) => {
       queryClient.setQueryData([GET_POST_NAME], (oldData) => {
         const newData = oldData?.pages.map(p => ({
           ...p,
-          data: p?.data?.filter(i => i.id !== postId)
+          data: p?.data?.filter(i => i.id !== id)
         }))
 
         return {

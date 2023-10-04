@@ -114,6 +114,25 @@ const PostController = () => {
     }
   }
 
+  const updatePostByUser = async (req, res, next) => {
+    try {
+      const { error } = validation.updatePostByUserValidation.param.validate(req.params)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await postService.updatePostByUser(req?.user, req.params.pid, req.body)
+      res.json({ message: "success update post by user", data: response })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const deletePostByUser = async (req, res, next) => {
+    try {
+
+    } catch (error) {
+      return next(error)
+    }
+  }
+
   return {
     createPost,
     getAllPost,
@@ -122,7 +141,9 @@ const PostController = () => {
     getPostById,
     postUserLike,
     getAllPostLikesByPostId,
-    getAllPostByUserId
+    getAllPostByUserId,
+    updatePostByUser,
+    deletePostByUser
   }
 
 }
