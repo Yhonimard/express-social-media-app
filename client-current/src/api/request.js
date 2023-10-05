@@ -127,6 +127,11 @@ const createPostByUser = async (data) => {
   return res.data
 }
 
+const getCurrentUser = async () => {
+  const res = await api.instance.request.get(`/user/current`)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -144,5 +149,6 @@ export default {
   getPostByUser,
   updatePostByUser,
   deletePostByUser,
-  createPostByUser
+  createPostByUser,
+  getCurrentUser
 }

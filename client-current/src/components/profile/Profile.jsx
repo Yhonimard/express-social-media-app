@@ -1,4 +1,6 @@
+import useCreatePostByUser from "@/features/post/useCreatePostByUser";
 import useGetPostListByUser from "@/features/post/useGetPostListByUser";
+import postValidation from "@/utils/validation/post.validation";
 import {
   ActionIcon,
   Avatar,
@@ -17,20 +19,18 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import ProfilePostComponent from "./profilePost";
 import { IconPhoto, IconSend } from "@tabler/icons-react";
-import classses from "./Profile.module.css";
 import { useFormik } from "formik";
-import postValidation from "@/utils/validation/post.validation";
-import useCreatePostByUser from "@/features/post/useCreatePostByUser";
 import { useSelector } from "react-redux";
+import classses from "./Profile.module.css";
+import ProfilePostComponent from "./profilePost";
 
 const ProfileComponent = () => {
   const {
     data: postUserData,
     isSuccess: isSuccessFetchPost,
     hasNextPage,
-    isFetchingNextPage,
+    fetchNextPage,
   } = useGetPostListByUser();
 
   const createPostFormik = useFormik({
@@ -142,8 +142,8 @@ const ProfileComponent = () => {
               </Paper>
               <Divider my={`xs`} />
               {isSuccessFetchPost &&
-                postUserData.pages.map((p) => (
-                  <Stack key={p.data} gap={`sm`}>
+                postUserData.pages.map((p, i) => (
+                  <Stack key={i} gap={`sm`}>
                     {p.data.length < 1 && (
                       <Center h={`100%`}>no post here</Center>
                     )}
@@ -154,9 +154,18 @@ const ProfileComponent = () => {
                         {...data}
                       />
                     ))}
-                    <Button>see more your post</Button>
                   </Stack>
                 ))}
+              <Button
+                onClick={fetchNextPage}
+                style={{ visibility: hasNextPage ? "visible" : "hidden" }}
+                fullWidth
+                color="gray"
+                variant="filled"
+                my={50}
+              >
+                see more your post
+              </Button>
             </Tabs.Panel>
             <Tabs.Panel value="likes">likes</Tabs.Panel>
             <Tabs.Panel value="comment">comment</Tabs.Panel>

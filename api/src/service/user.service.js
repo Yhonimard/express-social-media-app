@@ -25,6 +25,7 @@ const UserService = () => {
       throw prismaError(error)
     }
   }
+
   const getUserCurrent = async (currentUser) => {
     try {
       const user = await userRepo.findUnique({
