@@ -39,6 +39,7 @@ import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import ProfilePostCommentComponent from "./profilePostComment";
 import useUpdatePostByUser from "@/features/post/useUpdatePostByUser";
+import useDeletePostByUser from "@/features/post/useDeletePostByUser";
 
 const ProfilePostComponent = ({
   author,
@@ -80,7 +81,7 @@ const ProfilePostComponent = ({
   const { mutate: updatePost } = useUpdatePostByUser(currentUser.id, postId);
   const { data: commentsData, isSuccess: isSuccessFetchComment } =
     useGetListCommentByPostId(postId, { size: 1 });
-  const { mutate: deletePost } = useDeletePost(false, currentUser.id);
+  const { mutate: deletePost } = useDeletePostByUser(currentUser.id);
 
   const { data: likesData } = useGetListPostLikes({ postId });
 
@@ -207,6 +208,7 @@ const ProfilePostComponent = ({
         close={toggleDeleteModal}
         openedModal={isOpenDeleteModal}
         deletePost={handleDeletePost}
+        postId={postId}
       />
       <PostModalEditComponent
         openedModal={isOpenEditModal}

@@ -126,8 +126,12 @@ const PostController = () => {
   }
 
   const deletePostByUser = async (req, res, next) => {
+    const { params, user: currUser } = req
     try {
-
+      const { error } = validation.deletePostByUserValidation.param.validate(params)
+      if (error) throw new ApiBadRequestError(error.message)
+      await postService.deletePostByUser(params.pid, currUser)
+      res.json({ message: `success delete post user ${currUser.username}` })
     } catch (error) {
       return next(error)
     }

@@ -82,6 +82,16 @@ const updatePostByUserValidation = {
   })
 }
 
+const deletePostByUserValidation = {
+  param: Joi.object().keys({
+    pid: Joi.string().uuid().required().empty().messages({
+      "string.empty": "postId is required!!",
+      "any.required": "postId is required!!",
+      "string.uuid": "postId must have a valid uuid"
+    })
+  })
+}
+
 
 
 
@@ -90,5 +100,6 @@ export default {
   getPostValidation,
   updatePostValidation,
   deletePostValidation,
-  updatePostByUserValidation
+  updatePostByUserValidation,
+  deletePostByUserValidation
 }

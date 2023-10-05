@@ -1,14 +1,18 @@
 import useGetPostListByUser from "@/features/post/useGetPostListByUser";
 import {
+  ActionIcon,
   Avatar,
   Box,
   Button,
+  Center,
   Container,
   Flex,
   Group,
+  Paper,
   Stack,
   Tabs,
   Text,
+  TextInput,
   Title,
 } from "@mantine/core";
 import ProfilePostComponent from "./profilePost";
@@ -47,9 +51,16 @@ const ProfileComponent = () => {
               <Tabs.Tab value="friend">friend</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="post">
+              <Paper shadow="xl" p="xl">
+                <TextInput label="" />
+                <ActionIcon></ActionIcon>
+              </Paper>
               {isSuccessFetchPost &&
                 postUserData.pages.map((p) => (
                   <Stack key={p.data} gap={`sm`}>
+                    {p.data.length < 1 && (
+                      <Center h={`100%`}>no post here</Center>
+                    )}
                     {p.data.map((data) => (
                       <ProfilePostComponent
                         key={data.id}

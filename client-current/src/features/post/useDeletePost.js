@@ -9,12 +9,11 @@ const useDeletePost = (single = false, id) => {
   const dispatch = useDispatch()
 
   return useMutation(async (postId) => {
-    const res = await api.request.deletePostByPostId(postId)
+    const res = await api.request.deletePostByUser(postId)
     return res
   }, {
     onMutate: async () => {
       dispatch(globalReducer.action.showLoadingOverlay(true))
-
 
       await queryClient.cancelQueries([GET_POST_NAME])
       const prevPost = queryClient.getQueryData([GET_POST_NAME])

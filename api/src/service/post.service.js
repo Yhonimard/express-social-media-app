@@ -364,9 +364,27 @@ const PostService = () => {
     }
   }
 
-  const deletePostByUser = (pid, currUser) => {
+  const deletePostByUser = async (pid, currUser) => {
     try {
+      await db.$transaction(async (trx) => {
+        const user = await trx.user.findUniqueOrThrow({
+          where: {
+            id: currUser.userId
+          }
+        })
 
+        const deletedPost = await trx.post.delete({
+          where: {
+            id: pid
+          }
+        })
+        if (!deletedPost) throw new ApiNotFoundError("post not found")
+        if (user.id !== deletedPost.authorId) throw new ApiForbiddenError("you cant delete this user post")
+        fs.unlink(deletedPost.image, () => {
+          console.log("delete post image on api deletePostByUser");
+        })
+        return deletedPost
+      })
     } catch (error) {
       throw prismaError(error)
     }

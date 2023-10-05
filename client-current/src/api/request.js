@@ -108,6 +108,11 @@ const updatePostByUser = async (pid, data) => {
   return res.data
 }
 
+const deletePostByUser = async (pid) => {
+  const res = await api.instance.request.delete(`/user/post/${pid}`)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -123,5 +128,6 @@ export default {
   updateComment,
   deleteComment,
   getPostByUser,
-  updatePostByUser
+  updatePostByUser,
+  deletePostByUser
 }
