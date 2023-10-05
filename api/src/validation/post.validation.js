@@ -92,7 +92,13 @@ const deletePostByUserValidation = {
   })
 }
 
-
+const createPostByUserValidation = {
+  body: Joi.object().keys({
+    title: Joi.string().required().empty().min(3).max(200),
+    content: Joi.string().required().empty().min(3).max(200),
+    image: Joi.string().required().empty()
+  })
+}
 
 
 export default {
@@ -101,5 +107,6 @@ export default {
   updatePostValidation,
   deletePostValidation,
   updatePostByUserValidation,
-  deletePostByUserValidation
+  deletePostByUserValidation,
+  createPostByUserValidation
 }

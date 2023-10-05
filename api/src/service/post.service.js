@@ -390,6 +390,53 @@ const PostService = () => {
     }
   }
 
+  const createPostByUser = async (currUser, data) => {
+    try {
+      const tr = await db.$transaction(async (tx) => {
+        const { title, content, image } = data
+        const newPost = await tx.post.create({
+          data: {
+            title,
+            content,
+            image,
+            author: {
+              connect: {
+                id: currUser.userId
+              }
+            },
+          },
+          include: {
+            author: {
+              select: {
+                username: true,
+                photoProfile: true,
+                id: true
+              }
+            },
+            comments: {
+              select: {
+                title: true,
+                id: true,
+                author: {
+                  select: {
+                    photoProfile: true,
+                    username: true,
+                    id: true,
+                  },
+                },
+              },
+            }
+          }
+        })
+        return newPost
+      })
+
+      return tr
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     createPost,
     getAllPost,
@@ -400,7 +447,8 @@ const PostService = () => {
     getAllPostLikesByPostId,
     getAllPostByUserId,
     updatePostByUser,
-    deletePostByUser
+    deletePostByUser,
+    createPostByUser
   };
 };
 

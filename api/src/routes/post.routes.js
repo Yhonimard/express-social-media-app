@@ -341,6 +341,40 @@ routes.route("/user/post/:pid")
      */
   .delete(jwtVerify, postController.deletePostByUser)
 
+routes.route("/user/post")
+  /**
+    * @swagger
+    * /api/v1/user/post:
+    *  post:
+    *    summary: create post by user
+    *    tags: [Post]
+    *    description: api for create post by user
+    *    security:
+    *      - jwt-auth: []
+    *    requestBody:
+    *      required: true
+    *      content:
+    *        multipart/form-data:
+    *          schema:
+    *            type: object
+    *            properties:
+    *              title:
+    *                type: string
+    *              content:
+    *                type: string
+    *              image:
+    *                type: file
+    *    responses:
+    *      201:
+    *        description: success create post by user
+    *      400:
+    *        description: validation error
+    *      401:
+    *        description: Unauthorized
+    *      500:
+    *        description: something went wrong
+    */
+  .post(jwtVerify, upload.image.single("image"), postController.createPostByUser)
 
 const postRoutes = routes
 export default postRoutes

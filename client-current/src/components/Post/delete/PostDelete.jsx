@@ -1,12 +1,6 @@
 import { Button, Group, Modal } from "@mantine/core";
 
-const PostModalDeleteComponent = ({
-  openedModal,
-  close,
-  deletePost,
-  postId,
-}) => {
-  console.log(postId);
+const PostDelete = ({ openedModal, close, deletePost, postId }) => {
   return (
     <Modal
       title="are you sure want to delete this post"
@@ -24,4 +18,4 @@ const PostModalDeleteComponent = ({
   );
 };
 
-export default PostModalDeleteComponent;
+export default PostDelete;

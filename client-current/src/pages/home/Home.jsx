@@ -1,5 +1,4 @@
-import PostCardComponent from "@/components/postCard";
-import PostModal from "@/components/postModal/PostModal";
+import post from "@/components/Post";
 import useGetAllPost from "@/features/post/useGetAllPost";
 import globalReducer from "@/redux/globalReducer";
 import { Button, Container, Stack } from "@mantine/core";
@@ -33,19 +32,24 @@ const HomePage = () => {
               pages.data.map((p) => {
                 return (
                   <Fragment key={p.id}>
-                    <PostCardComponent {...p} postId={p.id} />
+                    <post.card {...p} postId={p.id} />
                   </Fragment>
                 );
               })
             );
           })}
-        {hasNextPage && !isFetchingNextPage && (
-          <Button my={100} onClick={fetchNextPage}>
-            Load More
-          </Button>
-        )}
+        <Button
+          my={100}
+          onClick={fetchNextPage}
+          style={{
+            visibility:
+              hasNextPage && !isFetchingNextPage ? "visible" : "hidden",
+          }}
+        >
+          Load More
+        </Button>
       </Stack>
-      <PostModal />
+      <post.create />
     </Container>
   );
 };

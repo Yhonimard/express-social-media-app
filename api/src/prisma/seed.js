@@ -30,7 +30,7 @@ async function main() {
         authorId: user1.id,
         content: "rog strix pink",
         title: "beautiful laptop",
-        image: "storage/img_seed/1.png"
+        image: "storage/img_seed/1.jpeg"
       },
       {
         authorId: user1.id,
@@ -64,15 +64,15 @@ async function main() {
       },
       {
         authorId: user1.id,
-        content: "rog monitor",
-        title: "best monitor for gaming & development",
-        image: "storage/img_seed/7.png"
+        content: "lenovo thinkpad",
+        title: "this is laptop for programming",
+        image: "storage/img_seed/7.jpeg"
       },
       {
         authorId: user1.id,
-        content: "rog pc",
-        title: "great pc",
-        image: "storage/img_seed/8.png"
+        content: "lenovo thinkpad 2023",
+        title: "good for bussiness",
+        image: "storage/img_seed/8.jpeg"
       },
       {
         authorId: user2.id,

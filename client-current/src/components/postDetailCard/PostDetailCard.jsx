@@ -33,11 +33,10 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import Post from "../Post";
 import PostCardCommentComponent from "../postCardComment";
 import PostCardCommentCreateComponent from "../postCardCommentCreate";
 import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
-import PostModalDeleteComponent from "../postModalDelete";
-import PostModalEditComponent from "../postModalEdit";
 
 const PostDetailCardComponent = ({ postData, postId }) => {
   const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
@@ -214,13 +213,13 @@ const PostDetailCardComponent = ({ postData, postId }) => {
           )}
         </CardSection>
       </Card>
-      <PostModalDeleteComponent
+      <Post.delete
         close={toggleDeleteModal}
         openedModal={isOpenDeleteModal}
         deletePost={handleDeletePost}
         postId={postId}
       />
-      <PostModalEditComponent
+      <Post.edit
         openedModal={isOpenEditModal}
         close={toggleEditModal}
         formik={updateFormik}

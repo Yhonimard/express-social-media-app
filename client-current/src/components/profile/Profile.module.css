@@ -1,0 +1,12 @@
+.upload_form {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.upload__form {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+}

@@ -1,3 +1,6 @@
+import PostCardCommentComponent from "@/components/postCardComment";
+import PostCardCommentCreateComponent from "@/components/postCardCommentCreate";
+import PostCardCommentNotFound from "@/components/postCardCommentNotFound/PostCardCommentNotFound";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePost from "@/features/post/useDeletePost";
 import useGetListPostLikes from "@/features/post/useGetListPostLikes";
@@ -32,20 +35,9 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import PostCardCommentComponent from "../postCardComment";
-import PostCardCommentCreateComponent from "../postCardCommentCreate";
-import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
-import PostModalDeleteComponent from "../postModalDelete";
-import PostModalEditComponent from "../postModalEdit";
+import Post from "..";
 
-const PostCardComponent = ({
-  author,
-  content,
-  title,
-  image,
-  createdAt,
-  postId,
-}) => {
+const PostCard = ({ author, content, title, image, createdAt, postId }) => {
   const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
     useDisclosure(false);
   const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false);
@@ -202,12 +194,12 @@ const PostCardComponent = ({
             })}
         </CardSection>
       </Card>
-      <PostModalDeleteComponent
+      <Post.delete
         close={toggleDeleteModal}
         openedModal={isOpenDeleteModal}
         deletePost={handleDeletePost}
       />
-      <PostModalEditComponent
+      <Post.edit
         openedModal={isOpenEditModal}
         close={toggleEditModal}
         formik={updateFormik}
@@ -216,4 +208,4 @@ const PostCardComponent = ({
   );
 };
 //
-export default PostCardComponent;
+export default PostCard;

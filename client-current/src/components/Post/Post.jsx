@@ -1,11 +1,8 @@
-import Post from "@/components/Post";
-import PostCardCommentCreateComponent from "@/components/postCardCommentCreate";
-import PostCardCommentNotFound from "@/components/postCardCommentNotFound/PostCardCommentNotFound";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
-import useDeletePostByUser from "@/features/post/useDeletePostByUser";
+import useDeletePost from "@/features/post/useDeletePost";
 import useGetListPostLikes from "@/features/post/useGetListPostLikes";
 import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
-import useUpdatePostByUser from "@/features/post/useUpdatePostByUser";
+import useUpdatePost from "@/features/post/useUpdatePost";
 import {
   ActionIcon,
   Avatar,
@@ -35,9 +32,11 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import ProfilePostCommentComponent from "./profilePostComment";
-
-const ProfilePostComponent = ({
+import PostCardCommentComponent from "../postCardComment";
+import PostCardCommentCreateComponent from "../postCardCommentCreate";
+import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
+import Post from ".";
+const PostComponent = ({
   author,
   content,
   title,
@@ -49,7 +48,6 @@ const ProfilePostComponent = ({
     useDisclosure(false);
   const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false);
   const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.auth.user);
 
   const handleDeletePost = () => {
     deletePost(postId);
@@ -74,10 +72,12 @@ const ProfilePostComponent = ({
     },
   });
 
-  const { mutate: updatePost } = useUpdatePostByUser(currentUser.id, postId);
+  const { mutate: updatePost } = useUpdatePost(postId);
   const { data: commentsData, isSuccess: isSuccessFetchComment } =
     useGetListCommentByPostId(postId, { size: 1 });
-  const { mutate: deletePost } = useDeletePostByUser(currentUser.id);
+  const { mutate: deletePost } = useDeletePost(false, postId);
+
+  const currentUser = useSelector((state) => state.auth.user);
 
   const { data: likesData } = useGetListPostLikes({ postId });
 
@@ -186,7 +186,7 @@ const ProfilePostComponent = ({
                   {p.data.length < 1 && <PostCardCommentNotFound />}
                   {p.data.length > 0 &&
                     p?.data?.map((c) => (
-                      <ProfilePostCommentComponent
+                      <PostCardCommentComponent
                         key={c?.id}
                         author={c?.author}
                         createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
@@ -204,7 +204,6 @@ const ProfilePostComponent = ({
         close={toggleDeleteModal}
         openedModal={isOpenDeleteModal}
         deletePost={handleDeletePost}
-        postId={postId}
       />
       <Post.edit
         openedModal={isOpenEditModal}
@@ -215,4 +214,4 @@ const ProfilePostComponent = ({
   );
 };
 //
-export default ProfilePostComponent;
+export default PostComponent;

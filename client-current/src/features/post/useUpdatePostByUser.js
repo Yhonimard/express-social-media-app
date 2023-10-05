@@ -19,7 +19,6 @@ const useUpdatePostByUser = (id, postId) => {
       await queryClient.cancelQueries([GET_POST_NAME, id])
       queryClient.setQueryData([GET_POST_NAME, id], (oldData) => {
         const updatedPages = oldData?.pages.map(p => {
-          console.log(p);
           const dataWillUpdateIndex = p.data.findIndex(i => i.id === id)
           const updatedPost = {
             ...p.data[dataWillUpdateIndex],

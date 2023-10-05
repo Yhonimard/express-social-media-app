@@ -113,6 +113,20 @@ const deletePostByUser = async (pid) => {
   return res.data
 }
 
+const createPostByUser = async (data) => {
+  const formData = new FormData()
+  formData.append("title", data.title)
+  formData.append("content", data.content)
+  formData.append("image", data.image)
+
+  const res = await api.instance.request.post(`/user/post`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -129,5 +143,6 @@ export default {
   deleteComment,
   getPostByUser,
   updatePostByUser,
-  deletePostByUser
+  deletePostByUser,
+  createPostByUser
 }

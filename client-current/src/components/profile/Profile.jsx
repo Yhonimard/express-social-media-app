@@ -6,6 +6,8 @@ import {
   Button,
   Center,
   Container,
+  Divider,
+  FileButton,
   Flex,
   Group,
   Paper,
@@ -16,10 +18,35 @@ import {
   Title,
 } from "@mantine/core";
 import ProfilePostComponent from "./profilePost";
+import { IconPhoto, IconSend } from "@tabler/icons-react";
+import classses from "./Profile.module.css";
+import { useFormik } from "formik";
+import postValidation from "@/utils/validation/post.validation";
+import useCreatePostByUser from "@/features/post/useCreatePostByUser";
+import { useSelector } from "react-redux";
 
 const ProfileComponent = () => {
-  const { data: postUserData, isSuccess: isSuccessFetchPost } =
-    useGetPostListByUser();
+  const {
+    data: postUserData,
+    isSuccess: isSuccessFetchPost,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetPostListByUser();
+
+  const createPostFormik = useFormik({
+    initialValues: {
+      title: "",
+      content: "",
+      image: "",
+    },
+    onSubmit: (data) => {
+      addPostByUser(data);
+      createPostFormik.handleReset();
+    },
+    validationSchema: postValidation.createPostValidation,
+  });
+  const currentUser = useSelector((state) => state.auth.user);
+  const { mutate: addPostByUser } = useCreatePostByUser(currentUser.id);
 
   return (
     <Container size={`md`}>
@@ -51,10 +78,69 @@ const ProfileComponent = () => {
               <Tabs.Tab value="friend">friend</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="post">
-              <Paper shadow="xl" p="xl">
-                <TextInput label="" />
-                <ActionIcon></ActionIcon>
+              <Paper>
+                <form
+                  className={classses.upload_form}
+                  onSubmit={createPostFormik.handleSubmit}
+                >
+                  <div className={classses.upload__form}>
+                    <TextInput
+                      label=""
+                      w={`100%`}
+                      placeholder="title"
+                      name="title"
+                      onChange={createPostFormik.handleChange}
+                      value={createPostFormik.values.title}
+                      error={
+                        createPostFormik.touched.title &&
+                        createPostFormik.errors.title
+                      }
+                    />
+                    <TextInput
+                      label=""
+                      w={`100%`}
+                      placeholder="content"
+                      name="content"
+                      onChange={createPostFormik.handleChange}
+                      value={createPostFormik.values.content}
+                      error={
+                        createPostFormik.touched.content &&
+                        createPostFormik.errors.content
+                      }
+                    />
+                    <ActionIcon
+                      type="submit"
+                      variant="subtle"
+                      color="gray"
+                      component="button"
+                    >
+                      <IconSend />
+                    </ActionIcon>
+                  </div>
+                  <Group align="center" mt={`xs`}>
+                    <FileButton
+                      onChange={(e) =>
+                        createPostFormik.setFieldValue("image", e)
+                      }
+                    >
+                      {(props) => (
+                        <ActionIcon variant="subtle" color="gray" {...props}>
+                          <IconPhoto />
+                        </ActionIcon>
+                      )}
+                    </FileButton>
+                    {createPostFormik.values.image && (
+                      <Text>{createPostFormik.values.image.name}</Text>
+                    )}
+                    {createPostFormik.touched.image && (
+                      <Text c={`red`} size="xs">
+                        {createPostFormik.errors.image}
+                      </Text>
+                    )}
+                  </Group>
+                </form>
               </Paper>
+              <Divider my={`xs`} />
               {isSuccessFetchPost &&
                 postUserData.pages.map((p) => (
                   <Stack key={p.data} gap={`sm`}>
@@ -68,6 +154,7 @@ const ProfileComponent = () => {
                         {...data}
                       />
                     ))}
+                    <Button>see more your post</Button>
                   </Stack>
                 ))}
             </Tabs.Panel>

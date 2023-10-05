@@ -137,6 +137,22 @@ const PostController = () => {
     }
   }
 
+  const createPostByUser = async (req, res, next) => {
+    const { user: currUser, body } = req
+    try {
+      const data = {
+        ...body,
+        image: req.file.path
+      }
+      const { error } = validation.createPostByUserValidation.body.validate(data)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await postService.createPostByUser(currUser, data)
+      res.status(httpStatus.CREATED).json({ message: "success create post", data: response })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
   return {
     createPost,
     getAllPost,
@@ -147,7 +163,8 @@ const PostController = () => {
     getAllPostLikesByPostId,
     getAllPostByUserId,
     updatePostByUser,
-    deletePostByUser
+    deletePostByUser,
+    createPostByUser
   }
 
 }

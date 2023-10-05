@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 const useDeletePostByUser = (uid) => {
   const queryClient = useQueryClient()
   return useMutation(async (pid) => {
-    console.log(pid);
     const res = await api.request.deletePostByUser(pid)
     return res
   }, {
