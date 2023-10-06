@@ -28,7 +28,12 @@ const AuthService = () => {
       }
 
       const savedUser = await userRepo.create({
-        data: userWillSave,
+        data: {
+          ...userWillSave,
+          profile: {
+            create: {}
+          }
+        },
       })
 
       const token = jwt.sign({ username: savedUser.username, userId: savedUser.id }, process.env.JWT_KEY)

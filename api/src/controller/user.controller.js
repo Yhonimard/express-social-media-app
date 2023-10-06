@@ -30,9 +30,23 @@ const UserController = () => {
     }
   }
 
+  const updateProfile = async (req, res, next) => {
+    try {
+      const { error } = validation.updateProfile.body.validate(req.body)
+      if (error) throw new ApiBadRequestError(error.message)
+
+      const response = await userService.updateProfile(req.user, req.body)
+      res.json({ message: "success update user profile", data: response })
+
+    } catch (error) {
+      return next(error)
+    }
+  }
+
   return {
     getUserById,
-    getUserCurrent
+    getUserCurrent,
+    updateProfile
   }
 
 }

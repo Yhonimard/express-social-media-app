@@ -16,7 +16,7 @@ const UserService = () => {
           photoProfile: true,
           firstName: true,
           lastName: true,
-          createdAt: true
+          createdAt: true,
         }
       })
       if (!user) throw new ApiNotFoundError("user not found")
@@ -32,12 +32,15 @@ const UserService = () => {
         where: {
           id: currentUser?.userId
         },
-        select: {
-          username: true,
-          photoProfile: true,
-          firstName: true,
-          lastName: true,
-          createdAt: true
+        // select: {
+        //   username: true,
+        //   photoProfile: true,
+        //   firstName: true,
+        //   lastName: true,
+        //   createdAt: true
+        // },
+        include: {
+          profile: true
         }
       })
       if (!user) throw new ApiNotFoundError("user not found")
@@ -49,7 +52,28 @@ const UserService = () => {
 
   const updateProfile = async (currentUser, data) => {
     try {
-      
+      const trx = db.$transaction(async (tr) => {
+
+        const existingUser = await tr.user.findUniqueOrThrow({
+          where: {
+            id: currentUser?.userId
+          }
+        })
+
+        const updatedProfile = await tr.profile.update({
+          where: {
+            userId: existingUser.id
+          },
+          data: {
+            bio: data?.bio,
+            birthday: new Date(data?.birthday)
+          }
+        })
+
+
+        return updatedProfile
+      })
+      return trx
     } catch (error) {
       throw prismaError(error)
     }

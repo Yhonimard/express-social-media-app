@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DB_URL")
 }
 
 model User {
@@ -84,14 +84,12 @@ model UserFriend {
 model Profile {
   id        String    @id @default(uuid())
   bio       String?   @db.VarChar(100)
-  userId    String
-  user      User?     @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  birthday  DateTime? @db.Date
+  birthday  DateTime?
   phone     Int?
 
-  @@unique([userId])
   @@map("user_profile")
 }
-

@@ -1,5 +1,6 @@
-import Joi from "joi"
+import baseJoi, { date } from "joi"
 
+const Joi = baseJoi.extend(require("@joi/date"))
 const getUserById = {
   params: Joi.object().keys({
     userId: Joi.string().required().empty().uuid().guid().messages({
@@ -11,6 +12,15 @@ const getUserById = {
   })
 }
 
+
+const updateProfile = {
+  body: Joi.object().keys({
+    bio: Joi.string().min(4).max(100),
+    birthday: Joi.date("DD-MM-YYYY").max(Date.now()).optional()
+  })
+}
+
 export default {
-  getUserById
+  getUserById,
+  updateProfile
 }

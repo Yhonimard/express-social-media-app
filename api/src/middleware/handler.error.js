@@ -15,6 +15,6 @@ const errorHandler = async (error, req, res, next) => {
   }
   if (res.headersSent) return next(error)
 
-  res.status(error.code || 500).json({ message: error.message || 'something went wrong, please try again' })
+  res.status(typeof error.code === "number" ? error.code : 500).json({ message: error.message || 'something went wrong, please try again' })
 }
 export default errorHandler
