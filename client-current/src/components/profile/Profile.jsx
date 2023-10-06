@@ -24,6 +24,7 @@ import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import classses from "./Profile.module.css";
 import ProfilePostComponent from "./profilePost";
+import useGetCurrentUser from "@/features/user/useGetCurrentUser";
 
 const ProfileComponent = () => {
   const {
@@ -47,6 +48,7 @@ const ProfileComponent = () => {
   });
   const currentUser = useSelector((state) => state.auth.user);
   const { mutate: addPostByUser } = useCreatePostByUser(currentUser.id);
+  const { data: currentUserData } = useGetCurrentUser();
 
   return (
     <Container size={`md`}>
@@ -58,9 +60,9 @@ const ProfileComponent = () => {
         gap={20}
       >
         <Group>
-          <Avatar src="https://source.unsplash.com/500x500" size={`xl`} />
+          <Avatar src={`${import.meta.env.VITE_API_BASE_URL}/${currentUserData?.photoProfile}`} size={`xl`} />
           <Stack gap={0}>
-            <Title order={3}>name</Title>
+            <Title order={3}>{currentUserData?.username}</Title>
             <Text order={4}>name</Text>
           </Stack>
         </Group>

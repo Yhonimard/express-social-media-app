@@ -26,7 +26,7 @@ app.use("/api/v1", routes)
 app.use(notFoundError)
 app.use(errorHandler)
 
-
+console.log(process.env.NODE_ENV);
 const server = app
 
 export default server

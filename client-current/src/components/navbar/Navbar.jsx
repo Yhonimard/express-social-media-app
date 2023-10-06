@@ -1,40 +1,27 @@
 import { listNavbar } from "@/fixtures/global";
-import { Stack, Tooltip, UnstyledButton, rem } from "@mantine/core";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Stack, Tooltip, rem } from "@mantine/core";
+import { NavLink } from "react-router-dom";
 import classes from "./Navbar.module.css";
 
-function NavbarLink({ icon: Icon, label, active, onClick }) {
+function NavbarLink({ icon: Icon, label, onClick, to }) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <UnstyledButton
+      <NavLink
         onClick={onClick}
-        className={classes.link}
-        data-active={active || undefined}
+        className={({ isActive }) =>
+          isActive ? `${classes.link} ${classes.link_active}` : classes.link
+        }
+        to={to}
       >
         <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
-      </UnstyledButton>
+      </NavLink>
     </Tooltip>
   );
 }
 
 export default function NavbarComponent() {
-  const [active, setActive] = useState(0);
-
-  const navigate = useNavigate();
-
-  const navigateHandler = ({ index, to }) => {
-    setActive(index);
-    navigate(to);
-  };
-
-  const links = listNavbar.map((link, index) => (
-    <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === active}
-      onClick={() => navigateHandler({ index, to: link.to })}
-    />
+  const links = listNavbar.map((link) => (
+    <NavbarLink {...link} key={link.label} to={link.to} />
   ));
 
   return (

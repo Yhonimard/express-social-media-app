@@ -22,6 +22,7 @@ model User {
   likes             PostUserLike[]
   userFriends       UserFriend[]   @relation("owner")
   friendUserFriends UserFriend[]   @relation("friend_user")
+  profile           Profile?
 
   @@map("user")
 }
@@ -79,3 +80,18 @@ model UserFriend {
   @@unique([senderId, receiverId])
   @@map("user_friendship")
 }
+
+model Profile {
+  id        String    @id @default(uuid())
+  bio       String?   @db.VarChar(100)
+  userId    String
+  user      User?     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  birthday  DateTime? @db.Date
+  phone     Int?
+
+  @@unique([userId])
+  @@map("user_profile")
+}
+

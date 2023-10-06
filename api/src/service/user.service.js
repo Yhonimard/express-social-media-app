@@ -47,9 +47,19 @@ const UserService = () => {
     }
   }
 
+  const updateProfile = async (currentUser, data) => {
+    try {
+      
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+
   return {
     getUserById,
-    getUserCurrent
+    getUserCurrent,
+    updateProfile
   }
 }
 export default UserService
