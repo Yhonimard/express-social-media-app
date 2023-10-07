@@ -1,21 +1,22 @@
 module.exports = {
   apps: [
     {
-      name: "sosmed-client",
+      name: "sosmed/client",
       script: 'serve',
       watch: './client-current/dist',
       env: {
         PM2_SERVE_PATH: './client-current/dist',
-        PM2_SERVE_PORT: 5001,
-        PM2_SERVE_SPA: true,
-        PM2_SERVE_HOMEPAGE: '/index.html'
+        PM2_SERVE_PORT: 40080,
+        PM2_SERVE_SPA: 'true',
       }
     }, {
-      name: 'sosmed-api',
-      script: './api/src/index.js',
+      name: 'sosmed/api',
+      script: 'npm',
+      args: "run start",
+      cwd: "./api",
+      watch: "./api",
       interpreter: "./api/node_modules/.bin/babel-node",
-      watch: true,
-      ignore_watch: ["node_modules", "storage"],
+      ignore_watch: ["./api/node_modules", "./api/storage"],
     }
   ],
 

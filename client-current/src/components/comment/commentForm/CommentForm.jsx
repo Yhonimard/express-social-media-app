@@ -4,7 +4,7 @@ import { IconSend } from "@tabler/icons-react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-const PostCardCommentCreateComponent = ({ postId }) => {
+const CommentFormComponent = ({ postId }) => {
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -53,4 +53,4 @@ const PostCardCommentCreateComponent = ({ postId }) => {
   );
 };
 
-export default PostCardCommentCreateComponent;
+export default CommentFormComponent;

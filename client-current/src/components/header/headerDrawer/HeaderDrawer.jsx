@@ -7,7 +7,7 @@ const HeaderDrawerComponent = ({ opened, close }) => {
   return (
     <Drawer opened={opened} onClose={close}>
       <Stack justify="center" gap={2}>
-        {listNavbar.map((l, i) => {
+        {listNavbar.map((l) => {
           return (
             <NavLink
               key={l.label}

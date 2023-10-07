@@ -1,6 +1,6 @@
 import { Center, Text } from "@mantine/core"
 
-const PostCardCommentNotFound = () => {
+const CommentNotFoundComponent = () => {
   return (
     <Center py={30}>
       <Text>Comment Not found</Text>
@@ -8,4 +8,4 @@ const PostCardCommentNotFound = () => {
   )
 }
 
-export default PostCardCommentNotFound
+export default CommentNotFoundComponent

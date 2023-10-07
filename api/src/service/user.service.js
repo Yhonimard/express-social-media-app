@@ -4,6 +4,7 @@ import prismaError from "../exception/prisma-error"
 
 const UserService = () => {
   const userRepo = db.user
+  const userProfileRepo = db.profile
 
   const getUserById = async (userId) => {
     try {
@@ -32,16 +33,13 @@ const UserService = () => {
         where: {
           id: currentUser?.userId
         },
-        // select: {
-        //   username: true,
-        //   photoProfile: true,
-        //   firstName: true,
-        //   lastName: true,
-        //   createdAt: true
-        // },
-        include: {
-          profile: true
-        }
+        select: {
+          username: true,
+          photoProfile: true,
+          firstName: true,
+          lastName: true,
+          createdAt: true
+        },
       })
       if (!user) throw new ApiNotFoundError("user not found")
       return user
@@ -65,11 +63,11 @@ const UserService = () => {
             userId: existingUser.id
           },
           data: {
-            bio: data?.bio,
-            birthday: new Date(data?.birthday)
+            bio: data.bio !== null ? data.bio : undefined,
+            birthday: data.birthday !== null ? data.birthday : undefined,
+            phone: data.phone !== null ? data.phone : undefined
           }
         })
-
 
         return updatedProfile
       })
@@ -79,11 +77,39 @@ const UserService = () => {
     }
   }
 
+  const getUserProfile = async (currentUser) => {
+    try {
+      const existingUser = await userRepo.findUniqueOrThrow({
+        where: {
+          id: currentUser.userId
+        }
+      })
+      
+      const userProfile = await userProfileRepo.findUniqueOrThrow({
+        where: {
+          userId: existingUser.id
+        },
+        select: {
+          bio: true,
+          birthday: true,
+          createdAt: true,
+          id: true,
+          phone: true
+        }
+      })
+
+      return userProfile
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
 
   return {
     getUserById,
     getUserCurrent,
-    updateProfile
+    updateProfile,
+    getUserProfile
   }
 }
 export default UserService

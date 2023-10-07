@@ -1,5 +1,5 @@
-import LoginComponent from "@/components/login"
-import SignupComponent from "@/components/signup"
+import LoginComponent from "@/components/auth/login"
+import SignupComponent from "@/components/auth/signup"
 import { Center, Container } from "@mantine/core"
 import { useSearchParams } from "react-router-dom"
 

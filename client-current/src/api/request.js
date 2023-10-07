@@ -132,6 +132,11 @@ const getCurrentUser = async () => {
   return res.data
 }
 
+const getCurrentUserProfile = async () => {
+  const res = await api.instance.request.get(`/user/profile`)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -150,5 +155,6 @@ export default {
   updatePostByUser,
   deletePostByUser,
   createPostByUser,
-  getCurrentUser
+  getCurrentUser,
+  getCurrentUserProfile
 }

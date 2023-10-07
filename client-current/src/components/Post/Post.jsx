@@ -32,9 +32,9 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import PostCardCommentComponent from "../postCardComment";
-import PostCardCommentCreateComponent from "../postCardCommentCreate";
-import PostCardCommentNotFound from "../postCardCommentNotFound/PostCardCommentNotFound";
+import CommentComponent from "../comment";
+import CommentFormComponent from "../comment/commentForm";
+import CommentNotFoundComponent from "../comment/commentNotFound";
 import Post from ".";
 const PostComponent = ({
   author,
@@ -176,17 +176,17 @@ const PostComponent = ({
           </ActionIcon>
         </Group>
         <Divider mt={"sm"} />
-        <PostCardCommentCreateComponent postId={postId} />
+        <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />
         <CardSection inheritPadding>
           {isSuccessFetchComment &&
             commentsData?.pages?.map((p) => {
               return (
                 <Fragment key={p.data}>
-                  {p.data.length < 1 && <PostCardCommentNotFound />}
+                  {p.data.length < 1 && <CommentNotFoundComponent />}
                   {p.data.length > 0 &&
                     p?.data?.map((c) => (
-                      <PostCardCommentComponent
+                      <CommentComponent
                         key={c?.id}
                         author={c?.author}
                         createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}

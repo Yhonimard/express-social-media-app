@@ -25,8 +25,8 @@ import {
   IconSwitchHorizontal,
   IconTrash,
 } from "@tabler/icons-react";
-import HeaderDrawerComponent from "../headerDrawer/HeaderDrawer";
 import classes from "./Header.module.css";
+import HeaderDrawerComponent from "./headerDrawer";
 import { useSelector } from "react-redux";
 
 

@@ -13,6 +13,9 @@ async function main() {
       password: await bcrypt.hash("yhoni", 5),
       photoProfile: "storage/img_seed/photo-profile-1.jpg",
       username: "yhoni",
+      profile: {
+        create: {}
+      }
     }
   })
 
@@ -21,6 +24,9 @@ async function main() {
       password: await bcrypt.hash("admin", 5),
       photoProfile: "storage/img_seed/photo-profile-2.jpeg",
       username: "admin",
+      profile: {
+        create: {}
+      }
     }
   })
 

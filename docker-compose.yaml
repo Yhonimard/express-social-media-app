@@ -11,15 +11,15 @@ services:
       - 5432
     networks:
       - sosmed
-  api-1:
+  api:
     container_name: sosmed-api
     build: api
     depends_on:
       - db
     networks:
       - sosmed
-    expose:
-      - 3000
+    ports:
+      - 40081:80
   
   client:
     container_name: sosmed-client
@@ -29,10 +29,8 @@ services:
     networks:
       - sosmed
     depends_on:
-      - api-1
+      - api
 
 networks:
   sosmed:
     external: true
-    
-    

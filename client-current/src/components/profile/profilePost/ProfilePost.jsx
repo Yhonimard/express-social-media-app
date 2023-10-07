@@ -1,218 +1,139 @@
-import Post from "@/components/Post";
-import PostCardCommentCreateComponent from "@/components/postCardCommentCreate";
-import PostCardCommentNotFound from "@/components/postCardCommentNotFound/PostCardCommentNotFound";
-import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
-import useDeletePostByUser from "@/features/post/useDeletePostByUser";
-import useGetListPostLikes from "@/features/post/useGetListPostLikes";
-import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
-import useUpdatePostByUser from "@/features/post/useUpdatePostByUser";
+import useCreatePostByUser from "@/features/post/useCreatePostByUser";
+import useGetPostListByUser from "@/features/post/useGetPostListByUser";
+import postValidation from "@/utils/validation/post.validation";
 import {
   ActionIcon,
-  Avatar,
-  Box,
-  Card,
-  CardSection,
+  Button,
+  Center,
   Divider,
+  FileButton,
   Group,
-  Image,
-  Menu,
-  rem,
+  Paper,
   Stack,
   Text,
-  Title,
-  Tooltip,
+  TextInput
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import {
-  IconDots,
-  IconEdit,
-  IconHeartFilled,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconPhoto, IconSend } from "@tabler/icons-react";
 import { useFormik } from "formik";
-import moment from "moment";
-import { Fragment } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import * as yup from "yup";
-import ProfilePostCommentComponent from "./profilePostComment";
+import classes from "./ProfilePost.module.css";
+import ProfilePostCardComponent from "./profilePostCard";
 
-const ProfilePostComponent = ({
-  author,
-  content,
-  title,
-  image,
-  createdAt,
-  postId,
-}) => {
-  const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
-    useDisclosure(false);
-  const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false);
-  const navigate = useNavigate();
+const ProfilePost = () => {
+  const {
+    data: postUserData,
+    isSuccess: isSuccessFetchPost,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetPostListByUser();
+
+  const createPostFormik = useFormik({
+    initialValues: {
+      title: "",
+      content: "",
+      image: "",
+    },
+    onSubmit: (data) => {
+      addPostByUser(data);
+      createPostFormik.handleReset();
+    },
+    validationSchema: postValidation.createPostValidation,
+  });
   const currentUser = useSelector((state) => state.auth.user);
 
-  const handleDeletePost = () => {
-    deletePost(postId);
-  };
-
-  const updateFormik = useFormik({
-    initialValues: {
-      title: title,
-      content: content,
-    },
-    validationSchema: yup.object({
-      title: yup.string().required().min(5).max(200),
-      content: yup.string().required().min(5).max(200),
-    }),
-    onSubmit: (data) => {
-      updatePost(data, {
-        onSuccess: () => {
-          updateFormik.handleReset();
-          toggleEditModal();
-        },
-      });
-    },
-  });
-
-  const { mutate: updatePost } = useUpdatePostByUser(currentUser.id, postId);
-  const { data: commentsData, isSuccess: isSuccessFetchComment } =
-    useGetListCommentByPostId(postId, { size: 1 });
-  const { mutate: deletePost } = useDeletePostByUser(currentUser.id);
-
-  const { data: likesData } = useGetListPostLikes({ postId });
-
-  const userHasLike = likesData?.data?.some(
-    (i) => i.user.id === currentUser.id
-  );
-
-  const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId });
+  const { mutate: addPostByUser } = useCreatePostByUser(currentUser.id);
 
   return (
     <>
-      <Card>
-        <CardSection inheritPadding py={`xs`}>
-          <Group justify="space-between">
-            <Group>
-              <ActionIcon
-                radius={`xl`}
-                variant="subtle"
-                color="gray"
-                size={`xl`}
-              >
-                <Tooltip withArrow label={author.username}>
-                  <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      author.photoProfile
-                    }`}
-                    alt={author.username}
-                    radius="xl"
-                    size="md"
-                  />
-                </Tooltip>
-              </ActionIcon>
-              <Box>
-                <Text>{author.username}</Text>
-                <Text size="sm">
-                  {moment(createdAt).format("DD MMMM, YYYY")}
-                </Text>
-              </Box>
-            </Group>
-            {author.id === currentUser.id && (
-              <Menu position="left-start">
-                <Menu.Target>
-                  <ActionIcon variant="subtle" color="gray">
-                    <IconDots />
-                  </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={toggleEditModal}
-                    leftSection={
-                      <IconEdit style={{ width: rem(14), height: rem(14) }} />
-                    }
-                  >
-                    Edit
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={toggleDeleteModal}
-                    leftSection={
-                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
-                    }
-                    color="red"
-                  >
-                    Delete
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+      <Paper>
+        <form
+          className={classes.upload_form}
+          onSubmit={createPostFormik.handleSubmit}
+        >
+          <div className={classes.upload__form}>
+            <TextInput
+              label=""
+              w={`100%`}
+              placeholder="title"
+              name="title"
+              onChange={createPostFormik.handleChange}
+              value={createPostFormik.values.title}
+              error={
+                createPostFormik.touched.title && createPostFormik.errors.title
+              }
+            />
+            <TextInput
+              label=""
+              w={`100%`}
+              placeholder="content"
+              name="content"
+              onChange={createPostFormik.handleChange}
+              value={createPostFormik.values.content}
+              error={
+                createPostFormik.touched.content &&
+                createPostFormik.errors.content
+              }
+            />
+            <ActionIcon
+              type="submit"
+              variant="subtle"
+              color="gray"
+              component="button"
+            >
+              <IconSend />
+            </ActionIcon>
+          </div>
+          <Group align="center" mt={`xs`}>
+            <FileButton
+              onChange={(e) => createPostFormik.setFieldValue("image", e)}
+            >
+              {(props) => (
+                <ActionIcon variant="subtle" color="gray" {...props}>
+                  <IconPhoto />
+                </ActionIcon>
+              )}
+            </FileButton>
+            {createPostFormik.values.image && (
+              <Text>{createPostFormik.values.image.name}</Text>
+            )}
+            {createPostFormik.touched.image && (
+              <Text c={`red`} size="xs">
+                {createPostFormik.errors.image}
+              </Text>
             )}
           </Group>
-        </CardSection>
-        <Box
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate(`/post/${postId}`)}
-        >
-          <CardSection mt={`sm`}>
-            <Image
-              src={`${import.meta.env.VITE_API_BASE_URL}/${image}`}
-              width={`100%`}
-              mah={`500px`}
-              loading="lazy"
-            />
-          </CardSection>
-          <Stack mt={"md"}>
-            <Title order={4}>{title}</Title>
-            <Text lineClamp={3}>{content}</Text>
+        </form>
+      </Paper>
+      <Divider my={`xs`} />
+      {isSuccessFetchPost &&
+        postUserData.pages.map((p, i) => (
+          <Stack key={i} gap={`sm`}>
+            {p.data.length < 1 && <Center h={`100%`}>no post here</Center>}
+            {p.data.map((data) => (
+              <ProfilePostCardComponent
+                key={data.id}
+                postId={data.id}
+                author={data.author}
+                content={data.content}
+                createdAt={data.createdAt}
+                image={data.image}
+                title={data.title}
+              />
+            ))}
           </Stack>
-
-          <Divider mt={"sm"} />
-        </Box>
-        <Group mt={`sm`}>
-          <ActionIcon
-            variant="transparent"
-            color={userHasLike ? "red" : "gray"}
-            onClick={() => likeOrUnlike(null)}
-          >
-            <IconHeartFilled />
-          </ActionIcon>
-        </Group>
-        <Divider mt={"sm"} />
-        <PostCardCommentCreateComponent postId={postId} />
-        <Divider mt={`md`} />
-        <CardSection inheritPadding>
-          {isSuccessFetchComment &&
-            commentsData?.pages?.map((p) => {
-              return (
-                <Fragment key={p.data}>
-                  {p.data.length < 1 && <PostCardCommentNotFound />}
-                  {p.data.length > 0 &&
-                    p?.data?.map((c) => (
-                      <ProfilePostCommentComponent
-                        key={c?.id}
-                        author={c?.author}
-                        createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
-                        title={c.title}
-                        commentId={c.id}
-                        postId={postId}
-                      />
-                    ))}
-                </Fragment>
-              );
-            })}
-        </CardSection>
-      </Card>
-      <Post.delete
-        close={toggleDeleteModal}
-        openedModal={isOpenDeleteModal}
-        deletePost={handleDeletePost}
-        postId={postId}
-      />
-      <Post.edit
-        openedModal={isOpenEditModal}
-        close={toggleEditModal}
-        formik={updateFormik}
-      />
+        ))}
+      <Button
+        onClick={fetchNextPage}
+        style={{ visibility: hasNextPage ? "visible" : "hidden" }}
+        fullWidth
+        color="gray"
+        variant="filled"
+        my={50}
+      >
+        see more your post
+      </Button>
     </>
   );
 };
-//
-export default ProfilePostComponent;
+
+export default ProfilePost;

@@ -1,5 +1,5 @@
-import Authorized from "@/components/authorized/Authorized";
-import Unauthorized from "@/components/unauthorized/Unauthorized";
+import Authorized from "@/components/auth/authorized";
+import Unauthorized from "@/components/auth/unauthorized/Unauthorized";
 import AuthPage from "@/pages/auth";
 import HomePage from "@/pages/home";
 import PostDetailPage from "@/pages/postDetail";
@@ -25,13 +25,13 @@ const routes = createBrowserRouter([
         children: [
           {
             path: ":postId",
-            element: <PostDetailPage />
-          }
-        ]
+            element: <PostDetailPage />,
+          },
+        ],
       },
       {
         path: "/profile",
-        element: <ProfilePage />
+        element: <ProfilePage />,
       },
       // {
       //   path: "user",
@@ -50,8 +50,8 @@ const routes = createBrowserRouter([
       <Authorized>
         <AuthPage />
       </Authorized>
-    )
-  }
+    ),
+  },
 ]);
 
 export default routes;

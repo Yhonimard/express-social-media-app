@@ -1,4 +1,3 @@
-import CommentMenuComponent from "@/components/comment/commentMenu";
 import {
   ActionIcon,
   Avatar,
@@ -10,14 +9,9 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useSelector } from "react-redux";
+import CommentMenuComponent from "./commentMenu";
 
-const ProfilePostCommentComponent = ({
-  author,
-  createdAt,
-  title,
-  commentId,
-  postId,
-}) => {
+const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
   const currentUser = useSelector((state) => state.auth.user);
 
   return (
@@ -54,6 +48,30 @@ const ProfilePostCommentComponent = ({
         </Group>
         {currentUser.id === author.id && (
           <CommentMenuComponent data={{ title, commentId }} postId={postId} />
+          // <Menu>
+          //   <Menu.Target>
+          //     <ActionIcon color="gray" style={{ alignSelf: "flex-start" }}>
+          //       <IconDots />
+          //     </ActionIcon>
+          //   </Menu.Target>
+          //   <Menu.Dropdown>
+          //     <Menu.Item
+          //       leftSection={
+          //         <IconEdit style={{ width: rem(14), height: rem(14) }} />
+          //       }
+          //     >
+          //       Edit
+          //     </Menu.Item>
+          //     <Menu.Item
+          //       leftSection={
+          //         <IconTrash style={{ width: rem(14), height: rem(14) }} />
+          //       }
+          //       color="red"
+          //     >
+          //       Delete
+          //     </Menu.Item>
+          //   </Menu.Dropdown>
+          // </Menu>
         )}
       </Group>
       <Divider my={`sm`} />
@@ -61,4 +79,4 @@ const ProfilePostCommentComponent = ({
   );
 };
 
-export default ProfilePostCommentComponent;
+export default CommentComponent;

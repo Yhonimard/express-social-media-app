@@ -95,5 +95,27 @@ routes.route("/user/profile")
      */
   .patch(jwtVerify, userController.updateProfile)
 
+routes.route("/user/profile")
+  /**
+     * @swagger
+     * /api/v1/user/profile:
+     *  get:
+     *    summary: get user current user profile
+     *    tags: [User]
+     *    description: api for get current user   
+     *    security:
+     *      - jwt-auth: []
+     *    responses:
+     *      200:
+     *        description: success update user profile
+     *      404:
+     *        description: user not found
+     *      401:
+     *        description: Unauthorized
+     *      500:
+     *        description: something went wrong
+     */
+  .get(jwtVerify, userController.getUserProfile)
+
 const userRoutes = routes
 export default userRoutes
