@@ -3,21 +3,22 @@ import useGetCurrentUserProfile from "@/features/user/useGetCurrentUserProfile";
 import {
   Avatar,
   Box,
-  Button,
   Container,
   Flex,
   Group,
   Stack,
   Tabs,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
+import { useSelector } from "react-redux";
+import ProfileEditComponent from "./profileEdit";
 import ProfilePostComponent from "./profilePost";
 
 const ProfileComponent = () => {
   const { data: currentUserData } = useGetCurrentUser();
-
-  const { data: currentUserProfile } = useGetCurrentUserProfile();
+  const currentUser = useSelector((state) => state.auth.user);
+  const { data: currentUserProfile } = useGetCurrentUserProfile(currentUser.id);
 
   return (
     <Container size={`md`}>
@@ -37,13 +38,11 @@ const ProfileComponent = () => {
           />
           <Stack gap={0}>
             <Title order={3}>{currentUserData?.username}</Title>
-            <Text order={4}>{currentUserProfile?.bio}</Text>
+            <Text order={4}>{currentUserProfile?.data?.bio}</Text>
           </Stack>
         </Group>
         <Box px={10}>
-          <Button fullWidth color="gray">
-            edit profile
-          </Button>
+          <ProfileEditComponent currentUserProfile={currentUserProfile?.data} />
         </Box>
         <Box>
           <Tabs defaultValue="post">

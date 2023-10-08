@@ -1,6 +1,6 @@
 import useCreatePost from "@/features/post/useCreatePost";
 import usePreviewImg from "@/hooks/usePreviewImg";
-import postValidation from "@/utils/validation/post.validation";
+import postValidation from "@/helpers/validation/post.validation";
 import { Button, FileInput, Image, Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";

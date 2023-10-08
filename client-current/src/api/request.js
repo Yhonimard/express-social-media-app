@@ -137,6 +137,11 @@ const getCurrentUserProfile = async () => {
   return res.data
 }
 
+const updateCurrentUserProfile = async (data) => {
+  const res = await api.instance.request.patch(`/user/profile`, data)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -156,5 +161,6 @@ export default {
   deletePostByUser,
   createPostByUser,
   getCurrentUser,
-  getCurrentUserProfile
+  getCurrentUserProfile,
+  updateCurrentUserProfile
 }

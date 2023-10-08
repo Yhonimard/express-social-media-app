@@ -48,30 +48,6 @@ const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
         </Group>
         {currentUser.id === author.id && (
           <CommentMenuComponent data={{ title, commentId }} postId={postId} />
-          // <Menu>
-          //   <Menu.Target>
-          //     <ActionIcon color="gray" style={{ alignSelf: "flex-start" }}>
-          //       <IconDots />
-          //     </ActionIcon>
-          //   </Menu.Target>
-          //   <Menu.Dropdown>
-          //     <Menu.Item
-          //       leftSection={
-          //         <IconEdit style={{ width: rem(14), height: rem(14) }} />
-          //       }
-          //     >
-          //       Edit
-          //     </Menu.Item>
-          //     <Menu.Item
-          //       leftSection={
-          //         <IconTrash style={{ width: rem(14), height: rem(14) }} />
-          //       }
-          //       color="red"
-          //     >
-          //       Delete
-          //     </Menu.Item>
-          //   </Menu.Dropdown>
-          // </Menu>
         )}
       </Group>
       <Divider my={`sm`} />

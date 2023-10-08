@@ -8,7 +8,7 @@ import cors from "cors"
 import path from "path"
 import compression from "compression"
 
-require("dotenv").config()
+if(process.env.NODE_ENV === "dev")require("dotenv").config({path: `.env.dev`})
 const app = express()
 app.use(compression({}))
 app.use(cors({}))

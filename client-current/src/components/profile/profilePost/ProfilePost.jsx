@@ -1,6 +1,6 @@
 import useCreatePostByUser from "@/features/post/useCreatePostByUser";
 import useGetPostListByUser from "@/features/post/useGetPostListByUser";
-import postValidation from "@/utils/validation/post.validation";
+import postValidation from "@/helpers/validation/post.validation";
 import {
   ActionIcon,
   Button,

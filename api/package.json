@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "dotenv -e .env.dev babel-node src/prisma/seed.js",
+    "seed:dev": "dotenv -e .env.dev babel-node src/prisma/seed.js",
+    "seed:stg": "dotenv -e .env babel-node src/prisma/seed.js",
     "dev": "cross-env NODE_ENV=dev dotenv -e .env.dev -- nodemon --exec babel-node src/index",
     "build": "npx babel src -d dist",
-    "start": "dotenv -e .env babel-node src/index.js",
+    "start": "babel-node src/index.js",
     "migrate:prod": "dotenv -e .env -- npx prisma migrate deploy --schema ./src/prisma/schema.prisma",
     "migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev --schema ./src/prisma/schema.prisma",
     "dbpush:dev": "dotenv -e .env.dev -- npx prisma db push --schema ./src/prisma/schema.prisma",
@@ -21,7 +22,7 @@
   "dependencies": {
     "@babel/cli": "^7.22.15",
     "@babel/core": "^7.22.17",
-    "@babel/node": "^7.22.15",
+    "@babel/node": "^7.22.19",
     "@babel/preset-env": "^7.22.15",
     "@joi/date": "^2.1.0",
     "@prisma/client": "^5.3.1",
