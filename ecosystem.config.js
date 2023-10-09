@@ -12,8 +12,8 @@ module.exports = {
       }
     }, {
       name: 'sosmed/api',
-      script: './api/build/index.js',
-      cwd: "./api",
+      script: './index.js',
+      cwd: "./api/build",
       watch: true,
       ignore_watch: ["node_modules", "./storage"],
     }
