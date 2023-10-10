@@ -240,7 +240,7 @@ routes.route(`/user/post`)
       * @swagger
       * /api/v1/user/post:
       *  get:
-      *    summary: get all post by user id
+      *    summary: get all post by current user
       *    parameters:
       *     - in: query
       *       name: pageNo
@@ -266,7 +266,7 @@ routes.route(`/user/post`)
       *      500:
       *        description: something went wrong
       */
-  .get(jwtVerify, postController.getAllPostByUserId)
+  .get(jwtVerify, postController.getAllPostByCurrentUser)
 
 routes.route(`/user/post/:pid`)
   /**

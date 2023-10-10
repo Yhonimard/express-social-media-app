@@ -1,6 +1,6 @@
 import useCreateCommentListByPostId from "@/features/comment/useCreateCommentListByPostId";
 import { ActionIcon, Group, TextInput } from "@mantine/core";
-import { IconSend } from "@tabler/icons-react";
+import { Send as IconSend } from "@mui/icons-material"
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -41,9 +41,9 @@ const CommentFormComponent = ({ postId }) => {
         <ActionIcon
           color="gray"
           mt={`md`}
-          variant="light"
-          size={`lg`}
-          component="button"
+          variant="subtle"
+          radius={`xl`}
+          size={`xl`}
           type="submit"
         >
           <IconSend />

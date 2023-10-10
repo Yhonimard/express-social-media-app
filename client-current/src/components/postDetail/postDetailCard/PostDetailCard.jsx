@@ -1,3 +1,4 @@
+import PostCardActionComponent from "@/components/Post/PostCardAction";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePost from "@/features/post/useDeletePost";
 import useGetListPostLikes from "@/features/post/useGetListPostLikes";
@@ -21,22 +22,17 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconDots,
-  IconEdit,
-  IconHeartFilled,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import Post from "../../Post";
 import CommentComponent from "../../comment";
 import CommentFormComponent from "../../comment/commentForm";
 import CommentNotFoundComponent from "../../comment/commentNotFound";
+import Post from "../../Post";
 
 const PostDetailCardComponent = ({ postData, postId }) => {
   const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
@@ -103,9 +99,8 @@ const PostDetailCardComponent = ({ postData, postId }) => {
               >
                 <Tooltip withArrow label={postData?.author.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      postData?.author.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${postData?.author.photoProfile
+                      }`}
                     alt={postData?.author.username}
                     radius="xl"
                     size="md"
@@ -123,7 +118,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
               <Menu position="left-start">
                 <Menu.Target>
                   <ActionIcon variant="subtle" color="gray">
-                    <IconDots />
+                    <IconMoreVert />
                   </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
@@ -138,7 +133,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                   <Menu.Item
                     onClick={toggleDeleteModal}
                     leftSection={
-                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                      <IconDelete style={{ width: rem(14), height: rem(14) }} />
                     }
                     color="red"
                   >
@@ -161,15 +156,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
           <Text lineClamp={3}>{postData?.content}</Text>
         </Stack>
         <Divider mt={`sm`} />
-        <Group mt={`sm`}>
-          <ActionIcon
-            variant="transparent"
-            color={userHasLike ? "red" : "gray"}
-            onClick={() => likeOrUnlike(null)}
-          >
-            <IconHeartFilled />
-          </ActionIcon>
-        </Group>
+        <PostCardActionComponent likeOrUnlike={likeOrUnlike} userHasLike={userHasLike} />
         <Divider mt={"sm"} />
         <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />

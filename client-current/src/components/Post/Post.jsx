@@ -20,22 +20,17 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconDots,
-  IconEdit,
-  IconHeartFilled,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Edit as IconEdit, Favorite as IconFavorite, MoreVert as IconMoreVert, Delete as IconDelete } from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import Post from ".";
 import CommentComponent from "../comment";
 import CommentFormComponent from "../comment/commentForm";
 import CommentNotFoundComponent from "../comment/commentNotFound";
-import Post from ".";
 const PostComponent = ({
   author,
   content,
@@ -101,9 +96,8 @@ const PostComponent = ({
               >
                 <Tooltip withArrow label={author.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      author.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${author.photoProfile
+                      }`}
                     alt={author.username}
                     radius="xl"
                     size="md"
@@ -121,7 +115,7 @@ const PostComponent = ({
               <Menu position="left-start">
                 <Menu.Target>
                   <ActionIcon variant="subtle" color="gray">
-                    <IconDots />
+                    <IconMoreVert />
                   </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
@@ -136,7 +130,7 @@ const PostComponent = ({
                   <Menu.Item
                     onClick={toggleDeleteModal}
                     leftSection={
-                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                      <IconDelete style={{ width: rem(14), height: rem(14) }} />
                     }
                     color="red"
                   >
@@ -172,7 +166,7 @@ const PostComponent = ({
             color={userHasLike ? "red" : "gray"}
             onClick={() => likeOrUnlike(null)}
           >
-            <IconHeartFilled />
+            <IconFavorite />
           </ActionIcon>
         </Group>
         <Divider mt={"sm"} />

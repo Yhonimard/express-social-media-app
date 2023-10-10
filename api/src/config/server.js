@@ -8,7 +8,7 @@ import cors from "cors"
 import path from "path"
 import compression from "compression"
 
-if(process.env.NODE_ENV === "dev")require("dotenv").config({path: `.env.dev`})
+if (process.env.NODE_ENV === "dev") require("dotenv").config({ path: `.env.dev` })
 const app = express()
 app.use(compression({}))
 app.use(cors({}))
@@ -26,7 +26,6 @@ app.use("/api/v1", routes)
 app.use(notFoundError)
 app.use(errorHandler)
 
-console.log(process.env.NODE_ENV);
 const server = app
 
 export default server

@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { useSelector } from "react-redux";
 import CommentMenuComponent from "./commentMenu";
+import moment from "moment/moment";
 
 const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
   const currentUser = useSelector((state) => state.auth.user);
@@ -27,9 +28,8 @@ const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
           >
             <Tooltip withArrow label={author.username}>
               <Avatar
-                src={`${import.meta.env.VITE_API_BASE_URL}/${
-                  author.photoProfile
-                }`}
+                src={`${import.meta.env.VITE_API_BASE_URL}/${author.photoProfile
+                  }`}
                 alt={author.username}
                 radius="xl"
                 size="md"

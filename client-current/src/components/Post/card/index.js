@@ -1,2 +1,2 @@
-import CardComponent from "./PostCard";
-export default CardComponent
+import PostCardComponent from "./PostCard";
+export default PostCardComponent

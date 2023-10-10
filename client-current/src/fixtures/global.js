@@ -1,8 +1,8 @@
-import { IconHome2, IconUser, IconGauge, IconDeviceDesktopAnalytics, IconCalendarStats, IconFingerprint, IconSettings } from "@tabler/icons-react"
+import { Home, Person } from "@mui/icons-material"
 
 export const listNavbar = [
-  { icon: IconHome2, label: "Home", to: "/" },
-  { icon: IconUser, label: "Profile", to: "/profile" },
+  { icon: Home, label: "Home", to: "/" },
+  { icon: Person, label: "Profile", to: "/profile" },
   //   { icon: IconGauge, label: "Dashboard" },
   //   { icon: IconDeviceDesktopAnalytics, label: "Analytics" },
   //   { icon: IconCalendarStats, label: "Releases" },

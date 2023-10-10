@@ -10,7 +10,7 @@ import {
   rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
+import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
 import { useFormik } from "formik";
 
 const CommentMenuComponent = ({ data, postId }) => {
@@ -57,7 +57,7 @@ const CommentMenuComponent = ({ data, postId }) => {
             color="gray"
             variant="subtle"
           >
-            <IconDots />
+            <IconMoreVert />
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
@@ -72,7 +72,7 @@ const CommentMenuComponent = ({ data, postId }) => {
           <Menu.Item
             onClick={toggleDeleteModal}
             leftSection={
-              <IconTrash style={{ width: rem(14), height: rem(14) }} />
+              <IconDelete style={{ width: rem(14), height: rem(14) }} />
             }
             color="red"
           >

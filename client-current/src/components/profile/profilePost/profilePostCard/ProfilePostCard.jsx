@@ -1,6 +1,7 @@
-import Post from "@/components/Post";
 import CommentFormComponent from "@/components/comment/commentForm";
 import CommentNotFoundComponent from "@/components/comment/commentNotFound";
+import Post from "@/components/Post";
+import PostCardActionComponent from "@/components/Post/PostCardAction";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePostByUser from "@/features/post/useDeletePostByUser";
 import useGetListPostLikes from "@/features/post/useGetListPostLikes";
@@ -23,12 +24,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconDots,
-  IconEdit,
-  IconHeartFilled,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -101,9 +97,8 @@ const ProfilePostCardComponent = ({
               >
                 <Tooltip withArrow label={author?.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      author?.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${author?.photoProfile
+                      }`}
                     alt={author?.username}
                     radius="xl"
                     size="md"
@@ -121,7 +116,7 @@ const ProfilePostCardComponent = ({
               <Menu position="left-start">
                 <Menu.Target>
                   <ActionIcon variant="subtle" color="gray">
-                    <IconDots />
+                    <IconMoreVert />
                   </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
@@ -136,7 +131,7 @@ const ProfilePostCardComponent = ({
                   <Menu.Item
                     onClick={toggleDeleteModal}
                     leftSection={
-                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                      <IconDelete style={{ width: rem(14), height: rem(14) }} />
                     }
                     color="red"
                   >
@@ -166,15 +161,7 @@ const ProfilePostCardComponent = ({
 
           <Divider mt={"sm"} />
         </Box>
-        <Group mt={`sm`}>
-          <ActionIcon
-            variant="transparent"
-            color={userHasLike ? "red" : "gray"}
-            onClick={() => likeOrUnlike(null)}
-          >
-            <IconHeartFilled />
-          </ActionIcon>
-        </Group>
+        <PostCardActionComponent likeOrUnlike={likeOrUnlike} userHasLike={userHasLike} />
         <Divider mt={"sm"} />
         <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />
@@ -191,7 +178,7 @@ const ProfilePostCardComponent = ({
                         author={p.author}
                         commentId={p.id}
                         postId={postId}
-                        createdAt={p.createdAt}
+                        createdAt={moment(p.createdAt).format("DD MMMM, YYYY")}
                         title={p.title}
                       />
                     );

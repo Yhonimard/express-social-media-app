@@ -12,20 +12,20 @@ module.exports = {
       }
     }, {
       name: 'sosmed/api',
-      script: './index.js',
-      cwd: "./api/build",
-      watch: true,
+      script: './build/index.js',
+      cwd: "./api",
+      watch: "./build",
       ignore_watch: ["node_modules", "./storage"],
     }
   ],
-  deploy: {
-    production: {
-      user: 'yhoniserver',
-      host: '[192.168.1.100]',
-      ref: 'origin/main',
-      repo: 'git@github.com:yhonimard/sosmed.git',
-      path: '/home/webserver/sosmed',
-      'post-deploy': 'cd ./api && npm install && npm run build && cd ../client-current && npm install && npm run build && pm2 startOrRestart ecosystem.config.js --env production',
-    }
-  }
+  // deploy: {
+  //   production: {
+  //     user: 'yhoniserver',
+  //     host: '[192.168.1.100]',
+  //     ref: 'origin/main',
+  //     repo: 'git@github.com:yhonimard/sosmed.git',
+  //     path: '/home/webserver/sosmed',
+  //     'post-deploy': 'cd ./api && npm install && npm run build && cd ../client-current && npm install && npm run build && pm2 startOrRestart ecosystem.config.js --env production',
+  //   }
+  // }
 };

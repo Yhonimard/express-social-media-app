@@ -14,9 +14,9 @@ const getUserById = {
 
 const updateProfile = {
   body: Joi.object().keys({
-    bio: Joi.string().min(4).max(100).allow(null).optional(),
-    birthday: Joi.date().allow(null).optional(),
-    phone: Joi.number().min(4).max(14).optional()
+    bio: Joi.string().min(4).max(100).allow(null).optional().label("bio"),
+    birthday: Joi.date().allow(null).optional().label("birthday"),
+    phone: Joi.string().min(3).max(15).optional().allow(null).label("phone")
   })
 }
 

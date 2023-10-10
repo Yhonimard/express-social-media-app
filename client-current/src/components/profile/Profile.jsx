@@ -26,14 +26,12 @@ const ProfileComponent = () => {
         justify={`flex-start`}
         mt={`xl`}
         direction={`column`}
-        px={{ base: "lg" }}
         gap={20}
       >
         <Group>
           <Avatar
-            src={`${import.meta.env.VITE_API_BASE_URL}/${
-              currentUserData?.photoProfile
-            }`}
+            src={`${import.meta.env.VITE_API_BASE_URL}/${currentUserData?.photoProfile
+              }`}
             size={`xl`}
           />
           <Stack gap={0}>
