@@ -78,6 +78,8 @@ const ProfilePost = () => {
               type="submit"
               variant="subtle"
               color="gray"
+              size={`xl`}
+              radius={`xl`}
               component="button"
             >
               <IconSend />

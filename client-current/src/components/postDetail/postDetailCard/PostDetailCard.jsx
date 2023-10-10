@@ -32,6 +32,7 @@ import Post from "../../Post";
 import CommentComponent from "../../comment";
 import CommentFormComponent from "../../comment/commentForm";
 import CommentNotFoundComponent from "../../comment/commentNotFound";
+import PostCardActionComponent from "@/components/Post/PostCardAction";
 
 const PostDetailCardComponent = ({ postData, postId }) => {
   const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
@@ -155,15 +156,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
           <Text lineClamp={3}>{postData?.content}</Text>
         </Stack>
         <Divider mt={`sm`} />
-        <Group mt={`sm`}>
-          <ActionIcon
-            variant="transparent"
-            color={userHasLike ? "red" : "gray"}
-            onClick={() => likeOrUnlike(null)}
-          >
-            <IconFavorite />
-          </ActionIcon>
-        </Group>
+        <PostCardActionComponent likeOrUnlike={likeOrUnlike} userHasLike={userHasLike} />
         <Divider mt={"sm"} />
         <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />

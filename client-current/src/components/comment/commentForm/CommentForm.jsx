@@ -41,9 +41,9 @@ const CommentFormComponent = ({ postId }) => {
         <ActionIcon
           color="gray"
           mt={`md`}
-          variant="light"
-          size={`lg`}
-          component="button"
+          variant="subtle"
+          radius={`xl`}
+          size={`xl`}
           type="submit"
         >
           <IconSend />

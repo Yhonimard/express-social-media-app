@@ -31,6 +31,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import ProfilePostCommentComponent from "../profilePostComment";
+import PostCardActionComponent from "@/components/Post/PostCardAction";
 
 const ProfilePostCardComponent = ({
   author,
@@ -160,15 +161,7 @@ const ProfilePostCardComponent = ({
 
           <Divider mt={"sm"} />
         </Box>
-        <Group mt={`sm`}>
-          <ActionIcon
-            variant="transparent"
-            color={userHasLike ? "red" : "gray"}
-            onClick={() => likeOrUnlike(null)}
-          >
-            <IconFavorite />
-          </ActionIcon>
-        </Group>
+        <PostCardActionComponent likeOrUnlike={likeOrUnlike} userHasLike={userHasLike} />
         <Divider mt={"sm"} />
         <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />

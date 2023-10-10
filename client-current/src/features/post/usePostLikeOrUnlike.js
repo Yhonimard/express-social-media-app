@@ -3,7 +3,7 @@ import { GET_POST_LIKE_NAME } from "@/fixtures/api-query"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
 
-const usePostLikeOrUnlike = ({ userHasLike, postId }) => {
+const usePostLikeOrUnlike = ({ postId }) => {
   const queryClient = useQueryClient()
   const currentUser = useSelector(state => state.auth.user)
   return useMutation(async () => {
@@ -13,6 +13,9 @@ const usePostLikeOrUnlike = ({ userHasLike, postId }) => {
     onMutate: async () => {
       const prevData = queryClient.getQueryData([GET_POST_LIKE_NAME, postId])
       await queryClient.cancelQueries([GET_POST_LIKE_NAME, postId])
+      const userHasLike = prevData.data.some(i => i.user.id === currentUser.id)
+      console.log(userHasLike);
+
 
       if (userHasLike) {
         queryClient.setQueryData([GET_POST_LIKE_NAME, postId], (oldData) => {
@@ -41,7 +44,7 @@ const usePostLikeOrUnlike = ({ userHasLike, postId }) => {
       queryClient.setQueryData([GET_POST_LIKE_NAME, postId], context.prevData)
     },
     onSettled: () => {
-      queryClient.invalidateQueries([GET_POST_LIKE_NAME])
+      // queryClient.invalidateQueries([GET_POST_LIKE_NAME])
     }
   })
 }

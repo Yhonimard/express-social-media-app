@@ -23,7 +23,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Edit as IconEdit, Favorite as IconFavorite, MoreVert as IconMoreVert, Delete as IconDelete } from "@mui/icons-material";
+import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
 
 import { useFormik } from "formik";
 import moment from "moment";
@@ -32,10 +32,11 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import Post from "..";
+import PostCardActionComponent from "../PostCardAction";
 
 const PostCard = ({ author, content, title, image, createdAt, postId }) => {
-  const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
-    useDisclosure(false);
+  const [isOpenDeleteModal, { toggle: toggleDeleteModal }] = useDisclosure(false)
+  useDisclosure(false);
   const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false);
   const navigate = useNavigate();
 
@@ -70,11 +71,10 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
   const currentUser = useSelector((state) => state.auth.user);
 
   const { data: likesData } = useGetListPostLikes({ postId });
-
-  const userHasLike = likesData?.data?.some(
+  const userHasLike = likesData?.data.some(
     (i) => i.user.id === currentUser.id
   );
-
+  
   const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId });
 
   return (
@@ -155,15 +155,7 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
 
           <Divider mt={"sm"} />
         </Box>
-        <Group mt={`sm`}>
-          <ActionIcon
-            variant="transparent"
-            color={userHasLike ? "red" : "gray"}
-            onClick={() => likeOrUnlike(null)}
-          >
-            <IconFavorite />
-          </ActionIcon>
-        </Group>
+        <PostCardActionComponent likeOrUnlike={likeOrUnlike} userHasLike={userHasLike} />
         <Divider mt={"sm"} />
         <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />
