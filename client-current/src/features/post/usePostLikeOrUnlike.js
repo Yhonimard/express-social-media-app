@@ -35,7 +35,6 @@ const usePostLikeOrUnlike = ({ postId }) => {
         })
       }
 
-
       return {
         prevData
       }
@@ -44,7 +43,7 @@ const usePostLikeOrUnlike = ({ postId }) => {
       queryClient.setQueryData([GET_POST_LIKE_NAME, postId], context.prevData)
     },
     onSettled: () => {
-      // queryClient.invalidateQueries([GET_POST_LIKE_NAME])
+      queryClient.invalidateQueries([GET_POST_LIKE_NAME])
     }
   })
 }

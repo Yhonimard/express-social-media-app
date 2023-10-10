@@ -1,6 +1,7 @@
-import Post from "@/components/Post";
 import CommentFormComponent from "@/components/comment/commentForm";
 import CommentNotFoundComponent from "@/components/comment/commentNotFound";
+import Post from "@/components/Post";
+import PostCardActionComponent from "@/components/Post/PostCardAction";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePostByUser from "@/features/post/useDeletePostByUser";
 import useGetListPostLikes from "@/features/post/useGetListPostLikes";
@@ -23,7 +24,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Edit as IconEdit, Favorite as IconFavorite, MoreVert as IconMoreVert, Delete as IconDelete } from "@mui/icons-material";
+import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -31,7 +32,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import ProfilePostCommentComponent from "../profilePostComment";
-import PostCardActionComponent from "@/components/Post/PostCardAction";
 
 const ProfilePostCardComponent = ({
   author,
@@ -178,7 +178,7 @@ const ProfilePostCardComponent = ({
                         author={p.author}
                         commentId={p.id}
                         postId={postId}
-                        createdAt={p.createdAt}
+                        createdAt={moment(p.createdAt).format("DD MMMM, YYYY")}
                         title={p.title}
                       />
                     );

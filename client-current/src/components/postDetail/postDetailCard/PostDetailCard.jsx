@@ -1,3 +1,4 @@
+import PostCardActionComponent from "@/components/Post/PostCardAction";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePost from "@/features/post/useDeletePost";
 import useGetListPostLikes from "@/features/post/useGetListPostLikes";
@@ -21,18 +22,17 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Edit as IconEdit, Favorite as IconFavorite, MoreVert as IconMoreVert, Delete as IconDelete } from "@mui/icons-material";
+import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import Post from "../../Post";
 import CommentComponent from "../../comment";
 import CommentFormComponent from "../../comment/commentForm";
 import CommentNotFoundComponent from "../../comment/commentNotFound";
-import PostCardActionComponent from "@/components/Post/PostCardAction";
+import Post from "../../Post";
 
 const PostDetailCardComponent = ({ postData, postId }) => {
   const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
