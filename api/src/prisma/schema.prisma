@@ -89,7 +89,7 @@ model Profile {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   birthday  DateTime?
-  phone     Int?
+  phone     BigInt?   @db.BigInt()
 
   @@map("user_profile")
 }

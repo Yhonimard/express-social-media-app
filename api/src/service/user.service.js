@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client"
 import db from "../config/db"
 import ApiNotFoundError from "../exception/ApiNotFoundError"
 import prismaError from "../exception/prisma-error"
@@ -48,35 +49,6 @@ const UserService = () => {
     }
   }
 
-  const updateProfile = async (currentUser, data) => {
-    try {
-      const trx = db.$transaction(async (tr) => {
-
-        const existingUser = await tr.user.findUniqueOrThrow({
-          where: {
-            id: currentUser?.userId
-          }
-        })
-
-        const updatedProfile = await tr.profile.update({
-          where: {
-            userId: existingUser.id
-          },
-          data: {
-            bio: data.bio !== null ? data.bio : undefined,
-            birthday: data.birthday !== null ? data.birthday : undefined,
-            phone: data.phone !== null ? data.phone : undefined
-          }
-        })
-
-        return updatedProfile
-      })
-      return trx
-    } catch (error) {
-      throw prismaError(error)
-    }
-  }
-
   const getUserProfile = async (currentUser) => {
     try {
       const existingUser = await userRepo.findUniqueOrThrow({
@@ -84,7 +56,7 @@ const UserService = () => {
           id: currentUser.userId
         }
       })
-      
+
       const userProfile = await userProfileRepo.findUniqueOrThrow({
         where: {
           userId: existingUser.id
@@ -97,13 +69,50 @@ const UserService = () => {
           phone: true
         }
       })
-
-      return userProfile
+      const response = {
+        ...userProfile,
+        phone: parseInt(userProfile.phone)
+      }
+      return response
     } catch (error) {
       throw prismaError(error)
     }
   }
 
+
+  const updateProfile = async (currentUser, data) => {
+    try {
+
+      const trx = await db.$transaction(async (tr) => {
+        await tr.user.findUniqueOrThrow({
+          where: {
+            id: currentUser.userId
+          }
+        })
+
+        const updateProfile = await tr.profile.update({
+          where: {
+            userId: currentUser.userId
+          },
+          data: {
+            bio: data.bio !== null ? data.bio : null,
+            birthday: data.birthday !== null ? data.birthday : null,
+            phone: data.phone !== null ? data.phone : null
+
+          }
+        })
+
+        const response = {
+          ...updateProfile,
+          phone: parseInt(updateProfile.phone)
+        }
+        return response
+      })
+      return trx
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
 
   return {
     getUserById,

@@ -81,6 +81,9 @@ const PostService = () => {
             },
           },
         },
+        orderBy: {
+          createdAt: "desc"
+        },
         skip,
         take,
       });
@@ -286,7 +289,7 @@ const PostService = () => {
     }
   }
 
-  const getAllPostByUserId = async (pageNo, size, user) => {
+  const getAllPostByCurrentUser = async (pageNo, size, user) => {
     try {
       const { skip, take } = paginationHelper(pageNo, size)
       const postByUserId = await postRepo.findMany({
@@ -445,7 +448,7 @@ const PostService = () => {
     getPostById,
     postUserLike,
     getAllPostLikesByPostId,
-    getAllPostByUserId,
+    getAllPostByCurrentUser,
     updatePostByUser,
     deletePostByUser,
     createPostByUser

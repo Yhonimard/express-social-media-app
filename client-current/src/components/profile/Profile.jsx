@@ -26,7 +26,6 @@ const ProfileComponent = () => {
         justify={`flex-start`}
         mt={`xl`}
         direction={`column`}
-        px={{ base: "lg" }}
         gap={20}
       >
         <Group>

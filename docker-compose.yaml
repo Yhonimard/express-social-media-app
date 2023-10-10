@@ -5,27 +5,38 @@ services:
     container_name: sosmed-db
     image: postgres:alpine
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PW}
     expose:
       - 5432
     networks:
       - sosmed
+
   api:
     container_name: sosmed-api
     build: api
     depends_on:
       - db
+    environment:
+      - DB_URL=postgresql://${PG_USER}:${PG_PW}@${PG_HOST}:${PG_PORT}/${PG_DB}
+      - JWT_KEY=${JWT_KEY}
+      - PORT=${API_CT_PORT}
     networks:
       - sosmed
-    ports:
-      - 40081:80
-  
+    expose:
+      - ${API_CT_PORT}
+
   client:
     container_name: sosmed-client
-    build: client-current
+    build:
+      context: client-current/
+      args:
+        - API_URL=${API_URL}
+        - API_BASE_URL=${API_BASE_URL}
     ports:
-      - 40080:80
+      - ${NGINX_FORWARD_PORT}:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - sosmed
     depends_on:

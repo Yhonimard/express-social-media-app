@@ -101,13 +101,13 @@ const PostController = () => {
     }
   }
 
-  const getAllPostByUserId = async (req, res, next) => {
+  const getAllPostByCurrentUser = async (req, res, next) => {
     const { query, user } = req
     const pageNo = parseInt(query.pageNo)
     const size = parseInt(query.size) || 4
 
     try {
-      const response = await postService.getAllPostByUserId(pageNo, size, user)
+      const response = await postService.getAllPostByCurrentUser(pageNo, size, user)
       res.json(response)
     } catch (error) {
       return next(error)
@@ -161,7 +161,7 @@ const PostController = () => {
     getPostById,
     postUserLike,
     getAllPostLikesByPostId,
-    getAllPostByUserId,
+    getAllPostByCurrentUser,
     updatePostByUser,
     deletePostByUser,
     createPostByUser

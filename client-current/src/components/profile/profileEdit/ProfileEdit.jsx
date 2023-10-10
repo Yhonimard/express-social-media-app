@@ -11,9 +11,9 @@ const ProfileEditComponent = ({ currentUserProfile }) => {
 
   const editProfileFormik = useFormik({
     initialValues: {
-      bio: currentUserProfile?.bio,
-      birthday: currentUserProfile?.birthday,
-      phone: currentUserProfile?.phone,
+      bio: "",
+      birthday: "",
+      phone: 0,
     },
     onSubmit: (data) => {
       updateProfile(data);
@@ -24,9 +24,19 @@ const ProfileEditComponent = ({ currentUserProfile }) => {
   const currentUser = useSelector((state) => state.auth.user);
   const { mutate: updateProfile } = useUpdateCurrentUserProfile(currentUser.id);
 
+  const toggleModalHandler = (data) => {
+    editProfileFormik.setValues({
+      bio: data?.bio || "",
+      birthday: new Date(data.birthday) || new Date(2004, 2, 20),
+      phone: data.phone
+    })
+    toggleModal()
+  }
+
+
   return (
     <>
-      <Button fullWidth onClick={toggleModal} color="gray">
+      <Button fullWidth onClick={() => toggleModalHandler(currentUserProfile)} color="gray">
         edit profile
       </Button>
       <Modal
@@ -58,7 +68,7 @@ const ProfileEditComponent = ({ currentUserProfile }) => {
               prefix="+"
               name="phone"
               min={10}
-              onChange={editProfileFormik.handleChange}
+              onChange={(e) => editProfileFormik.setFieldValue("phone", parseInt(e))}
               value={editProfileFormik.values.phone}
             />
             <Button color="gray" type="submit">

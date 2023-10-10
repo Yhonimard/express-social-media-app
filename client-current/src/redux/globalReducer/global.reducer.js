@@ -14,7 +14,7 @@ const globalReducer = createSlice({
     },
     showNotification: (state, { payload }) => {
       const { message, status: variant } = payload
-      enqueueSnackbar({ message, variant })
+      enqueueSnackbar({ message, variant: variant || "success" })
     }
   }
 })

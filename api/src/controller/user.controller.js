@@ -30,36 +30,33 @@ const UserController = () => {
     }
   }
 
-  const updateProfile = async (req, res, next) => {
-    try {
-      const dateMoment = moment.utc(req.body.birthday, "DD-MM-YYYY").toDate()
-      const date = !isNaN(dateMoment) ? dateMoment : undefined
 
-      const data = {
-        ...req.body,
-        birthday: date
-      }
-
-      const { error } = validation.updateProfile.body.validate(data)
-      if (error) throw new ApiBadRequestError(error.message)
-
-      const response = await userService.updateProfile(req.user, data)
-      res.json({ message: "success update user profile", data: response },)
-
-    } catch (error) {
-      return next(error)
-    }
-  }
 
   const getUserProfile = async (req, res, next) => {
     try {
       const response = await userService.getUserProfile(req.user)
+
       res.json({ message: "success get user profile", data: response })
     } catch (error) {
       return next(error)
     }
   }
 
+  const updateProfile = async (req, res, next) => {
+    const data = {
+      ...req.body,
+      phone: req.body.phone.toString()
+    }
+    try {
+      const { error } = validation.updateProfile.body.validate(data)
+      if (error) throw new ApiBadRequestError(error.message)
+
+      const response = await userService.updateProfile(req.user, data)
+      res.json({ message: "success update user profile", data: response },)
+    } catch (error) {
+      return next(error)
+    }
+  }
   return {
     getUserById,
     getUserCurrent,
