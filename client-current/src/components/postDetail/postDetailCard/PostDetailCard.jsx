@@ -21,12 +21,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconDots,
-  IconEdit,
-  IconHeartFilled,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Edit as IconEdit, Favorite as IconFavorite, MoreVert as IconMoreVert, Delete as IconDelete } from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -103,9 +98,8 @@ const PostDetailCardComponent = ({ postData, postId }) => {
               >
                 <Tooltip withArrow label={postData?.author.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      postData?.author.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${postData?.author.photoProfile
+                      }`}
                     alt={postData?.author.username}
                     radius="xl"
                     size="md"
@@ -123,7 +117,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
               <Menu position="left-start">
                 <Menu.Target>
                   <ActionIcon variant="subtle" color="gray">
-                    <IconDots />
+                    <IconMoreVert />
                   </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
@@ -138,7 +132,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                   <Menu.Item
                     onClick={toggleDeleteModal}
                     leftSection={
-                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                      <IconDelete style={{ width: rem(14), height: rem(14) }} />
                     }
                     color="red"
                   >
@@ -167,7 +161,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
             color={userHasLike ? "red" : "gray"}
             onClick={() => likeOrUnlike(null)}
           >
-            <IconHeartFilled />
+            <IconFavorite />
           </ActionIcon>
         </Group>
         <Divider mt={"sm"} />

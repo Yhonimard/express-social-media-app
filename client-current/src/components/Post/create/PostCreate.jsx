@@ -3,8 +3,8 @@ import usePreviewImg from "@/hooks/usePreviewImg";
 import postValidation from "@/helpers/validation/post.validation";
 import { Button, FileInput, Image, Modal, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPlus } from "@tabler/icons-react";
 import { useFormik } from "formik";
+import { Create as IconCreate } from "@mui/icons-material"
 import FloatingButton from "../../floatingButton/FloatingButton";
 
 const PostCreate = () => {
@@ -32,7 +32,7 @@ const PostCreate = () => {
   return (
     <>
       <FloatingButton onClick={open} bottom={50} right={50}>
-        <IconPlus />
+        <IconCreate />
       </FloatingButton>
       <Modal
         opened={isOpenModal}

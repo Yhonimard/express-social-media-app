@@ -13,11 +13,11 @@ import {
   Text,
   TextInput
 } from "@mantine/core";
-import { IconPhoto, IconSend } from "@tabler/icons-react";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import classes from "./ProfilePost.module.css";
 import ProfilePostCardComponent from "./profilePostCard";
+import { Send as IconSend, AddPhotoAlternate as IconAddPhoto } from '@mui/icons-material'
 
 const ProfilePost = () => {
   const {
@@ -89,7 +89,7 @@ const ProfilePost = () => {
             >
               {(props) => (
                 <ActionIcon variant="subtle" color="gray" {...props}>
-                  <IconPhoto />
+                  <IconAddPhoto />
                 </ActionIcon>
               )}
             </FileButton>

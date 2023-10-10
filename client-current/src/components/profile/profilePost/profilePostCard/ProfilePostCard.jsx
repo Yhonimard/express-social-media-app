@@ -23,12 +23,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconDots,
-  IconEdit,
-  IconHeartFilled,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Edit as IconEdit, Favorite as IconFavorite, MoreVert as IconMoreVert, Delete as IconDelete } from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -101,9 +96,8 @@ const ProfilePostCardComponent = ({
               >
                 <Tooltip withArrow label={author?.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      author?.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${author?.photoProfile
+                      }`}
                     alt={author?.username}
                     radius="xl"
                     size="md"
@@ -121,7 +115,7 @@ const ProfilePostCardComponent = ({
               <Menu position="left-start">
                 <Menu.Target>
                   <ActionIcon variant="subtle" color="gray">
-                    <IconDots />
+                    <IconMoreVert />
                   </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
@@ -136,7 +130,7 @@ const ProfilePostCardComponent = ({
                   <Menu.Item
                     onClick={toggleDeleteModal}
                     leftSection={
-                      <IconTrash style={{ width: rem(14), height: rem(14) }} />
+                      <IconDelete style={{ width: rem(14), height: rem(14) }} />
                     }
                     color="red"
                   >
@@ -172,7 +166,7 @@ const ProfilePostCardComponent = ({
             color={userHasLike ? "red" : "gray"}
             onClick={() => likeOrUnlike(null)}
           >
-            <IconHeartFilled />
+            <IconFavorite />
           </ActionIcon>
         </Group>
         <Divider mt={"sm"} />

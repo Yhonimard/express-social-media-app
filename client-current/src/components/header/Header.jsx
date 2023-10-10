@@ -13,21 +13,10 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconArrowRight,
-  IconHeart,
-  IconLogout,
-  IconMessage,
-  IconPlayerPause,
-  IconSearch,
-  IconSettings,
-  IconStar,
-  IconSwitchHorizontal,
-  IconTrash,
-} from "@tabler/icons-react";
 import classes from "./Header.module.css";
 import HeaderDrawerComponent from "./headerDrawer";
 import { useSelector } from "react-redux";
+import { Favorite as IconFavorite, Search as IconSearch, Star as IconStar, Message as IconMessage, Settings as IconSettings, SwapHoriz as IconSwapHoriz, Logout as IconLogout, Pause as IconPlayerPause, Delete as IconDelete } from "@mui/icons-material"
 
 
 export default function HeaderComponent() {
@@ -71,7 +60,7 @@ export default function HeaderComponent() {
                   color={theme.primaryColor}
                   variant="filled"
                 >
-                  <IconArrowRight
+                  <IconSearch
                     style={{ width: rem(18), height: rem(18) }}
                     stroke={1.5}
                   />
@@ -100,7 +89,7 @@ export default function HeaderComponent() {
               <Menu.Dropdown>
                 <Menu.Item
                   leftSection={
-                    <IconHeart
+                    <IconFavorite
                       style={{ width: rem(16), height: rem(16) }}
                       color={theme.colors.red[6]}
                       stroke={1.5}
@@ -145,7 +134,7 @@ export default function HeaderComponent() {
                 </Menu.Item>
                 <Menu.Item
                   leftSection={
-                    <IconSwitchHorizontal
+                    <IconSwapHoriz
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
@@ -178,7 +167,7 @@ export default function HeaderComponent() {
                 <Menu.Item
                   color="red"
                   leftSection={
-                    <IconTrash
+                    <IconDelete
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />

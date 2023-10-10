@@ -1,6 +1,6 @@
 import useCreateCommentListByPostId from "@/features/comment/useCreateCommentListByPostId";
 import { ActionIcon, Group, TextInput } from "@mantine/core";
-import { IconSend } from "@tabler/icons-react";
+import { Send as IconSend } from "@mui/icons-material"
 import { useFormik } from "formik";
 import * as yup from "yup";
 
