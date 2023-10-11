@@ -1,8 +1,6 @@
 import PostCardActionComponent from "@/components/Post/PostCardAction";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePost from "@/features/post/useDeletePost";
-import useGetListPostLikes from "@/features/post/useGetListPostLikes";
-import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
 import useUpdatePost from "@/features/post/useUpdatePost";
 import {
   ActionIcon,
@@ -22,7 +20,11 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
+import {
+  Delete as IconDelete,
+  Edit as IconEdit,
+  MoreVert as IconMoreVert,
+} from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -77,14 +79,6 @@ const PostDetailCardComponent = ({ postData, postId }) => {
   const { mutate: deletePost } = useDeletePost(true, postId);
   const currentUser = useSelector((state) => state.auth.user);
 
-  const { data: likesData } = useGetListPostLikes({ postId });
-
-  const userHasLike = likesData?.data?.some(
-    (i) => i.user.id === currentUser.id
-  );
-
-  const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId });
-
   return (
     <>
       <Card>
@@ -95,12 +89,12 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                 radius={`xl`}
                 variant="subtle"
                 color="gray"
-                size={`xl`}
-              >
+                size={`xl`}>
                 <Tooltip withArrow label={postData?.author.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${postData?.author.photoProfile
-                      }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${
+                      postData?.author.photoProfile
+                    }`}
                     alt={postData?.author.username}
                     radius="xl"
                     size="md"
@@ -126,8 +120,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                     onClick={toggleEditModal}
                     leftSection={
                       <IconEdit style={{ width: rem(14), height: rem(14) }} />
-                    }
-                  >
+                    }>
                     Edit
                   </Menu.Item>
                   <Menu.Item
@@ -135,8 +128,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                     leftSection={
                       <IconDelete style={{ width: rem(14), height: rem(14) }} />
                     }
-                    color="red"
-                  >
+                    color="red">
                     Delete
                   </Menu.Item>
                 </Menu.Dropdown>
@@ -156,15 +148,14 @@ const PostDetailCardComponent = ({ postData, postId }) => {
           <Text lineClamp={3}>{postData?.content}</Text>
         </Stack>
         <Divider mt={`sm`} />
-        <PostCardActionComponent likeOrUnlike={likeOrUnlike} userHasLike={userHasLike} />
+        <PostCardActionComponent postId={postId} />
         <Divider mt={"sm"} />
         <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />
         <CardSection
           inheritPadding
           mah={`392.2px`}
-          style={{ overflowY: "auto" }}
-        >
+          style={{ overflowY: "auto" }}>
           {isFetchCommentSuccess &&
             commentsData?.pages.map((p) => {
               return (
@@ -192,8 +183,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
               fullWidth
               variant="subtle"
               color="gray"
-              size="xs"
-            >
+              size="xs">
               {" "}
               see more comment
             </Button>

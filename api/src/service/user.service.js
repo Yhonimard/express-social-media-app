@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client"
 import db from "../config/db"
 import ApiNotFoundError from "../exception/ApiNotFoundError"
 import prismaError from "../exception/prisma-error"
@@ -6,7 +5,6 @@ import prismaError from "../exception/prisma-error"
 const UserService = () => {
   const userRepo = db.user
   const userProfileRepo = db.profile
-
   const getUserById = async (userId) => {
     try {
       const user = await userRepo.findUnique({
@@ -102,11 +100,10 @@ const UserService = () => {
           }
         })
 
-        const response = {
+        return {
           ...updateProfile,
           phone: parseInt(updateProfile.phone)
         }
-        return response
       })
       return trx
     } catch (error) {
@@ -118,7 +115,7 @@ const UserService = () => {
     getUserById,
     getUserCurrent,
     updateProfile,
-    getUserProfile
+    getUserProfile,
   }
 }
 export default UserService

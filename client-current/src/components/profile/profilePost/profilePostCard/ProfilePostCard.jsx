@@ -4,8 +4,6 @@ import Post from "@/components/Post";
 import PostCardActionComponent from "@/components/Post/PostCardAction";
 import useGetListCommentByPostId from "@/features/comment/useGetListCommentsByPostId";
 import useDeletePostByUser from "@/features/post/useDeletePostByUser";
-import useGetListPostLikes from "@/features/post/useGetListPostLikes";
-import usePostLikeOrUnlike from "@/features/post/usePostLikeOrUnlike";
 import useUpdatePostByUser from "@/features/post/useUpdatePostByUser";
 import {
   ActionIcon,
@@ -24,7 +22,11 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
+import {
+  Delete as IconDelete,
+  Edit as IconEdit,
+  MoreVert as IconMoreVert,
+} from "@mui/icons-material";
 import { useFormik } from "formik";
 import moment from "moment";
 import { Fragment } from "react";
@@ -75,14 +77,6 @@ const ProfilePostCardComponent = ({
     useGetListCommentByPostId(postId, { size: 1 });
   const { mutate: deletePost } = useDeletePostByUser(currentUser.id);
 
-  const { data: likesData } = useGetListPostLikes({ postId });
-
-  const userHasLike = likesData?.data?.some(
-    (i) => i.user.id === currentUser.id
-  );
-
-  const { mutate: likeOrUnlike } = usePostLikeOrUnlike({ userHasLike, postId });
-
   return (
     <>
       <Card>
@@ -93,12 +87,12 @@ const ProfilePostCardComponent = ({
                 radius={`xl`}
                 variant="subtle"
                 color="gray"
-                size={`xl`}
-              >
+                size={`xl`}>
                 <Tooltip withArrow label={author?.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${author?.photoProfile
-                      }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${
+                      author?.photoProfile
+                    }`}
                     alt={author?.username}
                     radius="xl"
                     size="md"
@@ -124,8 +118,7 @@ const ProfilePostCardComponent = ({
                     onClick={toggleEditModal}
                     leftSection={
                       <IconEdit style={{ width: rem(14), height: rem(14) }} />
-                    }
-                  >
+                    }>
                     Edit
                   </Menu.Item>
                   <Menu.Item
@@ -133,8 +126,7 @@ const ProfilePostCardComponent = ({
                     leftSection={
                       <IconDelete style={{ width: rem(14), height: rem(14) }} />
                     }
-                    color="red"
-                  >
+                    color="red">
                     Delete
                   </Menu.Item>
                 </Menu.Dropdown>
@@ -144,8 +136,7 @@ const ProfilePostCardComponent = ({
         </CardSection>
         <Box
           style={{ cursor: "pointer" }}
-          onClick={() => navigate(`/post/${postId}`)}
-        >
+          onClick={() => navigate(`/post/${postId}`)}>
           <CardSection mt={`sm`}>
             <Image
               src={`${import.meta.env.VITE_API_BASE_URL}/${image}`}
@@ -161,7 +152,7 @@ const ProfilePostCardComponent = ({
 
           <Divider mt={"sm"} />
         </Box>
-        <PostCardActionComponent likeOrUnlike={likeOrUnlike} userHasLike={userHasLike} />
+        <PostCardActionComponent postId={postId} />
         <Divider mt={"sm"} />
         <CommentFormComponent postId={postId} />
         <Divider mt={`md`} />

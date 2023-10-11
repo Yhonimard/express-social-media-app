@@ -10,7 +10,7 @@ import ApiErrorResponse from "../exception/ApiErrorResponse";
 const PostService = () => {
   const postRepo = db.post;
   const userRepo = db.user;
-  const postLikeRepo = db.postUserLike
+  const postLikeRepo = db.postUserLike;
 
   const createPost = async (data, { userId }) => {
     const { title, content, image } = data;
@@ -38,8 +38,8 @@ const PostService = () => {
             select: {
               username: true,
               photoProfile: true,
-              id: true
-            }
+              id: true,
+            },
           },
           comments: {
             select: {
@@ -53,8 +53,8 @@ const PostService = () => {
                 },
               },
             },
-          }
-        }
+          },
+        },
       });
 
       return newPost;
@@ -82,7 +82,7 @@ const PostService = () => {
           },
         },
         orderBy: {
-          createdAt: "desc"
+          createdAt: "desc",
         },
         skip,
         take,
@@ -110,37 +110,37 @@ const PostService = () => {
     try {
       const existingUser = await userRepo.findUnique({
         where: {
-          id: user?.userId
-        }
-      })
-      if (!existingUser) throw new ApiNotFoundError("user not found")
+          id: user?.userId,
+        },
+      });
+      if (!existingUser) throw new ApiNotFoundError("user not found");
 
       const post = await postRepo.findUnique({
         where: {
-          id: postId
+          id: postId,
         },
+      });
+      if (!post) throw ApiNotFoundError("post not found");
 
-      })
-      if (!post) throw ApiNotFoundError("post not found")
-
-      if (post.authorId !== existingUser.id) throw new ApiForbiddenError("you cannot update this user post")
+      if (post.authorId !== existingUser.id)
+        throw new ApiForbiddenError("you cannot update this user post");
 
       const updatedPost = await postRepo.update({
         where: {
-          id: postId
+          id: postId,
         },
         data: {
           title: {
-            set: data.title || post.title
+            set: data.title || post.title,
           },
           content: {
-            set: data.content || post.content
-          }
-        }
-      })
-      return updatedPost
+            set: data.content || post.content,
+          },
+        },
+      });
+      return updatedPost;
     } catch (error) {
-      throw prismaError(error)
+      throw prismaError(error);
     }
   };
 
@@ -148,41 +148,41 @@ const PostService = () => {
     try {
       const userExist = await userRepo.findUnique({
         where: {
-          id: user.userId
-        }
-      })
-      if (!userExist) throw new ApiNotFoundError("user not found")
+          id: user.userId,
+        },
+      });
+      if (!userExist) throw new ApiNotFoundError("user not found");
 
       const post = await postRepo.findUnique({
         where: {
-          id: postId
+          id: postId,
         },
-      })
-      if (!post) throw new ApiNotFoundError("post not found")
+      });
+      if (!post) throw new ApiNotFoundError("post not found");
 
       if (post.authorId !== userExist.id)
-        throw new ApiForbiddenError("you cannot delete this user post")
+        throw new ApiForbiddenError("you cannot delete this user post");
 
       const deletedPost = await postRepo.delete({
         where: {
-          id: post.id
-        }
-      })
+          id: post.id,
+        },
+      });
 
-      if (process.env.NODE_ENV !== "dev") fs.unlink(deletedPost.image, () => {
-      })
+      if (process.env.NODE_ENV !== "dev")
+        fs.unlink(deletedPost.image, () => {});
 
-      return deletedPost
+      return deletedPost;
     } catch (error) {
-      throw prismaError(error)
+      throw prismaError(error);
     }
-  }
+  };
 
   const getPostById = async (postId) => {
     try {
       const post = await postRepo.findUnique({
         where: {
-          id: postId
+          id: postId,
         },
         select: {
           id: true,
@@ -194,107 +194,24 @@ const PostService = () => {
             select: {
               username: true,
               photoProfile: true,
-              id: true
-            }
-          },
-        }
-      })
-      if (!post) throw new ApiNotFoundError("post not found")
-      return post
-    } catch (error) {
-      throw prismaError(error)
-    }
-  }
-
-  const postUserLike = async (postId, user) => {
-    try {
-      const existingUser = await userRepo.findUnique({
-        where: {
-          id: user?.userId
-        }
-      })
-      if (!existingUser) throw new ApiErrorResponse("user not found")
-
-      const existingPost = await postRepo.findUnique({
-        where: {
-          id: postId
-        }
-      })
-      if (!existingPost) throw new ApiErrorResponse("post not found")
-
-      const existingLike = await postLikeRepo.findFirst({
-        where: {
-          postId: existingPost.id,
-          userId: existingUser.id
-        }
-      })
-      const hasLike = Boolean(existingLike)
-
-      if (hasLike) {
-        await postLikeRepo.delete({
-          where: {
-            postId_userId: {
-              postId: existingPost.id,
-              userId: existingUser.id
-            }
-          }
-        })
-        return "success unlike post"
-      }
-
-      if (!hasLike) {
-        await postLikeRepo.create({
-          data: {
-            post: {
-              connect: {
-                id: existingPost.id
-              },
+              id: true,
             },
-            user: {
-              connect: {
-                id: existingUser.id
-              }
-            }
-          }
-        })
-        return "success like post"
-      }
-
-      return "something went wrong"
-    } catch (error) {
-      return prismaError(error)
-    }
-  }
-
-  const getAllPostLikesByPostId = async (postId) => {
-    try {
-      const postLikes = await postLikeRepo.findMany({
-        where: {
-          postId: postId
+          },
         },
-        select: {
-          user: {
-            select: {
-              photoProfile: true,
-              username: true,
-              id: true
-            }
-          }
-        }
-      })
-      if (!postLikes) throw new ApiNotFoundError("post likes not found")
-      return postLikes
+      });
+      if (!post) throw new ApiNotFoundError("post not found");
+      return post;
     } catch (error) {
-      return prismaError(error)
+      throw prismaError(error);
     }
-  }
+  };
 
   const getAllPostByCurrentUser = async (pageNo, size, user) => {
     try {
-      const { skip, take } = paginationHelper(pageNo, size)
+      const { skip, take } = paginationHelper(pageNo, size);
       const postByUserId = await postRepo.findMany({
         where: {
-          authorId: user?.userId
+          authorId: user?.userId,
         },
         select: {
           id: true,
@@ -311,13 +228,13 @@ const PostService = () => {
           },
         },
         skip,
-        take
-      })
+        take,
+      });
 
       const totalData = await postRepo.count({
         where: {
-          authorId: user?.userId
-        }
+          authorId: user?.userId,
+        },
       });
       const totalPages = Math.ceil(totalData / size);
       const currentPageData = postByUserId.length;
@@ -328,75 +245,79 @@ const PostService = () => {
         totalPages,
         totalData,
         currentPageData,
-        isLast
-      }
+        isLast,
+      };
     } catch (error) {
-      throw prismaError(error)
+      throw prismaError(error);
     }
-  }
+  };
 
   const updatePostByUser = async (currentUser, pid, data) => {
     try {
       const trx = await db.$transaction(async (tr) => {
         const user = await tr.user.findUniqueOrThrow({
           where: {
-            id: currentUser.userId
-          }
-        })
+            id: currentUser.userId,
+          },
+        });
 
         const post = await tr.post.update({
           where: {
-            id: pid
+            id: pid,
           },
           data: {
             title: {
-              set: data.title
+              set: data.title,
             },
             content: {
-              set: data.content
-            }
-          }
-        })
+              set: data.content,
+            },
+          },
+        });
 
-        if (user.id !== post.authorId) throw new ApiForbiddenError('you cant update this specific user post')
-        return post
-      })
-      return trx
+        if (user.id !== post.authorId)
+          throw new ApiForbiddenError(
+            "you cant update this specific user post"
+          );
+        return post;
+      });
+      return trx;
     } catch (error) {
-      throw prismaError(error)
+      throw prismaError(error);
     }
-  }
+  };
 
   const deletePostByUser = async (pid, currUser) => {
     try {
       await db.$transaction(async (trx) => {
         const user = await trx.user.findUniqueOrThrow({
           where: {
-            id: currUser.userId
-          }
-        })
+            id: currUser.userId,
+          },
+        });
 
         const deletedPost = await trx.post.delete({
           where: {
-            id: pid
-          }
-        })
-        if (!deletedPost) throw new ApiNotFoundError("post not found")
-        if (user.id !== deletedPost.authorId) throw new ApiForbiddenError("you cant delete this user post")
+            id: pid,
+          },
+        });
+        if (!deletedPost) throw new ApiNotFoundError("post not found");
+        if (user.id !== deletedPost.authorId)
+          throw new ApiForbiddenError("you cant delete this user post");
         fs.unlink(deletedPost.image, () => {
           console.log("delete post image on api deletePostByUser");
-        })
-        return deletedPost
-      })
+        });
+        return deletedPost;
+      });
     } catch (error) {
-      throw prismaError(error)
+      throw prismaError(error);
     }
-  }
+  };
 
   const createPostByUser = async (currUser, data) => {
     try {
       const tr = await db.$transaction(async (tx) => {
-        const { title, content, image } = data
+        const { title, content, image } = data;
         const newPost = await tx.post.create({
           data: {
             title,
@@ -404,8 +325,8 @@ const PostService = () => {
             image,
             author: {
               connect: {
-                id: currUser.userId
-              }
+                id: currUser.userId,
+              },
             },
           },
           include: {
@@ -413,8 +334,8 @@ const PostService = () => {
               select: {
                 username: true,
                 photoProfile: true,
-                id: true
-              }
+                id: true,
+              },
             },
             comments: {
               select: {
@@ -428,17 +349,17 @@ const PostService = () => {
                   },
                 },
               },
-            }
-          }
-        })
-        return newPost
-      })
+            },
+          },
+        });
+        return newPost;
+      });
 
-      return tr
+      return tr;
     } catch (error) {
-      throw prismaError(error)
+      throw prismaError(error);
     }
-  }
+  };
 
   return {
     createPost,
@@ -446,12 +367,10 @@ const PostService = () => {
     updatePost,
     deletePost,
     getPostById,
-    postUserLike,
-    getAllPostLikesByPostId,
     getAllPostByCurrentUser,
     updatePostByUser,
     deletePostByUser,
-    createPostByUser
+    createPostByUser,
   };
 };
 

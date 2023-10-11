@@ -7,7 +7,6 @@ async function init() {
     server.listen(PORT, () => {
       console.log(`run on port ${PORT}`);
     })
-    
     db.$disconnect()
   } catch (error) {
     console.log("error from index", error);
@@ -15,4 +14,5 @@ async function init() {
     process.exit(1)
   }
 }
+
 init()

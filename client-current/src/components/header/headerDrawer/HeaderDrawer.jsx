@@ -5,7 +5,7 @@ import classes from "./HeaderDrawer.module.css";
 
 const HeaderDrawerComponent = ({ opened, close }) => {
   return (
-    <Drawer opened={opened} onClose={close}>
+    <Drawer opened={opened} onClose={close} size={`xs`}>
       <Stack justify="center" gap={2}>
         {listNavbar.map((l) => {
           return (

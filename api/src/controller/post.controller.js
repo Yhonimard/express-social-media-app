@@ -81,26 +81,6 @@ const PostController = () => {
     }
   }
 
-  const postUserLike = async (req, res, next) => {
-    const { user, params } = req
-    try {
-      const response = await postService.postUserLike(params?.postId, user)
-      res.json({ message: response })
-    } catch (error) {
-      return next(error)
-    }
-  }
-
-  const getAllPostLikesByPostId = async (req, res, next) => {
-    const { params } = req
-    try {
-      const response = await postService.getAllPostLikesByPostId(params.postId)
-      return res.json({ message: "success get all likes by post id", data: response })
-    } catch (error) {
-      return next(error)
-    }
-  }
-
   const getAllPostByCurrentUser = async (req, res, next) => {
     const { query, user } = req
     const pageNo = parseInt(query.pageNo)
@@ -159,8 +139,6 @@ const PostController = () => {
     updatePost,
     deletePost,
     getPostById,
-    postUserLike,
-    getAllPostLikesByPostId,
     getAllPostByCurrentUser,
     updatePostByUser,
     deletePostByUser,
