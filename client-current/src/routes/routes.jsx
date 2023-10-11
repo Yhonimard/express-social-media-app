@@ -5,6 +5,7 @@ import HomePage from "@/pages/home";
 import PostDetailPage from "@/pages/postDetail";
 import ProfilePage from "@/pages/profile";
 import RootPage from "@/pages/root";
+import UserDetailPage from "@/pages/userDetail";
 import { createBrowserRouter } from "react-router-dom";
 
 const routes = createBrowserRouter([
@@ -33,15 +34,15 @@ const routes = createBrowserRouter([
         path: "/profile",
         element: <ProfilePage />,
       },
-      // {
-      //   path: "user",
-      //   element: <ProfilePage />,
-      //   children: [
-      //     {
-      //       path: ":userId"
-      //     }
-      //   ]
-      // }
+      {
+        path: "/user",
+        children: [
+          {
+            path: ":uid",
+            element: <UserDetailPage />,
+          },
+        ],
+      },
     ],
   },
   {

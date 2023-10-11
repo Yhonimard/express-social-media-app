@@ -4,6 +4,7 @@
   align-items: center;
   padding: 15px 10px;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  text-decoration: none;
   &:hover {
     background-color: light-dark(
       var(--mantine-color-gray-0),

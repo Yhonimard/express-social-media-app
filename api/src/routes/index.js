@@ -4,6 +4,7 @@ import postRoutes from "./post.routes";
 import commentRoutes from "./comment.routes";
 import userRoutes from "./user.routes";
 import friendRoutes from "./friend.routes";
+import postLikeRoutes from "./post-like.routes";
 
 const routes = Router()
 routes.use(authRoutes)
@@ -11,4 +12,5 @@ routes.use(postRoutes)
 routes.use(commentRoutes)
 routes.use(userRoutes)
 routes.use(friendRoutes)
+routes.use(postLikeRoutes)
 export default routes
