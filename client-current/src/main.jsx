@@ -13,7 +13,7 @@ import redux from "./redux";
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
-    <Provider store={redux.store}>
+    <Provider store={redux.store} >
       <PersistGate persistor={redux.persistor}>
         <SnackbarProvider
           anchorOrigin={{ horizontal: "right", vertical: "top" }}
@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           autoHideDuration={1500}
           maxSnack={2}
         >
-          <MantineProvider defaultColorScheme="dark">
+          <MantineProvider defaultColorScheme="dark" theme={{components : {}}}>
             <App />
           </MantineProvider>
         </SnackbarProvider>

@@ -80,7 +80,7 @@ const CommentService = () => {
         take,
         skip,
         orderBy: {
-          createdAt: "asc"
+          createdAt: "desc"
         }
       })
       if (!comments) throw new ApiNotFoundError("post not found")

@@ -11,15 +11,19 @@ import {
   Paper,
   Stack,
   Text,
-  TextInput
+  TextInput,
 } from "@mantine/core";
+import {
+  AddPhotoAlternate as IconAddPhoto,
+  Send as IconSend,
+} from "@mui/icons-material";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import classes from "./ProfilePost.module.css";
 import ProfilePostCardComponent from "./profilePostCard";
-import { Send as IconSend, AddPhotoAlternate as IconAddPhoto } from '@mui/icons-material'
 
 const ProfilePost = () => {
+  
   const {
     data: postUserData,
     isSuccess: isSuccessFetchPost,
@@ -48,8 +52,7 @@ const ProfilePost = () => {
       <Paper>
         <form
           className={classes.upload_form}
-          onSubmit={createPostFormik.handleSubmit}
-        >
+          onSubmit={createPostFormik.handleSubmit}>
           <div className={classes.upload__form}>
             <TextInput
               label=""
@@ -80,15 +83,13 @@ const ProfilePost = () => {
               color="gray"
               size={`xl`}
               radius={`xl`}
-              component="button"
-            >
+              component="button">
               <IconSend />
             </ActionIcon>
           </div>
           <Group align="center" mt={`xs`}>
             <FileButton
-              onChange={(e) => createPostFormik.setFieldValue("image", e)}
-            >
+              onChange={(e) => createPostFormik.setFieldValue("image", e)}>
               {(props) => (
                 <ActionIcon variant="subtle" color="gray" {...props}>
                   <IconAddPhoto />
@@ -130,8 +131,7 @@ const ProfilePost = () => {
         fullWidth
         color="gray"
         variant="filled"
-        my={50}
-      >
+        my={50}>
         see more your post
       </Button>
     </>
