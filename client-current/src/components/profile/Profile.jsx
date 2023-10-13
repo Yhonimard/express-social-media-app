@@ -44,13 +44,11 @@ const ProfileComponent = () => {
           />
           <Stack gap={0}>
             <Title order={3}>{currentUserData.username}</Title>
-            <Text order={4}>{currentUserProfileData.data.bio}</Text>
+            <Text order={4}>{currentUserProfileData.bio}</Text>
           </Stack>
         </Group>
         <Box px={10}>
-          <ProfileEditComponent
-            currentUserProfile={currentUserProfileData.data}
-          />
+          <ProfileEditComponent currentUserProfile={currentUserProfileData} />
         </Box>
         <Box>
           <Tabs
@@ -58,7 +56,7 @@ const ProfileComponent = () => {
             value={tabsLocation || "post"}
             onChange={(e) => setSearchParams({ tabs: e })}>
             <Tabs.List mb={20}>
-            <Tabs.Tab value="post">post</Tabs.Tab>
+              <Tabs.Tab value="post">post</Tabs.Tab>
               <Tabs.Tab value="profile">profile</Tabs.Tab>
               <Tabs.Tab value="likes">likes</Tabs.Tab>
               <Tabs.Tab value="comment">comment</Tabs.Tab>
@@ -69,9 +67,9 @@ const ProfileComponent = () => {
             </Tabs.Panel>
             <Tabs.Panel value="profile">
               <ProfileDetail
-                bio={currentUserProfileData.data.bio}
-                phone={currentUserProfileData.data.phone}
-                birthday={currentUserProfileData.data.birthday}
+                bio={currentUserProfileData.bio}
+                phone={currentUserProfileData.phone}
+                birthday={currentUserProfileData.birthday}
               />
             </Tabs.Panel>
             <Tabs.Panel value="likes">likes</Tabs.Panel>
