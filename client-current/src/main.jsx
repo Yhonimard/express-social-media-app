@@ -10,7 +10,9 @@ import App from "./App.jsx";
 import "./index.css";
 import redux from "./redux";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+
+});
 ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <Provider store={redux.store} >

@@ -6,24 +6,31 @@ import {
   Container,
   Flex,
   Group,
+  LoadingOverlay,
   Stack,
   Tabs,
   Text,
   Title,
 } from "@mantine/core";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import ProfileDetail from "./ProfileDetail";
 import ProfileEditComponent from "./profileEdit";
 import ProfilePostComponent from "./profilePost";
-import { useSearchParams } from "react-router-dom";
-import { ContactPhone, StickyNote2 } from "@mui/icons-material";
 
 const ProfileComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabsLocation = searchParams.get("tabs");
 
-  const { data: currentUserData } = useGetCurrentUser();
+  const { data: currentUserData, isLoading: isLoadingGetCurrUser } =
+    useGetCurrentUser();
+
   const currentUser = useSelector((state) => state.auth.user);
-  const { data: currentUserProfile } = useGetCurrentUserProfile(currentUser.id);
+  const { data: currentUserProfileData, isLoading: isLoadingFetchUserProfile } =
+    useGetCurrentUserProfile(currentUser.id);
+
+  if (isLoadingFetchUserProfile || isLoadingGetCurrUser)
+    return <LoadingOverlay visible />;
 
   return (
     <Container size={`md`}>
@@ -31,17 +38,19 @@ const ProfileComponent = () => {
         <Group>
           <Avatar
             src={`${import.meta.env.VITE_API_BASE_URL}/${
-              currentUserData?.photoProfile
+              currentUserData.photoProfile
             }`}
             size={`xl`}
           />
           <Stack gap={0}>
-            <Title order={3}>{currentUserData?.username}</Title>
-            <Text order={4}>{currentUserProfile?.data?.bio}</Text>
+            <Title order={3}>{currentUserData.username}</Title>
+            <Text order={4}>{currentUserProfileData.data.bio}</Text>
           </Stack>
         </Group>
         <Box px={10}>
-          <ProfileEditComponent currentUserProfile={currentUserProfile?.data} />
+          <ProfileEditComponent
+            currentUserProfile={currentUserProfileData.data}
+          />
         </Box>
         <Box>
           <Tabs
@@ -49,7 +58,7 @@ const ProfileComponent = () => {
             value={tabsLocation || "post"}
             onChange={(e) => setSearchParams({ tabs: e })}>
             <Tabs.List mb={20}>
-              <Tabs.Tab value="post">post</Tabs.Tab>
+            <Tabs.Tab value="post">post</Tabs.Tab>
               <Tabs.Tab value="profile">profile</Tabs.Tab>
               <Tabs.Tab value="likes">likes</Tabs.Tab>
               <Tabs.Tab value="comment">comment</Tabs.Tab>
@@ -59,20 +68,11 @@ const ProfileComponent = () => {
               <ProfilePostComponent />
             </Tabs.Panel>
             <Tabs.Panel value="profile">
-              <Stack px={20}>
-                <Group>
-                  <ContactPhone />
-                  <Text>086569455246</Text>
-                </Group>
-                <Group>
-                  <StickyNote2 />
-                  <Text>this is me</Text>
-                </Group>
-                <Group>
-                  <ContactPhone />
-                  <Text>086569455246</Text>
-                </Group>
-              </Stack>
+              <ProfileDetail
+                bio={currentUserProfileData.data.bio}
+                phone={currentUserProfileData.data.phone}
+                birthday={currentUserProfileData.data.birthday}
+              />
             </Tabs.Panel>
             <Tabs.Panel value="likes">likes</Tabs.Panel>
             <Tabs.Panel value="comment">comment</Tabs.Panel>

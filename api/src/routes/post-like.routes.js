@@ -93,6 +93,40 @@ routes.route("/post/:pid/like/user")
     */
   .get(jwtVerify, postLikeController.getUserHasLikeByCurrentUser)
 
+routes.route("/user/like")
+  /**
+    * @swagger
+    * /api/v1/user/like:
+    *  get:
+    *    summary: get current user has like
+    *    tags: [Post Like]
+    *    description: api for get current user has like or not
+    *    parameters:
+    *      - in: query
+    *        name: pageNo
+    *        description: for get the number of page
+    *        schema:
+    *          type: number
+    *          example: 1
+    *      - in: query
+    *        name: size
+    *        description: for get the size of page
+    *        schema:
+    *          type: number
+    *          example: 4
+    *    security:
+    *      - jwt-auth: []
+    *    responses:
+    *      200:
+    *        description: success
+    *      404:
+    *        description: like not found
+    *      401:
+    *        description: unauthorized
+    *      500:
+    *        description: something went wrong
+    */
+  .get(jwtVerify, postLikeController.getAllUserLikeByCurrentUser)
 
 const postLikeRoutes = routes
 export default postLikeRoutes

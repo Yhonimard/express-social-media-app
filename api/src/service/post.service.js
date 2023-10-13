@@ -81,11 +81,11 @@ const PostService = () => {
             },
           },
         },
+        skip,
+        take,
         orderBy: {
           createdAt: "desc",
         },
-        skip,
-        take,
       });
 
       const totalData = await postRepo.count();
@@ -229,9 +229,9 @@ const PostService = () => {
         },
         skip,
         take,
-        orderBy : {
-          createdAt : "desc"
-        }
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
       const totalData = await postRepo.count({

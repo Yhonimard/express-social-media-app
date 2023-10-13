@@ -102,7 +102,10 @@ routes.route("/user/profile")
      *              birthday:
      *                type: string
      *                format: date
-     *                example: 21-03-2004
+     *                example: 2017-07-21T17:32:28Z
+     *              phone:
+     *                type: string
+     *                example: 6285694555246
      *    security:
      *      - jwt-auth: []
      *    responses:

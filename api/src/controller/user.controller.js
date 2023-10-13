@@ -45,7 +45,7 @@ const UserController = () => {
   const updateProfile = async (req, res, next) => {
     const data = {
       ...req.body,
-      phone: req.body.phone.toString()
+      phone: req.body.phone
     }
     try {
       const {error} = validation.updateProfile.body.validate(data)

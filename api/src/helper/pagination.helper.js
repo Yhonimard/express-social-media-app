@@ -1,8 +1,9 @@
 const paginationHelper = (pageNo, size) => {
+  console.log("pageNo", pageNo);
   return {
-    skip: parseInt((pageNo - 1) * size),
-    take: parseInt(size)
-  }
-}
+    skip: parseInt((parseInt(pageNo) - 1) * parseInt(size)),
+    take: parseInt(size),
+  };
+};
 
-export default paginationHelper
+export default paginationHelper;
