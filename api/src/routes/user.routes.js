@@ -99,6 +99,7 @@ routes.route("/user/profile")
      *            properties:
      *              bio:
      *                type: string
+     *                example: i like a cat
      *              birthday:
      *                type: string
      *                format: date

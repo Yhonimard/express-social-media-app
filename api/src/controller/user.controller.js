@@ -35,7 +35,7 @@ const UserController = () => {
     try {
       const response = await userService.getUserProfile(req.user);
 
-      res.json(response );
+      res.json(response);
     } catch (error) {
       return next(error);
     }
@@ -44,13 +44,13 @@ const UserController = () => {
   const updateProfile = async (req, res, next) => {
     const data = {
       ...req.body,
-      phone: req.body.phone,
+      phone: String(req.body.phone),
     };
     try {
       const { error } = validation.updateProfile.body.validate(data);
       if (error) throw new ApiBadRequestError(error.message);
 
-      const response = await userService.updateProfile(req.user, data);
+      await userService.updateProfile(req.user, data);
       res.json({ message: "success update user profile" });
     } catch (error) {
       return next(error);

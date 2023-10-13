@@ -72,7 +72,6 @@ const createCommentByPostId = async (postId, data) => {
   return res.data;
 };
 
-
 const updateComment = async (postId, commentId, data) => {
   const res = await api.instance.request.patch(
     `/post/${postId}/comment/${commentId}`,
@@ -133,7 +132,11 @@ const getCurrentUserProfile = async () => {
 };
 
 const updateCurrentUserProfile = async (data) => {
-  const res = await api.instance.request.patch(`/user/profile`, data);
+  const mappedData = {
+    ...data,
+    phone: String(data.phone),
+  };
+  const res = await api.instance.request.patch(`/user/profile`, mappedData);
   return res.data;
 };
 
@@ -149,6 +152,11 @@ const likePostByCurrentUser = async (pid) => {
 
 const unlikePostByCurrentUser = async (pid) => {
   const res = await api.instance.request.delete(`/post/${pid}/like`);
+  return res.data;
+};
+
+const getCurrentUserLikes = async () => {
+  const res = await api.instance.request.get(`/user/like`);
   return res.data;
 };
 
@@ -173,5 +181,6 @@ export default {
   updateCurrentUserProfile,
   getCurrentUserHasLike,
   likePostByCurrentUser,
-  unlikePostByCurrentUser
+  unlikePostByCurrentUser,
+  getCurrentUserLikes,
 };

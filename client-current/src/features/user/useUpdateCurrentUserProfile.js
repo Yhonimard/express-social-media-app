@@ -47,6 +47,8 @@ const useUpdateCurrentUserProfile = (uid) => {
       },
       onSettled: () => {
         queryClient.invalidateQueries([GET_USER_PROFILE_NAME, uid]);
+      },
+      onSuccess: () => {
         dispatch(
           globalReducer.action.showNotification({
             message: "success updating profile",
