@@ -337,5 +337,9 @@ routes
     postController.createPostByUser
   );
 
+routes
+  .route("/user/post/like")
+  .get(jwtVerify, postController.getAllPostHasLikedUser);
+
 const postRoutes = routes;
 export default postRoutes;

@@ -1,5 +1,6 @@
-const toPaginationResponseHelper = async (repo, data, pageNo, size) => {
-  const totalData = await repo.count();
+const toPaginationResponseHelper = async (dataCount, data, query) => {
+  const { pageNo, size } = query;
+  const totalData = dataCount;
   const totalPages = Math.ceil(totalData / size);
   const currentPageData = data.length;
   const isLast = pageNo === totalPages;
@@ -15,5 +16,4 @@ const toPaginationResponseHelper = async (repo, data, pageNo, size) => {
   return mapperData;
 };
 
-
-export default toPaginationResponseHelper
+export default toPaginationResponseHelper;

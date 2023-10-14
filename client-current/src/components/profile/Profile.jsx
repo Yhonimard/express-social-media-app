@@ -17,6 +17,7 @@ import { useSearchParams } from "react-router-dom";
 import ProfileDetail from "./ProfileDetail";
 import ProfileEditComponent from "./profileEdit";
 import ProfilePostComponent from "./profilePost";
+import ProfileLikes from "./profileLikes";
 
 const ProfileComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,7 +73,9 @@ const ProfileComponent = () => {
                 birthday={currentUserProfileData.birthday}
               />
             </Tabs.Panel>
-            <Tabs.Panel value="likes">likes</Tabs.Panel>
+            <Tabs.Panel value="likes">
+              <ProfileLikes />
+            </Tabs.Panel>
             <Tabs.Panel value="comment">comment</Tabs.Panel>
             <Tabs.Panel value="friend">friend</Tabs.Panel>
           </Tabs>

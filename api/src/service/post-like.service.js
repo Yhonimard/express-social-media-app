@@ -111,41 +111,10 @@ const PostLikeService = () => {
     }
   };
 
-  const getAllUserLikeByCurrentUser = async (currentUser, query) => {
-    const { pageNo, size } = query;
-    try {
-      const { skip, take } = paginationHelper(pageNo, size);
-
-      const userLikePostList = await postUserLikeRepo.findMany({
-        where: {
-          user: {
-            id: currentUser.userId,
-          },
-        },
-        select: {
-          createdAt: true,
-          postId: true,
-        },
-        take,
-        skip,
-      });
-
-      return toPaginationResponseHelper(
-        postUserLikeRepo,
-        userLikePostList,
-        pageNo,
-        size
-      );
-    } catch (error) {
-      throw prismaError(error);
-    }
-  };
-
   return {
     likePost,
     unlikePost,
     getUserHasLikeByCurrentUser,
-    getAllUserLikeByCurrentUser,
   };
 };
 

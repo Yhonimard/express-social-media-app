@@ -158,7 +158,17 @@ const PostController = () => {
       return next(error);
     }
   };
-
+  const getAllPostHasLikedUser = async (req, res, next) => {
+    try {
+      const response = await postService.getAllPostHasLikedUser(
+        req.user,
+        req.query
+      );
+      res.json(response);
+    } catch (error) {
+      return next(error);
+    }
+  };
   return {
     createPost,
     getAllPost,
@@ -169,6 +179,7 @@ const PostController = () => {
     updatePostByUser,
     deletePostByUser,
     createPostByUser,
+    getAllPostHasLikedUser,
   };
 };
 

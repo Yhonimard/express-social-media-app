@@ -39,21 +39,10 @@ const PostLikeController = () => {
     }
   };
 
-  const getAllUserLikeByCurrentUser = async (req, res, next) => {
-    const { user, query } = req;
-    try {
-      const response = await postLikeService.getAllUserLikeByCurrentUser(user, query);
-      res.json(response);
-    } catch (error) {
-      return next(error);
-    }
-  };
-
   return {
     likePost,
     unlikePost,
     getUserHasLikeByCurrentUser,
-    getAllUserLikeByCurrentUser,
   };
 };
 

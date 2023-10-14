@@ -6,6 +6,7 @@ import ApiUnauthorizedError from "../exception/ApiUnauthorizedError";
 import prismaError from "../exception/prisma-error";
 import paginationHelper from "../helper/pagination.helper";
 import ApiErrorResponse from "../exception/ApiErrorResponse";
+import toPaginationResponseHelper from "../helper/to-pagination-response.helper";
 
 const PostService = () => {
   const postRepo = db.post;
@@ -364,6 +365,56 @@ const PostService = () => {
     }
   };
 
+  const getAllPostHasLikedUser = async (currentUser, query) => {
+    const { pageNo, size } = query;
+    try {
+      const { take, skip } = paginationHelper(pageNo, size);
+      const posts = await postRepo.findMany({
+        where: {
+          likesBy: {
+            some: {
+              user: {
+                id: currentUser.userId,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          image: true,
+          createdAt: true,
+          author: {
+            select: {
+              username: true,
+              photoProfile: true,
+              id: true,
+            },
+          },
+        },
+        take,
+        skip,
+      });
+
+      const postCount = await postRepo.count({
+        where: {
+          likesBy: {
+            some: {
+              user: {
+                id: currentUser.userId,
+              },
+            },
+          },
+        },
+      });
+
+      return toPaginationResponseHelper(postCount, posts, query);
+    } catch (error) {
+      throw prismaError(error);
+    }
+  };
+
   return {
     createPost,
     getAllPost,
@@ -374,6 +425,7 @@ const PostService = () => {
     updatePostByUser,
     deletePostByUser,
     createPostByUser,
+    getAllPostHasLikedUser,
   };
 };
 
