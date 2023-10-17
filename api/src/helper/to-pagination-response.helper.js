@@ -6,11 +6,11 @@ const toPaginationResponseHelper = async (dataCount, data, query) => {
   const isLast = parseInt(pageNo) === parseInt(totalPages);
 
   const mapperData = {
-    data,
     currentPageData,
     totalData,
     totalPages,
     isLast,
+    data,
   };
 
   return mapperData;

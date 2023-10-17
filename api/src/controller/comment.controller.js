@@ -51,8 +51,21 @@ const CommentController = () => {
   const deleteCommentByPostId = async (req, res, next) => {
     const { params, user } = req
     try {
+      const { error } = validation.updateCommentValidation.params.validate(params)
+      if (error) throw new ApiBadRequestError(error.message)
       const response = await commentService.deleteCommentByPostId(params.postId, params.commentId, user)
       res.json({ message: "success delete post", data: response })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const getCommentHasCommentedCurrentUser = async (req, res, next) => {
+    try {
+      const { error } = validation.getCommentHasCommentedCurrentUser.query.validate(req.query)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await commentService.getCommentHasCommentedCurrentUser(req.user, req.query)
+      res.json(response)
     } catch (error) {
       return next(error)
     }
@@ -61,7 +74,8 @@ const CommentController = () => {
     createComment,
     getCommentByPostId,
     updateCommentByPostId,
-    deleteCommentByPostId
+    deleteCommentByPostId,
+    getCommentHasCommentedCurrentUser
   }
 }
 export default CommentController

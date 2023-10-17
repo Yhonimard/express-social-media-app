@@ -17,7 +17,8 @@ import { useSearchParams } from "react-router-dom";
 import ProfileDetail from "./ProfileDetail";
 import ProfileEditComponent from "./profileEdit";
 import ProfilePostComponent from "./profilePost";
-import ProfileLikes from "./profileLikes";
+import ProfileLikes from "./profileLikes/ProfileLikes";
+import ProfileComment from "./profileComment/ProfileComment";
 
 const ProfileComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,9 +39,8 @@ const ProfileComponent = () => {
       <Flex justify={`flex-start`} mt={`xl`} direction={`column`} gap={20}>
         <Group>
           <Avatar
-            src={`${import.meta.env.VITE_API_BASE_URL}/${
-              currentUserData.photoProfile
-            }`}
+            src={`${import.meta.env.VITE_API_BASE_URL}/${currentUserData.photoProfile
+              }`}
             size={`xl`}
           />
           <Stack gap={0}>
@@ -53,7 +53,6 @@ const ProfileComponent = () => {
         </Box>
         <Box>
           <Tabs
-            defaultValue={tabsLocation || "post"}
             value={tabsLocation || "post"}
             onChange={(e) => setSearchParams({ tabs: e })}>
             <Tabs.List mb={20}>
@@ -76,7 +75,9 @@ const ProfileComponent = () => {
             <Tabs.Panel value="likes">
               <ProfileLikes />
             </Tabs.Panel>
-            <Tabs.Panel value="comment">comment</Tabs.Panel>
+            <Tabs.Panel value="comment">
+              <ProfileComment />
+            </Tabs.Panel>
             <Tabs.Panel value="friend">friend</Tabs.Panel>
           </Tabs>
         </Box>

@@ -28,7 +28,22 @@ const updateCommentValidation = {
   })
 }
 
+const deleteCommentValidation = {
+  params: Joi.object().keys({
+    commentId: Joi.string().uuid().required().empty().label("comment id")
+  })
+}
+
+const getCommentHasCommentedCurrentUser = {
+  query: Joi.object().keys({
+    pageNo: Joi.number().required().empty().label("page number of page"),
+    size: Joi.number().required().empty().label("size of page")
+  })
+}
+
 export default {
   createCommentValidation,
-  updateCommentValidation
+  updateCommentValidation,
+  deleteCommentValidation,
+  getCommentHasCommentedCurrentUser
 }

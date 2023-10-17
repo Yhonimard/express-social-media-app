@@ -6,6 +6,7 @@ import prismaError from "../exception/prisma-error"
 import paginationHelper from "../helper/pagination.helper"
 import ApiBadRequestError from "../exception/ApiBadRequestError"
 import ApiForbiddenError from "../exception/ApiForbiddenError"
+import toPaginationResponseHelper from "../helper/to-pagination-response.helper"
 
 const CommentService = () => {
   const userRepo = db.user
@@ -175,11 +176,52 @@ const CommentService = () => {
     }
   }
 
+  const getCommentHasCommentedCurrentUser = async (currentUser, query) => {
+    const { pageNo, size } = query
+    try {
+
+      const { take, skip } = paginationHelper(pageNo, size)
+
+      const comments = await commentRepo.findMany({
+        where: {
+          author: {
+            id: currentUser.userId
+          }
+        },
+        select: {
+          createdAt: true,
+          id: true,
+          post: {
+            select: {
+              id: true
+            }
+          },
+          title: true
+        },
+        take,
+        skip
+      })
+
+      const commentsCount = await commentRepo.count({
+        where: {
+          author: {
+            id: currentUser.userId
+          }
+        }
+      })
+            
+      return toPaginationResponseHelper(commentsCount, comments, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     createComment,
     getCommentByPostId,
     updateCommentByPostId,
-    deleteCommentByPostId
+    deleteCommentByPostId,
+    getCommentHasCommentedCurrentUser
   }
 }
 export default CommentService
