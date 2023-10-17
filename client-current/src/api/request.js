@@ -155,10 +155,17 @@ const unlikePostByCurrentUser = async (pid) => {
   return res.data;
 };
 
-const getCurrentUserLikes = async () => {
-  const res = await api.instance.request.get(`/user/like`);
-  return res.data;
-};
+
+const getPostHasLikeCurrentUser = async (query) => {
+  const { pageNo, size } = query
+  const res = await api.instance.request.get(`/user/post/like`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
 
 export default {
   login,
@@ -182,5 +189,5 @@ export default {
   getCurrentUserHasLike,
   likePostByCurrentUser,
   unlikePostByCurrentUser,
-  getCurrentUserLikes,
+  getPostHasLikeCurrentUser
 };

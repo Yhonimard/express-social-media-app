@@ -171,7 +171,7 @@ const PostService = () => {
       });
 
       if (process.env.NODE_ENV !== "dev")
-        fs.unlink(deletedPost.image, () => {});
+        fs.unlink(deletedPost.image, () => { });
 
       return deletedPost;
     } catch (error) {
@@ -365,7 +365,7 @@ const PostService = () => {
     }
   };
 
-  const getAllPostHasLikedUser = async (currentUser, query) => {
+  const getAllPostHasLikedCurrentUser = async (currentUser, query) => {
     const { pageNo, size } = query;
     try {
       const { take, skip } = paginationHelper(pageNo, size);
@@ -425,7 +425,7 @@ const PostService = () => {
     updatePostByUser,
     deletePostByUser,
     createPostByUser,
-    getAllPostHasLikedUser,
+    getAllPostHasLikedCurrentUser,
   };
 };
 

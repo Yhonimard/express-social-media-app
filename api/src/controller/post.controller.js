@@ -158,9 +158,9 @@ const PostController = () => {
       return next(error);
     }
   };
-  const getAllPostHasLikedUser = async (req, res, next) => {
+  const getAllPostHasLikedCurrentUser = async (req, res, next) => {
     try {
-      const response = await postService.getAllPostHasLikedUser(
+      const response = await postService.getAllPostHasLikedCurrentUser(
         req.user,
         req.query
       );
@@ -169,6 +169,8 @@ const PostController = () => {
       return next(error);
     }
   };
+
+
   return {
     createPost,
     getAllPost,
@@ -179,7 +181,7 @@ const PostController = () => {
     updatePostByUser,
     deletePostByUser,
     createPostByUser,
-    getAllPostHasLikedUser,
+    getAllPostHasLikedCurrentUser,
   };
 };
 

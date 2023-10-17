@@ -339,7 +339,39 @@ routes
 
 routes
   .route("/user/post/like")
-  .get(jwtVerify, postController.getAllPostHasLikedUser);
+  /**
+   * @swagger
+   * /api/v1/user/post/like:
+   *  get:
+   *    summary: get all post has like current user
+   *    tags: [Post]
+   *    description: api for get post has like current user
+   *    security:
+   *      - jwt-auth: []
+   *    parameters:
+   *      - in: query
+   *        name: pageNo
+   *        description: for get the number of page
+   *        schema:
+   *          type: number
+   *          example: 1
+   *      - in: query
+   *        name: size
+   *        description: for get the size of page
+   *        schema:
+   *          type: number
+   *          example: 4
+   *    responses:
+   *      200:
+   *        description: success get post has like user
+   *      401:
+   *        description: unauthorized
+   *      404:
+   *        description: post not found
+   *      500:
+   *        description: something went wrong
+   */
+  .get(jwtVerify, postController.getAllPostHasLikedCurrentUser);
 
 const postRoutes = routes;
 export default postRoutes;
