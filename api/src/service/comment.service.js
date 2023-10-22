@@ -199,7 +199,10 @@ const CommentService = () => {
           title: true
         },
         take,
-        skip
+        skip,
+        orderBy: {
+          createdAt: "desc"
+        }
       })
 
       const commentsCount = await commentRepo.count({
@@ -209,7 +212,7 @@ const CommentService = () => {
           }
         }
       })
-            
+
       return toPaginationResponseHelper(commentsCount, comments, query)
     } catch (error) {
       throw prismaError(error)

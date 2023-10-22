@@ -100,6 +100,17 @@ const createPostByUserValidation = {
   })
 }
 
+const getPostByAuthorId = {
+  params: Joi.object().keys({
+    uid: Joi.string().required().empty().uuid().label("user id"),
+  }),
+  query: Joi.object().keys({
+    pageNo: Joi.number().required().empty().label("page number"),
+    size: Joi.number().required().empty().label("size of page"),
+  }),
+
+}
+
 
 export default {
   createPostValidation,
@@ -108,5 +119,6 @@ export default {
   deletePostValidation,
   updatePostByUserValidation,
   deletePostByUserValidation,
-  createPostByUserValidation
+  createPostByUserValidation,
+  getPostByAuthorId
 }

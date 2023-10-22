@@ -1,4 +1,4 @@
-import { LoadingOverlay, SimpleGrid } from "@mantine/core"
+import { Button, LoadingOverlay, SimpleGrid } from "@mantine/core"
 import ProfileCommentCard from "./ProfileCommentCard"
 import useGetCommentHasCommentedCurrentUser from "@/features/comment/useGetCommentHasCommentedCurrentUser"
 import { useSelector } from "react-redux"
@@ -7,10 +7,8 @@ import moment from "moment"
 
 const ProfileComment = () => {
   const currentUser = useSelector(state => state.auth.user)
-  const { data: commentUserData, isLoading } = useGetCommentHasCommentedCurrentUser(currentUser.id)
+  const { data: commentUserData, isLoading, hasNextPage, fetchNextPage } = useGetCommentHasCommentedCurrentUser(currentUser.id)
   if (isLoading) return <LoadingOverlay visible />
-
-  console.log(commentUserData);
 
   return (
     <>
@@ -22,9 +20,10 @@ const ProfileComment = () => {
             ))}
           </Fragment>
         ))}
-        {/* <ProfileCommentCard /> */}
-        {/* <ProfileCommentCard /> */}
       </SimpleGrid>
+      {hasNextPage &&
+        <Button fullWidth my={30} bg={`gray`} onClick={fetchNextPage}>see more youre comment!!</Button>
+      }
     </>
   )
 }

@@ -415,6 +415,57 @@ const PostService = () => {
     }
   };
 
+  const getPostByAuthorId = async (params, query) => {
+    try {
+      const { uid } = params
+      await userRepo.findUniqueOrThrow({
+        where: {
+          id: uid
+        }
+      })
+
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+
+      const posts = await postRepo.findMany({
+        where: {
+          author: {
+            id: uid
+          }
+        },
+
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          image: true,
+          createdAt: true,
+          author: {
+            select: {
+              username: true,
+              photoProfile: true,
+              id: true,
+            },
+          },
+        },
+
+        skip,
+        take
+      })
+
+      const postCountsByUid = await postRepo.count({
+        where: {
+          author: {
+            id: uid
+          }
+        }
+      })
+
+      return toPaginationResponseHelper(postCountsByUid, posts, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     createPost,
     getAllPost,
@@ -426,6 +477,7 @@ const PostService = () => {
     deletePostByUser,
     createPostByUser,
     getAllPostHasLikedCurrentUser,
+    getPostByAuthorId
   };
 };
 

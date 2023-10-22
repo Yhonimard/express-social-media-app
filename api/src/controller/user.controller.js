@@ -14,7 +14,7 @@ const UserController = () => {
       const { error } = validation.getUserById.params.validate(params);
       if (error) throw new ApiBadRequestError(error.message);
       const response = await userService.getUserById(params?.userId);
-      res.json({ message: "success get user by id", data: response });
+      res.json(response);
     } catch (error) {
       return next(error);
     }

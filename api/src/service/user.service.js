@@ -5,6 +5,7 @@ import prismaError from "../exception/prisma-error";
 const UserService = () => {
   const userRepo = db.user;
   const userProfileRepo = db.profile;
+
   const getUserById = async (userId) => {
     try {
       const user = await userRepo.findUnique({
@@ -19,6 +20,7 @@ const UserService = () => {
           createdAt: true,
         },
       });
+
       if (!user) throw new ApiNotFoundError("user not found");
       return user;
     } catch (error) {
@@ -40,6 +42,7 @@ const UserService = () => {
           createdAt: true,
         },
       });
+      console.log('user', user)
       if (!user) throw new ApiNotFoundError("user not found");
       return user;
     } catch (error) {

@@ -86,9 +86,8 @@ export default function HeaderComponent() {
                 <ActionIcon radius={`xl`} variant="subtle" color="gray">
                   <Tooltip withArrow label={user.username}>
                     <Avatar
-                      src={`${import.meta.env.VITE_API_BASE_URL}/${
-                        user.photoProfile
-                      }`}
+                      src={`${import.meta.env.VITE_API_BASE_URL}/${user.photoProfile
+                        }`}
                       alt={user.username}
                       radius="xl"
                       size="sm"

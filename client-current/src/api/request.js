@@ -179,6 +179,23 @@ const getCommentHasCommentedCurrentUser = async (query) => {
 }
 
 
+const getPostByUserId = async (uid, query) => {
+  const { pageNo, size } = query
+  const res = await api.instance.request.get(`/user/${uid}/post`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
+const getUserDetail = async (uid) => {
+  const res = await api.instance.request.get(`/user/${uid}/detail`)
+  return res.data
+}
+
+
 
 export default {
   login,
@@ -203,5 +220,7 @@ export default {
   likePostByCurrentUser,
   unlikePostByCurrentUser,
   getPostHasLikeCurrentUser,
-  getCommentHasCommentedCurrentUser
+  getCommentHasCommentedCurrentUser,
+  getPostByUserId,
+  getUserDetail
 };

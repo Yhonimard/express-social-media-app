@@ -170,6 +170,19 @@ const PostController = () => {
     }
   };
 
+  const getPostByAuthorId = async (req, res, next) => {
+    try {
+      const { error: errParams } = validation.getPostByAuthorId.params.validate(req.params)
+
+      const { error: errQuery } = validation.getPostByAuthorId.query.validate(req.query)
+      if (errParams || errQuery) throw new ApiBadRequestError(errParams?.message || errQuery?.message)
+      const response = await postService.getPostByAuthorId(req.params, req.query)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
 
   return {
     createPost,
@@ -182,6 +195,7 @@ const PostController = () => {
     deletePostByUser,
     createPostByUser,
     getAllPostHasLikedCurrentUser,
+    getPostByAuthorId
   };
 };
 

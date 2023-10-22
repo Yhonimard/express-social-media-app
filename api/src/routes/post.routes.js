@@ -366,12 +366,17 @@ routes
    *        description: success get post has like user
    *      401:
    *        description: unauthorized
+   *      400:
+   *        description: validation error
    *      404:
    *        description: post not found
    *      500:
    *        description: something went wrong
    */
   .get(jwtVerify, postController.getAllPostHasLikedCurrentUser);
+
+
+routes.route(`/user/:uid/post`).get(postController.getPostByAuthorId)
 
 const postRoutes = routes;
 export default postRoutes;

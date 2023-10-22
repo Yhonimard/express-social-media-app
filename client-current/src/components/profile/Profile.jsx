@@ -24,8 +24,8 @@ const ProfileComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabsLocation = searchParams.get("tabs");
 
-  const { data: currentUserData, isLoading: isLoadingGetCurrUser } =
-    useGetCurrentUser();
+  const { data: currentUserData, isLoading: isLoadingGetCurrUser } = useGetCurrentUser();
+
 
   const currentUser = useSelector((state) => state.auth.user);
   const { data: currentUserProfileData, isLoading: isLoadingFetchUserProfile } =
@@ -39,7 +39,7 @@ const ProfileComponent = () => {
       <Flex justify={`flex-start`} mt={`xl`} direction={`column`} gap={20}>
         <Group>
           <Avatar
-            src={`${import.meta.env.VITE_API_BASE_URL}/${currentUserData.photoProfile
+            src={`${import.meta.env.VITE_API_BASE_URL}/${currentUserData?.photoProfile
               }`}
             size={`xl`}
           />

@@ -16,7 +16,7 @@ const userController = UserController()
 routes.route("/user/:userId/detail")
   /**
      * @swagger
-     * /api/v1/user/{userId/detail}:
+     * /api/v1/user/{userId}/detail:
      *  get:
      *    summary: get user detail
      *    tags: [User]

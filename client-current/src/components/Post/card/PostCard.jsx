@@ -69,6 +69,7 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
   const { mutate: updatePost } = useUpdatePost(postId);
   const { data: commentsData, isSuccess: isSuccessFetchComment } =
     useGetListCommentByPostId(postId, { size: 1 });
+    
   const { mutate: deletePost } = useDeletePost(false, postId);
 
   const currentUser = useSelector((state) => state.auth.user);

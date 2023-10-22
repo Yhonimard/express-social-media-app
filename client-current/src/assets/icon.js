@@ -1,6 +1,14 @@
-import { Favorite, ArrowForward } from "@mui/icons-material";
+import {
+  Favorite, ArrowForward,
+  Delete,
+  Edit,
+  MoreVert,
+} from "@mui/icons-material";
 
 export default {
   Favorite,
-  ArrowForward
+  ArrowForward,
+  Edit,
+  MoreVert,
+  Delete
 }
