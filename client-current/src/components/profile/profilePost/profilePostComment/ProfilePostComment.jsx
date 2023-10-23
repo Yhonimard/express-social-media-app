@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 const ProfilePostCommentComponent = ({
   author,
@@ -19,6 +20,8 @@ const ProfilePostCommentComponent = ({
   postId,
 }) => {
   const currentUser = useSelector((state) => state.auth.user);
+
+
 
   return (
     <>

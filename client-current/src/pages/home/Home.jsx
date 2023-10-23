@@ -1,7 +1,7 @@
 import post from "@/components/Post";
 import useGetAllPost from "@/features/post/useGetAllPost";
 import globalReducer from "@/redux/globalReducer";
-import { Button, Container, Stack } from "@mantine/core";
+import { Button, Container, LoadingOverlay, SimpleGrid, Stack } from "@mantine/core";
 import { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -14,41 +14,35 @@ const HomePage = () => {
     hasNextPage,
     isSuccess,
   } = useGetAllPost();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (isFetchingNextPage || isLoading)
-      dispatch(globalReducer.action.showLoadingOverlay(true));
-    if (!isFetchingNextPage || !isLoading)
-      dispatch(globalReducer.action.showLoadingOverlay(false));
-  }, [isFetchingNextPage, isLoading, dispatch]);
+
+  if (isLoading) return <LoadingOverlay visible />
 
   return (
     <Container>
-      <Stack gap={`sm`}>
+      <SimpleGrid cols={1}>
         {isSuccess &&
-          postDatas.pages.map((pages) => {
-            return (
-              isSuccess &&
-              pages.data.map((p) => {
-                return (
-                  <Fragment key={p.id}>
-                    <post.card {...p} postId={p.id} />
-                  </Fragment>
-                );
-              })
-            );
-          })}
-        <Button
-          my={100}
-          onClick={fetchNextPage}
-          style={{
-            visibility:
-              hasNextPage && !isFetchingNextPage ? "visible" : "hidden",
-          }}
-        >
-          Load More
-        </Button>
-      </Stack>
+          postDatas.pages.map((pages, i) => (
+            <Fragment key={i}>
+              {pages.data.map((p) => (
+                <Fragment key={p.id}>
+                  <post.card {...p} postId={p.id} />
+                </Fragment>
+              ))}
+            </Fragment>
+          ))}
+      </SimpleGrid>
+      <Button
+        my={20}
+        fullWidth
+        onClick={fetchNextPage}
+        color="gray"
+        style={{
+          visibility:
+            hasNextPage && !isFetchingNextPage ? "visible" : "hidden",
+        }}
+      >
+        Load More
+      </Button>
       <post.create />
     </Container>
   );

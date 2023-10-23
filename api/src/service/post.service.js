@@ -6,6 +6,7 @@ import ApiUnauthorizedError from "../exception/ApiUnauthorizedError";
 import prismaError from "../exception/prisma-error";
 import paginationHelper from "../helper/pagination.helper";
 import ApiErrorResponse from "../exception/ApiErrorResponse";
+import toPaginationResponseHelper from "../helper/to-pagination-response.helper";
 
 const PostService = () => {
   const postRepo = db.post;
@@ -81,11 +82,11 @@ const PostService = () => {
             },
           },
         },
+        skip,
+        take,
         orderBy: {
           createdAt: "desc",
         },
-        skip,
-        take,
       });
 
       const totalData = await postRepo.count();
@@ -170,7 +171,7 @@ const PostService = () => {
       });
 
       if (process.env.NODE_ENV !== "dev")
-        fs.unlink(deletedPost.image, () => {});
+        fs.unlink(deletedPost.image, () => { });
 
       return deletedPost;
     } catch (error) {
@@ -229,6 +230,9 @@ const PostService = () => {
         },
         skip,
         take,
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
       const totalData = await postRepo.count({
@@ -361,6 +365,107 @@ const PostService = () => {
     }
   };
 
+  const getAllPostHasLikedCurrentUser = async (currentUser, query) => {
+    const { pageNo, size } = query;
+    try {
+      const { take, skip } = paginationHelper(pageNo, size);
+      const posts = await postRepo.findMany({
+        where: {
+          likesBy: {
+            some: {
+              user: {
+                id: currentUser.userId,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          image: true,
+          createdAt: true,
+          author: {
+            select: {
+              username: true,
+              photoProfile: true,
+              id: true,
+            },
+          },
+        },
+        take,
+        skip,
+      });
+
+      const postCount = await postRepo.count({
+        where: {
+          likesBy: {
+            some: {
+              user: {
+                id: currentUser.userId,
+              },
+            },
+          },
+        },
+      });
+
+      return toPaginationResponseHelper(postCount, posts, query);
+    } catch (error) {
+      throw prismaError(error);
+    }
+  };
+
+  const getPostByAuthorId = async (params, query) => {
+    try {
+      const { uid } = params
+      await userRepo.findUniqueOrThrow({
+        where: {
+          id: uid
+        }
+      })
+
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+
+      const posts = await postRepo.findMany({
+        where: {
+          author: {
+            id: uid
+          }
+        },
+
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          image: true,
+          createdAt: true,
+          author: {
+            select: {
+              username: true,
+              photoProfile: true,
+              id: true,
+            },
+          },
+        },
+
+        skip,
+        take
+      })
+
+      const postCountsByUid = await postRepo.count({
+        where: {
+          author: {
+            id: uid
+          }
+        }
+      })
+
+      return toPaginationResponseHelper(postCountsByUid, posts, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     createPost,
     getAllPost,
@@ -371,6 +476,8 @@ const PostService = () => {
     updatePostByUser,
     deletePostByUser,
     createPostByUser,
+    getAllPostHasLikedCurrentUser,
+    getPostByAuthorId
   };
 };
 

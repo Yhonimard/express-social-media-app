@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 const PostCardActionComponent = ({ postId }) => {
   const { id: userId } = useSelector((state) => state.auth.user);
   const { data: userHasLike } = useGetCurrentUserHasLike(postId, userId);
-
   const likeOrUnlike = () => {
     const hasLike = userHasLike?.hasLike;
     if (hasLike) unlikePost(null);

@@ -20,13 +20,14 @@ const updateProfile = {
   })
 }
 
-const getUserByUserId = {
+const getUserProfileByUserId = {
   params: Joi.object().keys({
-    uid: Joi.string().uuid().required().label("user id")
+    uid: Joi.string().uuid().required().empty().label("user id"),
   })
 }
 
 export default {
   getUserById,
-  updateProfile
+  updateProfile,
+  getUserProfileByUserId
 }

@@ -180,8 +180,42 @@ routes.route("/post/:postId/comment/:commentId")
   .delete(jwtVerify, commentController.deleteCommentByPostId)
 
 
-
-
+routes.route("/user/comment")
+  /**
+      * @swagger
+      * /api/v1/user/comment:
+      *  get:
+      *    summary: get comment by post id
+      *    tags: [Comment]
+      *    description: api for get comment has commented user in post
+      *    security:
+      *     - jwt-auth: []
+      *    parameters:
+      *     - in: query 
+      *       name: pageNo 
+      *       description: for get the number of page
+      *       required: true
+      *       schema:
+      *         type: number 
+      *         example: 1
+      *     - in: query 
+      *       name: size 
+      *       description: for get size of page
+      *       required: true
+      *       schema:
+      *         type: number 
+      *         example: 1
+      *    responses:
+      *      200:
+      *        description: success get comment has commented user in post
+      *      404:
+      *        description: comment not found
+      *      401:
+      *        description: Unauthorized
+      *      500:
+      *        description: something went wrong
+      */
+  .get(jwtVerify, commentController.getCommentHasCommentedCurrentUser)
 
 
 const commentRoutes = routes

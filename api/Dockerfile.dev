@@ -1,0 +1,11 @@
+FROM node:lts-alpine
+ARG PORT=80
+WORKDIR /app
+COPY package* .
+RUN npm install
+COPY . .
+ENV DB_URL=postgresql://yhoni:yhoni@pg-local/sosmed_ct-dev
+ENV JWT_KEY=secret
+ENV PORT=${PORT}
+EXPOSE ${PORT}
+CMD ["npm", "run", "start:container:dev"]

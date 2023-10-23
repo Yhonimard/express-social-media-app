@@ -16,7 +16,7 @@ const userController = UserController()
 routes.route("/user/:userId/detail")
   /**
      * @swagger
-     * /api/v1/user/{userId/detail}:
+     * /api/v1/user/{userId}/detail:
      *  get:
      *    summary: get user detail
      *    tags: [User]
@@ -99,10 +99,14 @@ routes.route("/user/profile")
      *            properties:
      *              bio:
      *                type: string
+     *                example: i like a cat
      *              birthday:
      *                type: string
      *                format: date
-     *                example: 21-03-2004
+     *                example: 2017-07-21T17:32:28Z
+     *              phone:
+     *                type: string
+     *                example: 6285694555246
      *    security:
      *      - jwt-auth: []
      *    responses:
@@ -116,6 +120,8 @@ routes.route("/user/profile")
      *        description: something went wrong
      */
   .patch(jwtVerify, userController.updateProfile)
+
+routes.route("/user/:uid/profile").get(userController.getUserProfileByUserId)
 
 const userRoutes = routes
 export default userRoutes

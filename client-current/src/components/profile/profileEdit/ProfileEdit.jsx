@@ -28,23 +28,24 @@ const ProfileEditComponent = ({ currentUserProfile }) => {
     editProfileFormik.setValues({
       bio: data?.bio || "",
       birthday: new Date(data.birthday) || new Date(2004, 2, 20),
-      phone: data.phone
-    })
-    toggleModal()
-  }
-
+      phone: data.phone,
+    });
+    toggleModal();
+  };
 
   return (
     <>
-      <Button fullWidth onClick={() => toggleModalHandler(currentUserProfile)} color="gray">
+      <Button
+        fullWidth
+        onClick={() => toggleModalHandler(currentUserProfile)}
+        color="gray">
         edit profile
       </Button>
       <Modal
         opened={openedModal}
         centered
         onClose={toggleModal}
-        title="update your profile"
-      >
+        title="update your profile">
         <form onSubmit={editProfileFormik.handleSubmit}>
           <Stack>
             <TextInput
@@ -68,7 +69,9 @@ const ProfileEditComponent = ({ currentUserProfile }) => {
               prefix="+"
               name="phone"
               min={10}
-              onChange={(e) => editProfileFormik.setFieldValue("phone", parseInt(e))}
+              onChange={(e) =>
+                editProfileFormik.setFieldValue("phone", parseInt(e))
+              }
               value={editProfileFormik.values.phone}
             />
             <Button color="gray" type="submit">

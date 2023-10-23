@@ -16,13 +16,24 @@ import { useDisclosure } from "@mantine/hooks";
 import classes from "./Header.module.css";
 import HeaderDrawerComponent from "./headerDrawer";
 import { useSelector } from "react-redux";
-import { Favorite as IconFavorite, Search as IconSearch, Star as IconStar, Message as IconMessage, Settings as IconSettings, SwapHoriz as IconSwapHoriz, Logout as IconLogout, Pause as IconPlayerPause, Delete as IconDelete } from "@mui/icons-material"
-
+import {
+  Favorite as IconFavorite,
+  Search as IconSearch,
+  Star as IconStar,
+  Message as IconMessage,
+  Settings as IconSettings,
+  SwapHoriz as IconSwapHoriz,
+  Logout as IconLogout,
+  Pause as IconPlayerPause,
+  Delete as IconDelete,
+} from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export default function HeaderComponent() {
   const theme = useMantineTheme();
-  const [openedDrawer, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure();
-  const user = useSelector(state => state.auth.user)
+  const [openedDrawer, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure();
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <div>
@@ -58,8 +69,7 @@ export default function HeaderComponent() {
                   size={32}
                   radius="xl"
                   color={theme.primaryColor}
-                  variant="filled"
-                >
+                  variant="filled">
                   <IconSearch
                     style={{ width: rem(18), height: rem(18) }}
                     stroke={1.5}
@@ -71,13 +81,13 @@ export default function HeaderComponent() {
               width={260}
               position="bottom-end"
               transitionProps={{ transition: "pop-top-right" }}
-              withinPortal
-            >
+              withinPortal>
               <Menu.Target>
                 <ActionIcon radius={`xl`} variant="subtle" color="gray">
                   <Tooltip withArrow label={user.username}>
                     <Avatar
-                      src={`${import.meta.env.VITE_API_BASE_URL}/${user.photoProfile}`}
+                      src={`${import.meta.env.VITE_API_BASE_URL}/${user.photoProfile
+                        }`}
                       alt={user.username}
                       radius="xl"
                       size="sm"
@@ -88,37 +98,41 @@ export default function HeaderComponent() {
 
               <Menu.Dropdown>
                 <Menu.Item
+                  component={Link}
+                  to={`/profile?tabs=likes`}
                   leftSection={
                     <IconFavorite
                       style={{ width: rem(16), height: rem(16) }}
                       color={theme.colors.red[6]}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Liked posts
                 </Menu.Item>
 
                 <Menu.Item
+                  component={Link}
+                  to={`/profile?tabs=saved_post`}
                   leftSection={
                     <IconStar
                       style={{ width: rem(16), height: rem(16) }}
                       color={theme.colors.yellow[6]}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Saved posts
                 </Menu.Item>
+
                 <Menu.Item
+                  component={Link}
+                  to={`/profile?tabs=comment`}
                   leftSection={
                     <IconMessage
                       style={{ width: rem(16), height: rem(16) }}
                       color={theme.colors.blue[6]}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Your comments
                 </Menu.Item>
                 <Menu.Label>Settings</Menu.Label>
@@ -128,8 +142,7 @@ export default function HeaderComponent() {
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Account settings
                 </Menu.Item>
                 <Menu.Item
@@ -138,8 +151,7 @@ export default function HeaderComponent() {
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Change account
                 </Menu.Item>
                 <Menu.Item
@@ -148,8 +160,7 @@ export default function HeaderComponent() {
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Logout
                 </Menu.Item>
                 <Menu.Divider />
@@ -160,8 +171,7 @@ export default function HeaderComponent() {
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Pause subscription
                 </Menu.Item>
                 <Menu.Item
@@ -171,8 +181,7 @@ export default function HeaderComponent() {
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
-                  }
-                >
+                  }>
                   Delete account
                 </Menu.Item>
               </Menu.Dropdown>

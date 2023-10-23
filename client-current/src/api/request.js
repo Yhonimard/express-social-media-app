@@ -72,7 +72,6 @@ const createCommentByPostId = async (postId, data) => {
   return res.data;
 };
 
-
 const updateComment = async (postId, commentId, data) => {
   const res = await api.instance.request.patch(
     `/post/${postId}/comment/${commentId}`,
@@ -133,7 +132,11 @@ const getCurrentUserProfile = async () => {
 };
 
 const updateCurrentUserProfile = async (data) => {
-  const res = await api.instance.request.patch(`/user/profile`, data);
+  const mappedData = {
+    ...data,
+    phone: String(data.phone),
+  };
+  const res = await api.instance.request.patch(`/user/profile`, mappedData);
   return res.data;
 };
 
@@ -151,6 +154,55 @@ const unlikePostByCurrentUser = async (pid) => {
   const res = await api.instance.request.delete(`/post/${pid}/like`);
   return res.data;
 };
+
+
+const getPostHasLikeCurrentUser = async (query) => {
+  const { pageNo, size } = query
+  const res = await api.instance.request.get(`/user/post/like`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
+const getCommentHasCommentedCurrentUser = async (query) => {
+  const { pageNo, size } = query
+  const res = await api.instance.request.get(`/user/comment`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
+
+const getPostByUserId = async (uid, query) => {
+  const { pageNo, size } = query
+  const res = await api.instance.request.get(`/user/${uid}/post`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
+const getUserDetail = async (uid) => {
+  const res = await api.instance.request.get(`/user/${uid}/detail`)
+  return res.data
+}
+
+
+const getUserProfileByUserId = async (uid) => {
+  console.log('uid', uid)
+  const res = await api.instance.request.get(`/user/${uid}/profile`)
+  return res.data
+}
+
+
 
 export default {
   login,
@@ -173,5 +225,10 @@ export default {
   updateCurrentUserProfile,
   getCurrentUserHasLike,
   likePostByCurrentUser,
-  unlikePostByCurrentUser
+  unlikePostByCurrentUser,
+  getPostHasLikeCurrentUser,
+  getCommentHasCommentedCurrentUser,
+  getPostByUserId,
+  getUserDetail,
+  getUserProfileByUserId
 };
