@@ -57,11 +57,24 @@ const UserController = () => {
     }
   };
 
+  const getUserProfileByUserId = async (req, res, next) => {
+    try {
+      const err = validation.getUserProfileByUserId.params.validate(req.params)
+      // console.log(err);
+
+      const response = await userService.getUserProfileByUserId(req.params)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
   return {
     getUserById,
     getUserCurrent,
     updateProfile,
     getUserProfile,
+    getUserProfileByUserId
   };
 };
 

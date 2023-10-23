@@ -196,6 +196,13 @@ const getUserDetail = async (uid) => {
 }
 
 
+const getUserProfileByUserId = async (uid) => {
+  console.log('uid', uid)
+  const res = await api.instance.request.get(`/user/${uid}/profile`)
+  return res.data
+}
+
+
 
 export default {
   login,
@@ -222,5 +229,6 @@ export default {
   getPostHasLikeCurrentUser,
   getCommentHasCommentedCurrentUser,
   getPostByUserId,
-  getUserDetail
+  getUserDetail,
+  getUserProfileByUserId
 };

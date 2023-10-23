@@ -9,6 +9,7 @@ import {
   FileButton,
   Group,
   Paper,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
@@ -21,9 +22,10 @@ import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import classes from "./ProfilePost.module.css";
 import ProfilePostCardComponent from "./profilePostCard";
+import { Fragment } from "react";
 
 const ProfilePost = () => {
-  
+
   const {
     data: postUserData,
     isSuccess: isSuccessFetchPost,
@@ -108,30 +110,32 @@ const ProfilePost = () => {
         </form>
       </Paper>
       <Divider my={`xs`} />
-      {isSuccessFetchPost &&
-        postUserData.pages.map((p, i) => (
-          <Stack key={i} gap={`sm`}>
-            {p.data.length < 1 && <Center h={`100%`}>no post here</Center>}
-            {p.data.map((data) => (
-              <ProfilePostCardComponent
-                key={data.id}
-                postId={data.id}
-                author={data.author}
-                content={data.content}
-                createdAt={data.createdAt}
-                image={data.image}
-                title={data.title}
-              />
-            ))}
-          </Stack>
-        ))}
+      <SimpleGrid cols={1}>
+        {isSuccessFetchPost &&
+          postUserData.pages.map((p, i) => (
+            <Fragment key={i} gap={`sm`}>
+              {p.data.length < 1 && <Center h={`100%`}>no post here</Center>}
+              {p.data.map((data) => (
+                <ProfilePostCardComponent
+                  key={data.id}
+                  postId={data.id}
+                  author={data.author}
+                  content={data.content}
+                  createdAt={data.createdAt}
+                  image={data.image}
+                  title={data.title}
+                />
+              ))}
+            </Fragment>
+          ))}
+      </SimpleGrid>
       <Button
         onClick={fetchNextPage}
         style={{ visibility: hasNextPage ? "visible" : "hidden" }}
         fullWidth
         color="gray"
         variant="filled"
-        my={50}>
+        my={20}>
         see more your post
       </Button>
     </>

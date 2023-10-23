@@ -69,11 +69,15 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
   const { mutate: updatePost } = useUpdatePost(postId);
   const { data: commentsData, isSuccess: isSuccessFetchComment } =
     useGetListCommentByPostId(postId, { size: 1 });
-    
+
   const { mutate: deletePost } = useDeletePost(false, postId);
 
   const currentUser = useSelector((state) => state.auth.user);
 
+  const navigateToUserDetailOrProfile = (uid) => {
+    if (currentUser.id === uid) navigate("/profile")
+    if (currentUser.id !== uid) navigate(`/user/${uid}`)
+  }
   return (
     <>
       <Card>
@@ -87,12 +91,12 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
                 size={`xl`}>
                 <Tooltip withArrow label={author.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      author.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${author.photoProfile
+                      }`}
                     alt={author.username}
                     radius="xl"
                     size="md"
+                    onClick={() => navigateToUserDetailOrProfile(author.id)}
                   />
                 </Tooltip>
               </ActionIcon>

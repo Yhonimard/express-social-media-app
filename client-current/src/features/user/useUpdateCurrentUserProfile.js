@@ -1,5 +1,5 @@
 import api from "@/api";
-import { GET_USER_PROFILE_NAME } from "@/fixtures/api-query";
+import { GET_CURRENT_USER_PROFILE_NAME } from "@/fixtures/api-query";
 import globalReducer from "@/redux/globalReducer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
@@ -15,10 +15,10 @@ const useUpdateCurrentUserProfile = (uid) => {
     {
       onMutate: async (newData) => {
         dispatch(globalReducer.action.showLoadingOverlay(true));
-        await queryClient.cancelQueries([GET_USER_PROFILE_NAME, uid]);
-        const prevData = queryClient.getQueryData([GET_USER_PROFILE_NAME, uid]);
+        await queryClient.cancelQueries([GET_CURRENT_USER_PROFILE_NAME, uid]);
+        const prevData = queryClient.getQueryData([GET_CURRENT_USER_PROFILE_NAME, uid]);
 
-        queryClient.setQueryData([GET_USER_PROFILE_NAME, uid], (oldData) => {
+        queryClient.setQueryData([GET_CURRENT_USER_PROFILE_NAME, uid], (oldData) => {
           return {
             ...oldData,
             bio: newData.bio,
@@ -34,7 +34,7 @@ const useUpdateCurrentUserProfile = (uid) => {
       onError: (err, _var, context) => {
         const message = err?.response?.data?.message;
         queryClient.setQueryData(
-          [GET_USER_PROFILE_NAME, uid],
+          [GET_CURRENT_USER_PROFILE_NAME, uid],
           context.prevData
         );
         dispatch(
@@ -46,7 +46,7 @@ const useUpdateCurrentUserProfile = (uid) => {
         dispatch(globalReducer.action.showLoadingOverlay(false));
       },
       onSettled: () => {
-        queryClient.invalidateQueries([GET_USER_PROFILE_NAME, uid]);
+        queryClient.invalidateQueries([GET_CURRENT_USER_PROFILE_NAME, uid]);
       },
       onSuccess: () => {
         dispatch(

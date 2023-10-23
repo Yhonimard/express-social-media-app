@@ -3,6 +3,9 @@ import {
   Delete,
   Edit,
   MoreVert,
+  Cake,
+  ContactPhone,
+  StickyNote2
 } from "@mui/icons-material";
 
 export default {
@@ -10,5 +13,8 @@ export default {
   ArrowForward,
   Edit,
   MoreVert,
-  Delete
+  Delete,
+  Cake,
+  ContactPhone,
+  StickyNote2
 }

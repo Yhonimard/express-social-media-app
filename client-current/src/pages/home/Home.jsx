@@ -1,7 +1,7 @@
 import post from "@/components/Post";
 import useGetAllPost from "@/features/post/useGetAllPost";
 import globalReducer from "@/redux/globalReducer";
-import { Button, Container, LoadingOverlay, Stack } from "@mantine/core";
+import { Button, Container, LoadingOverlay, SimpleGrid, Stack } from "@mantine/core";
 import { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -19,7 +19,7 @@ const HomePage = () => {
 
   return (
     <Container>
-      <Stack gap={`sm`}>
+      <SimpleGrid cols={1}>
         {isSuccess &&
           postDatas.pages.map((pages, i) => (
             <Fragment key={i}>
@@ -30,17 +30,19 @@ const HomePage = () => {
               ))}
             </Fragment>
           ))}
-        <Button
-          my={100}
-          onClick={fetchNextPage}
-          style={{
-            visibility:
-              hasNextPage && !isFetchingNextPage ? "visible" : "hidden",
-          }}
-        >
-          Load More
-        </Button>
-      </Stack>
+      </SimpleGrid>
+      <Button
+        my={20}
+        fullWidth
+        onClick={fetchNextPage}
+        color="gray"
+        style={{
+          visibility:
+            hasNextPage && !isFetchingNextPage ? "visible" : "hidden",
+        }}
+      >
+        Load More
+      </Button>
       <post.create />
     </Container>
   );

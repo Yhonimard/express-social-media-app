@@ -121,5 +121,7 @@ routes.route("/user/profile")
      */
   .patch(jwtVerify, userController.updateProfile)
 
+routes.route("/user/:uid/profile").get(userController.getUserProfileByUserId)
+
 const userRoutes = routes
 export default userRoutes

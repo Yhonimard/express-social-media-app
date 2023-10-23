@@ -1,21 +1,20 @@
 import {
   Avatar,
   Box,
-  Divider,
+  Container,
   Flex,
   Group,
   LoadingOverlay,
-  SimpleGrid,
   Stack,
   Tabs,
   Text,
-  Container,
   Title
 } from "@mantine/core";
 
+import UserDetailPost from "@/components/userDetail/UserDetailPost";
+import UserDetailProfile from "@/components/userDetail/userDetailProfile";
 import useGetUserDetail from "@/features/user/useGetUserDetail";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
-import UserDetailPost from "@/components/userDetail/UserDetailPost";
 
 const UserDetailPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,7 +58,7 @@ const UserDetailPage = () => {
               <UserDetailPost params={params} />
             </Tabs.Panel>
             <Tabs.Panel value="profile">
-              profile
+              <UserDetailProfile userId={params.uid} />
             </Tabs.Panel>
           </Tabs>
         </Box>

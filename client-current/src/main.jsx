@@ -13,7 +13,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 const queryClient = new QueryClient({});
 
-console.log(import.meta.env);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient} >
     <Provider store={redux.store} >

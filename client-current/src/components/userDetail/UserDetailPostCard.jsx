@@ -34,8 +34,8 @@ const UserDetailPostCard = ({
 }) => {
   const navigate = useNavigate()
 
-  // const { data: commentsData, isLoading } = useGetListCommentByPostId(postId, { size: 1 });
-  // if (isLoading) return <LoadingOverlay visible />
+  const { data: commentsData, isLoading } = useGetListCommentByPostId(postId, { size: 1 });
+  if (isLoading) return <LoadingOverlay visible />
 
 
   return (
@@ -91,9 +91,9 @@ const UserDetailPostCard = ({
       <CommentFormComponent postId={postId} />
       <Divider mt={`md`} />
       <CardSection inheritPadding>
-        {/* {commentsData?.pages?.map((p) => {
+        {commentsData?.pages?.map((p, i) => {
           return (
-            <Fragment key={p.data}>
+            <Fragment key={i}>
               {p.data.length < 1 && <CommentNotFoundComponent />}
               {p.data.length > 0 &&
                 p?.data?.map((c) => (
@@ -108,7 +108,7 @@ const UserDetailPostCard = ({
                 ))}
             </Fragment>
           );
-        })} */}
+        })}
       </CardSection>
     </Card>
 

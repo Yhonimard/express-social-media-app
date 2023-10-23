@@ -42,7 +42,6 @@ const UserService = () => {
           createdAt: true,
         },
       });
-      console.log('user', user)
       if (!user) throw new ApiNotFoundError("user not found");
       return user;
     } catch (error) {
@@ -111,11 +110,32 @@ const UserService = () => {
     }
   };
 
+  const getUserProfileByUserId = async (params) => {
+    try {
+      const { uid } = params
+      const userProfile = await userProfileRepo.findFirstOrThrow({
+        where: {
+          user: {
+            id: uid
+          }
+        }
+      })
+      const mapperUserProfile = {
+        ...userProfile,
+        phone: parseInt(userProfile.phone)
+      }
+      return mapperUserProfile
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     getUserById,
     getUserCurrent,
     updateProfile,
     getUserProfile,
+    getUserProfileByUserId
   };
 };
 export default UserService;
