@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   db:
-    container_name: sosmed-db
+    container_name: sosmed_db
     image: postgres:alpine
     environment:
       - POSTGRES_USER=${PG_USER}
@@ -14,7 +14,7 @@ services:
       - web
 
   api:
-    container_name: sosmed-api
+    container_name: sosmed_api
     build: api
     depends_on:
       - db
@@ -29,7 +29,7 @@ services:
       - ${API_CT_PORT}
 
   client:
-    container_name: sosmed-client
+    container_name: sosmed_nginx
     build:
       context: client-current/
       args:
@@ -47,6 +47,5 @@ services:
 
 networks:
   sosmed_networks:
-
   web:
     external: true
