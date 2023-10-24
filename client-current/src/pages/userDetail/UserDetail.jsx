@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 
 import UserDetailPost from "@/components/userDetail/UserDetailPost";
-import UserDetailProfile from "@/components/userDetail/userDetailProfile";
+import UserDetailProfile from "@/components/userDetail/UserDetailProfile";
 import useGetUserDetail from "@/features/user/useGetUserDetail";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import useGetUserHasFollow from "@/features/friend/useGetUserHasFollow";
