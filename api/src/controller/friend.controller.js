@@ -7,7 +7,7 @@ const FriendController = () => {
   const friendService = FriendService()
   const validation = friendValidation
 
-  const addFriend = async (req, res, next) => {
+  const followFriend = async (req, res, next) => {
     const { params, user } = req
     const currentUser = user
     try {
@@ -59,11 +59,23 @@ const FriendController = () => {
     }
   }
 
+  const getUserHasLikeByCurrentUser = async (req, res, next) => {
+    try {
+      const { error } = validation.getUserHasFollow.params.validate(req.params)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await friendService.getUserHasLikeByCurrentUser(req.user, req.params)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
   return {
-    addFriend,
+    followFriend,
     confirmFriend,
     unconfirmFriend,
-    unfriend
+    unfriend,
+    getUserHasLikeByCurrentUser
   }
 
 }

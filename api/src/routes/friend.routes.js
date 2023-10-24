@@ -37,7 +37,7 @@ routes.route("/friend/:receiverId/add-friend")
      *      500:
      *        description: something went wrong
      */
-  .post(jwtVerify, friendController.addFriend)
+  .post(jwtVerify, friendController.followFriend)
 
 routes.route("/friend/:senderId/confirm-friend")
   /**
@@ -128,6 +128,35 @@ routes.route("/friend/:receiverId/unfriend")
      *        description: something went wrong
      */
   .delete(jwtVerify, friendController.unfriend)
+
+routes.route("/friend/:receiverId")
+  /**
+      * @swagger
+      * /api/v1/friend/{receiverId}:
+      *  delete:
+      *    summary: get user has follow
+      *    tags: [Friend]
+      *    description: api for get user has follow
+      *    security:
+      *      - jwt-auth: []
+      *    parameters:
+      *     - in: path
+      *       name: receiverId
+      *       description: user who you added to friend
+      *    responses:
+      *      200:
+      *        description: success 
+      *      401:
+      *        description: Unauthorized
+      *      400:
+      *        description: params validation error / you cant unfriend yourself
+      *      404:
+      *        description: user not found / friendship not found
+      *      500:
+      *        description: something went wrong
+      */
+  .get(jwtVerify, friendController.getUserHasLikeByCurrentUser)
+
 
 const friendRoutes = routes
 export default friendRoutes

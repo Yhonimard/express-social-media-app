@@ -197,11 +197,15 @@ const getUserDetail = async (uid) => {
 
 
 const getUserProfileByUserId = async (uid) => {
-  console.log('uid', uid)
   const res = await api.instance.request.get(`/user/${uid}/profile`)
   return res.data
 }
 
+
+const getUserHasFollow = async (receiverId) => {
+  const res = await api.instance.request.get(`/friend/${receiverId}`)
+  return res.data
+}
 
 
 export default {
@@ -230,5 +234,6 @@ export default {
   getCommentHasCommentedCurrentUser,
   getPostByUserId,
   getUserDetail,
-  getUserProfileByUserId
+  getUserProfileByUserId,
+  getUserHasFollow
 };

@@ -10,7 +10,7 @@ const FriendService = () => {
   const userRepo = db.user
   const userFriendRepo = db.userFriend
 
-  const addFriend = async (receiverId, currentUser) => {
+  const followUser = async (receiverId, currentUser) => {
     const senderId = currentUser?.userId
     try {
       if (senderId === receiverId) throw new ApiBadRequestError("you cannot send friend request to yourself")
@@ -165,11 +165,30 @@ const FriendService = () => {
     }
   }
 
+  const getUserHasLikeByCurrentUser = async (currentUser, params) => {
+    try {
+      const { receiverId } = params
+      const response = await userFriendRepo.findUnique({
+        where: {
+          senderId_receiverId: {
+            senderId: currentUser.userId,
+            receiverId
+          }
+        }
+      })
+      return Boolean(response)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+
   return {
-    addFriend,
+    followUser,
     confirmFriend,
     unconfirmFriend,
-    unfriend
+    unfriend,
+    getUserHasLikeByCurrentUser
   }
 }
 

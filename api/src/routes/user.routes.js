@@ -121,7 +121,31 @@ routes.route("/user/profile")
      */
   .patch(jwtVerify, userController.updateProfile)
 
-routes.route("/user/:uid/profile").get(userController.getUserProfileByUserId)
+routes.route("/user/:uid/profile")
+  /**
+     * @swagger
+     * /api/v1/user/{uid}/profile:
+     *  get:
+     *    summary: get user profile by user id
+     *    tags: [User]
+     *    description: api for get user profile by user id
+     *    parameters:
+     *      - in: path
+     *        name: uid
+     *        description: user id
+     *        schema:
+     *          type: string
+     *    responses:
+     *      200:
+     *        description: success 
+     *      400:
+     *        description: validation query error
+     *      404:
+     *        description: profile not found
+     *      500:
+     *        description: something went wrong
+     */
+  .get(userController.getUserProfileByUserId)
 
 const userRoutes = routes
 export default userRoutes

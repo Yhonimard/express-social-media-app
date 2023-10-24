@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Flex,
   Group,
@@ -15,12 +16,17 @@ import UserDetailPost from "@/components/userDetail/UserDetailPost";
 import UserDetailProfile from "@/components/userDetail/userDetailProfile";
 import useGetUserDetail from "@/features/user/useGetUserDetail";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
+import useGetUserHasFollow from "@/features/friend/useGetUserHasFollow";
+import { useSelector } from "react-redux";
 
 const UserDetailPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabsLocation = searchParams.get("tabs");
   const params = useParams()
 
+  const currentUser = useSelector(s => s.auth.user)
+
+  const { data: userHasFollow } = useGetUserHasFollow({ currUserId: currentUser.id, receiverId: params.uid })
   const userQuery = useGetUserDetail(params.uid)
   if (userQuery.isLoading) return <LoadingOverlay visible />
   if (userQuery.isError) return <Navigate to={`/`} />
@@ -33,19 +39,21 @@ const UserDetailPage = () => {
         direction={`column`}
         gap={20}
       >
-        <Group>
-          <Avatar
-            src={`${import.meta.env.VITE_API_BASE_URL}/${userQuery.data.photoProfile}`}
-            size={`xl`}
-          />
-          <Stack gap={0}>
-            <Title order={3}>{userQuery.data.username}</Title>
-            <Text order={4}>{userQuery.data.bio}</Text>
-          </Stack>
+        <Group justify="space-between" pr={40}>
+          <Group>
+            <Avatar
+              src={`${import.meta.env.VITE_API_BASE_URL}/${userQuery.data.photoProfile}`}
+              size={`xl`}
+            />
+            <Stack gap={0}>
+              <Title order={3}>{userQuery.data.username}</Title>
+              <Text order={4}>{userQuery.data.bio}</Text>
+            </Stack>
+          </Group>
+          <Box>
+            <Button color="gray">{userHasFollow ? "remove friend" : "follow"}</Button>
+          </Box>
         </Group>
-        <Box px={10}>
-          <div>follow</div>
-        </Box>
         <Box>
           <Tabs
             value={tabsLocation || "post"}

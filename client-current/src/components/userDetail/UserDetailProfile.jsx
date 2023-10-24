@@ -3,7 +3,6 @@ import useGetUserProfileByUserId from "@/features/user/useGetUserProfileByUserId
 import { Group, LoadingOverlay, Stack, Text } from "@mantine/core";
 import moment from "moment";
 const UserDetailProfile = ({ userId, }) => {
-  console.log('userId', userId)
 
   const { data: profileData, isLoading } = useGetUserProfileByUserId(userId)
 

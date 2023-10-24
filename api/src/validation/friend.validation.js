@@ -46,11 +46,16 @@ const unfriend = {
 }
 
 
-
+const getUserHasFollow = {
+  params: Joi.object().keys({
+    receiverId: Joi.string().required().empty().uuid().guid().label("user receiver id")
+  })
+}
 
 export default {
   addFriend,
   confirmFriend,
   unconfirmFriend,
-  unfriend
+  unfriend,
+  getUserHasFollow
 }
