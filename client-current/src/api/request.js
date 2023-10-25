@@ -207,6 +207,10 @@ const getUserHasFollow = async (receiverId) => {
   return res.data
 }
 
+const followUser = async (receiverId) => {
+  const res = await api.instance.request.post(`/friend/${receiverId}/follow`)
+  return res.data
+}
 
 export default {
   login,
@@ -235,5 +239,6 @@ export default {
   getPostByUserId,
   getUserDetail,
   getUserProfileByUserId,
-  getUserHasFollow
+  getUserHasFollow,
+  followUser
 };

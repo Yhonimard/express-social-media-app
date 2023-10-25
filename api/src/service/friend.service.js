@@ -168,15 +168,24 @@ const FriendService = () => {
   const getUserHasLikeByCurrentUser = async (currentUser, params) => {
     try {
       const { receiverId } = params
-      const response = await userFriendRepo.findUnique({
+      const friendship = await userFriendRepo.findUnique({
         where: {
           senderId_receiverId: {
             senderId: currentUser.userId,
             receiverId
           }
+        },
+        select: {
+          confirmed: true,
         }
       })
-      return Boolean(response)
+      
+      const mapperResponse = {
+        hasFollow: Boolean(friendship),
+        confirmed: friendship?.confirmed
+      }
+
+      return mapperResponse
     } catch (error) {
       throw prismaError(error)
     }

@@ -11,12 +11,12 @@ const friendController = FriendController()
  *    description: The user friend api
  */
 
-routes.route("/friend/:receiverId/add-friend")
+routes.route("/friend/:receiverId/follow")
   /**
      * @swagger
-     * /api/v1/friend/{receiverId}/add-friend:
+     * /api/v1/friend/{receiverId}/follow:
      *  post:
-     *    summary: add friend api
+     *    summary: follow user api
      *    tags: [Friend]
      *    description: api for add friend
      *    security:
@@ -24,10 +24,10 @@ routes.route("/friend/:receiverId/add-friend")
      *    parameters:
      *     - in: path
      *       name: receiverId
-     *       description: user who will be added to friends
+     *       description: user who will be follow
      *    responses:
      *      201:
-     *        description: success added to friend request
+     *        description: success follow user
      *      401:
      *        description: Unauthorized
      *      404:
@@ -42,7 +42,7 @@ routes.route("/friend/:receiverId/add-friend")
 routes.route("/friend/:senderId/confirm-friend")
   /**
      * @swagger
-     * /api/v1/friend/{senderId}/confirm-friend:
+       * /api/v1/friend/{senderId}/confirm-friend:
      *  patch:
      *    summary: confirm user friend
      *    tags: [Friend]
@@ -75,7 +75,7 @@ routes.route("/friend/:senderId/unconfirm-friend")
      * /api/v1/friend/{senderId}/unconfirm-friend:
      *  delete:
      *    summary: unconfirm user friend
-     *    tags: [Friend]
+     *    tags: [Friend] 
      *    description: api for unconfirm friend
      *    security:
      *      - jwt-auth: []

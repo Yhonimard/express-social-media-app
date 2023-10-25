@@ -113,7 +113,7 @@ const ProfilePost = () => {
       <SimpleGrid cols={1}>
         {isSuccessFetchPost &&
           postUserData.pages.map((p, i) => (
-            <Fragment key={i} gap={`sm`}>
+            <Fragment key={i}>
               {p.data.length < 1 && <Center h={`100%`}>no post here</Center>}
               {p.data.map((data) => (
                 <ProfilePostCardComponent

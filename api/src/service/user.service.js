@@ -15,8 +15,6 @@ const UserService = () => {
         select: {
           username: true,
           photoProfile: true,
-          firstName: true,
-          lastName: true,
           createdAt: true,
         },
       });
@@ -37,8 +35,6 @@ const UserService = () => {
         select: {
           username: true,
           photoProfile: true,
-          firstName: true,
-          lastName: true,
           createdAt: true,
         },
       });

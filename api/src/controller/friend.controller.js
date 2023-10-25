@@ -11,10 +11,11 @@ const FriendController = () => {
     const { params, user } = req
     const currentUser = user
     try {
+      console.log('req.params', req.params)
       const { error } = validation.addFriend.params.validate(params)
       if (error) throw new ApiBadRequestError(error.message)
-      const response = await friendService.addFriend(params?.receiverId, currentUser)
-      res.status(httpStatus.CREATED).json({ message: "success add friend", data: response })
+      await friendService.followUser(params?.receiverId, currentUser)
+      res.status(httpStatus.CREATED).json({ message: "success follow user" })
     } catch (error) {
       return next(error)
     }
@@ -26,8 +27,8 @@ const FriendController = () => {
     try {
       const { error } = validation.confirmFriend.params.validate(params)
       if (error) throw new ApiBadRequestError(error.message)
-      const response = await friendService.confirmFriend(params?.senderId, currentUser)
-      res.json({ message: "success confirm user", data: response })
+      await friendService.confirmFriend(params?.senderId, currentUser)
+      res.json({ message: "success confirm user" })
     } catch (error) {
       return next(error)
     }
@@ -39,8 +40,8 @@ const FriendController = () => {
     try {
       const { error } = validation.unconfirmFriend.params.validate(params)
       if (error) throw new ApiBadRequestError(error.message)
-      const response = await friendService.unconfirmFriend(params?.senderId, currentUser)
-      res.json({ message: "success unconfirm user", data: response })
+      await friendService.unconfirmFriend(params?.senderId, currentUser)
+      res.json({ message: "success unconfirm user" })
     } catch (error) {
       return next(error)
     }
@@ -52,8 +53,8 @@ const FriendController = () => {
     try {
       const { error } = validation.unfriend.params.validate(params)
       if (error) throw new ApiBadRequestError(error.message)
-      const response = await friendService.unfriend(params?.receiverId, currentUser)
-      res.json({ message: "success unfriend user", data: response })
+      await friendService.unfriend(params?.receiverId, currentUser)
+      res.json({ message: "success unfriend user", })
     } catch (error) {
       return next(error)
     }

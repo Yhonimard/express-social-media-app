@@ -13,8 +13,6 @@ model User {
   username          String         @unique @db.VarChar(100)
   password          String         @db.VarChar(100)
   photoProfile      String
-  firstName         String?        @db.VarChar(100)
-  lastName          String?        @db.VarChar(100)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
   posts             Post[]
@@ -84,12 +82,13 @@ model UserFriend {
 model Profile {
   id        String    @id @default(uuid())
   bio       String?   @db.VarChar(100)
+  name      String?   @db.VarChar(100)
+  phone     BigInt?   @db.BigInt()
+  birthday  DateTime?
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  birthday  DateTime?
-  phone     BigInt?   @db.BigInt()
 
   @@map("user_profile")
 }

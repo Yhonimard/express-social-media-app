@@ -33,6 +33,7 @@ const PostLikeController = () => {
         user,
         params?.pid
       );
+      
       res.json({ hasLike: response });
     } catch (error) {
       return next(error);
