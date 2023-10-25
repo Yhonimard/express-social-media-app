@@ -11,11 +11,23 @@ const FriendController = () => {
     const { params, user } = req
     const currentUser = user
     try {
-      console.log('req.params', req.params)
       const { error } = validation.addFriend.params.validate(params)
       if (error) throw new ApiBadRequestError(error.message)
       await friendService.followUser(params?.receiverId, currentUser)
       res.status(httpStatus.CREATED).json({ message: "success follow user" })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const unfollowUser = async (req, res, next) => {
+    const { params, user } = req
+    const currentUser = user
+    try {
+      const { error } = validation.unfollowUser.params.validate(params)
+      if (error) throw new ApiBadRequestError(error.message)
+      await friendService.unfollowUser(params?.receiverId, currentUser)
+      res.json({ message: "success unfriend user", })
     } catch (error) {
       return next(error)
     }
@@ -47,18 +59,7 @@ const FriendController = () => {
     }
   }
 
-  const unfriend = async (req, res, next) => {
-    const { params, user } = req
-    const currentUser = user
-    try {
-      const { error } = validation.unfriend.params.validate(params)
-      if (error) throw new ApiBadRequestError(error.message)
-      await friendService.unfriend(params?.receiverId, currentUser)
-      res.json({ message: "success unfriend user", })
-    } catch (error) {
-      return next(error)
-    }
-  }
+
 
   const getUserHasLikeByCurrentUser = async (req, res, next) => {
     try {
@@ -73,9 +74,9 @@ const FriendController = () => {
 
   return {
     followFriend,
+    unfollowUser,
     confirmFriend,
     unconfirmFriend,
-    unfriend,
     getUserHasLikeByCurrentUser
   }
 

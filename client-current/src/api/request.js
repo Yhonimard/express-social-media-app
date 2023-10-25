@@ -212,6 +212,11 @@ const followUser = async (receiverId) => {
   return res.data
 }
 
+const unfollowUser = async (receiverId) => {
+  const res = await api.instance.request.delete(`/friend/${receiverId}/unfollow`)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -240,5 +245,6 @@ export default {
   getUserDetail,
   getUserProfileByUserId,
   getUserHasFollow,
-  followUser
+  followUser,
+  unfollowUser
 };

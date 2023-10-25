@@ -39,6 +39,39 @@ routes.route("/friend/:receiverId/follow")
      */
   .post(jwtVerify, friendController.followFriend)
 
+
+routes.route("/friend/:receiverId/unfollow")
+  /**
+     * @swagger
+     * /api/v1/friend/{receiverId}/unfollow:
+     *  delete:
+     *    summary: unfriend user friend
+     *    tags: [Friend]
+     *    description: api for unfriend friend
+     *    security:
+     *      - jwt-auth: []
+     *    parameters:
+     *     - in: path
+     *       name: receiverId
+     *       description: user who you added to friend
+     *    responses:
+     *      200:
+     *        description: success unfriend this user
+     *      401:
+     *        description: Unauthorized
+     *      400:
+     *        description: params validation error / you cant unfriend yourself
+     *      403:
+     *        description: youare not allowed to confirm this user friendship
+     *      404:
+     *        description: user not found / friendship not found
+     *      500:
+     *        description: something went wrong
+     */
+  .delete(jwtVerify, friendController.unfollowUser)
+
+
+
 routes.route("/friend/:senderId/confirm-friend")
   /**
      * @swagger
@@ -99,35 +132,6 @@ routes.route("/friend/:senderId/unconfirm-friend")
      */
   .delete(jwtVerify, friendController.unconfirmFriend)
 
-routes.route("/friend/:receiverId/unfriend")
-  /**
-     * @swagger
-     * /api/v1/friend/{receiverId}/unfriend:
-     *  delete:
-     *    summary: unfriend user friend
-     *    tags: [Friend]
-     *    description: api for unfriend friend
-     *    security:
-     *      - jwt-auth: []
-     *    parameters:
-     *     - in: path
-     *       name: receiverId
-     *       description: user who you added to friend
-     *    responses:
-     *      200:
-     *        description: success unfriend this user
-     *      401:
-     *        description: Unauthorized
-     *      400:
-     *        description: params validation error / you cant unfriend yourself
-     *      403:
-     *        description: youare not allowed to confirm this user friendship
-     *      404:
-     *        description: user not found / friendship not found
-     *      500:
-     *        description: something went wrong
-     */
-  .delete(jwtVerify, friendController.unfriend)
 
 routes.route("/friend/:receiverId")
   /**

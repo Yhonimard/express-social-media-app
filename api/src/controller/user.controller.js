@@ -59,8 +59,8 @@ const UserController = () => {
 
   const getUserProfileByUserId = async (req, res, next) => {
     try {
-      const err = validation.getUserProfileByUserId.params.validate(req.params)
-      // console.log(err);
+      const { error } = validation.getUserProfileByUserId.params.validate(req.params)
+      if (error) throw new ApiBadRequestError(error.message)
 
       const response = await userService.getUserProfileByUserId(req.params)
       res.json(response)

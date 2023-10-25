@@ -19,6 +19,7 @@ import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import useGetUserHasFollow from "@/features/friend/useGetUserHasFollow";
 import { useSelector } from "react-redux";
 import useFollowUser from "@/features/friend/useFollowUser";
+import useUnfollowUser from "@/features/friend/useUnfollowUser";
 
 const UserDetailPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,18 +28,18 @@ const UserDetailPage = () => {
 
   const currentUser = useSelector(s => s.auth.user)
 
-  const friendQuery = useGetUserHasFollow({ currUserId: currentUser.id, receiverId: params.uid })
   const userQuery = useGetUserDetail(params.uid)
   const { mutate: followUser } = useFollowUser({ currUserId: currentUser.id, receiverId: params.uid })
+  const { mutate: unfollowUser } = useUnfollowUser({ currUserid: currentUser.id, receiverId: params.uid })
+  const friendQuery = useGetUserHasFollow({ currUserId: currentUser.id, receiverId: params.uid })
 
   if (userQuery.isLoading || friendQuery.isLoading) return <LoadingOverlay visible />
   if (userQuery.isError || friendQuery.isError) return <Navigate to={`/`} />
 
-  const followOrUnfollUser = () => {
-    followUser(null)
+  const followOrUnfollUser = (hasFollow) => {
+    if (hasFollow) unfollowUser(null)
+    if (!hasFollow) followUser(null)
   }
-
-
   return (
     <Container size={`md`}>
       <Flex
@@ -59,7 +60,7 @@ const UserDetailPage = () => {
             </Stack>
           </Group>
           <Box>
-            <Button color="gray" onClick={followOrUnfollUser}>{friendQuery.data.hasFollow ? "remove friend" : "follow"}</Button>
+            <Button color="gray" onClick={() => followOrUnfollUser(friendQuery.data.hasFollow)}>{friendQuery.data.hasFollow ? friendQuery.data.confirmed ? "Unfollow" : 'Requested' : "Follow"}</Button>
           </Box>
         </Group>
         <Box>

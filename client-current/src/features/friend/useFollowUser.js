@@ -18,7 +18,7 @@ const useFollowUser = ({ currUserId, receiverId }) => {
       query.setQueryData([FRIEND_QUERY_NAME, currUserId, receiverId], (oldData) => {
         return {
           ...oldData,
-          hasFollow: true
+          hasFollow: true,
         }
       })
 

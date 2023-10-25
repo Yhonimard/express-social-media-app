@@ -8,7 +8,6 @@ import db from "../config/db"
 import { Prisma } from "@prisma/client"
 
 const prismaError = (error, table) => {
-  // console.log('error from prisma error', error)
   let err
   if (error instanceof PrismaClientKnownRequestError) {
     if (error.code === "P2025") err = new ApiErrorResponse(error.message, httpStatus.NOT_FOUND)

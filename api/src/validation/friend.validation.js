@@ -34,7 +34,7 @@ const unconfirmFriend = {
 }
 
 
-const unfriend = {
+const unfollowUser = {
   params: Joi.object().keys({
     receiverId: Joi.string().required().empty().uuid().guid().messages({
       "string.empty": "receiverId is required!!",
@@ -56,6 +56,6 @@ export default {
   addFriend,
   confirmFriend,
   unconfirmFriend,
-  unfriend,
+  unfollowUser,
   getUserHasFollow
 }

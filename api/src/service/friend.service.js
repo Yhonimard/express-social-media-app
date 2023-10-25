@@ -4,6 +4,7 @@ import ApiBadRequestError from "../exception/ApiBadRequestError"
 import ApiErrorResponse from "../exception/ApiErrorResponse"
 import ApiNotFoundError from "../exception/ApiNotFoundError"
 import prismaError from "../exception/prisma-error"
+import customPrismaError from "../exception/custom-prisma-error"
 
 const FriendService = () => {
 
@@ -13,8 +14,70 @@ const FriendService = () => {
   const followUser = async (receiverId, currentUser) => {
     const senderId = currentUser?.userId
     try {
-      if (senderId === receiverId) throw new ApiBadRequestError("you cannot send friend request to yourself")
 
+      // const existingUserSender = await userRepo.findUnique({
+      //   where: {
+      //     id: senderId
+      //   }
+      // })
+
+      // const existingUserReceiver = await userRepo.findUnique({
+      //   where: {
+      //     id: receiverId
+      //   }
+      // })
+      // if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
+
+      // const existingFriendship = await userFriendRepo.findFirst({
+      //   where: {
+      //     senderId: existingUserSender.id,
+      //     receiverId: existingUserReceiver.id,
+      //   }
+      // })
+      // if (existingFriendship) throw new ApiBadRequestError("friendship already exist")
+
+      // const newFriendship = await userFriendRepo.create({
+      //   data: {
+      //     senderId: existingUserSender.id,
+      //     receiverId: existingUserReceiver.id,
+      //     confirmed: false
+      //   }
+      // })
+
+
+      await db.$transaction(async tr => {
+        if (senderId === receiverId) throw new ApiBadRequestError("you cant follow yourself")
+
+        await tr.userFriend.create({
+          data: {
+            receiver: {
+              connect: {
+                id: receiverId
+              }
+            },
+            sender: {
+              connect: {
+                id: senderId
+              }
+            }
+          }
+        }).catch((reason) => {
+          console.log('reason', JSON.stringify(reason))
+          throw customPrismaError(reason, { msgP2002: `you have been follow this user`, msgP2025: "user not found" })
+        })
+
+      })
+
+      return
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const unfollowUser = async (receiverId, currentUser) => {
+    const senderId = currentUser?.userId
+    try {
+      if (senderId === receiverId) throw new ApiBadRequestError("you cant unfollow yourself")
       const existingUserSender = await userRepo.findUnique({
         where: {
           id: senderId
@@ -28,23 +91,23 @@ const FriendService = () => {
       })
       if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
 
-      const existingFriendship = await userFriendRepo.findFirst({
+      const existingFriendship = await userFriendRepo.findUnique({
         where: {
-          senderId: existingUserSender.id,
-          receiverId: existingUserReceiver.id,
+          senderId_receiverId: {
+            senderId: existingUserSender.id,
+            receiverId: existingUserReceiver.id,
+          }
+
         }
       })
-      if (existingFriendship) throw new ApiBadRequestError("friendship already exist")
+      if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
 
-      const newFriendship = await userFriendRepo.create({
-        data: {
-          senderId: existingUserSender.id,
-          receiverId: existingUserReceiver.id,
-          confirmed: false
+      const deletedFriendship = await userFriendRepo.delete({
+        where: {
+          id: existingFriendship.id
         }
       })
-
-      return newFriendship
+      return deletedFriendship
     } catch (error) {
       throw prismaError(error)
     }
@@ -128,42 +191,7 @@ const FriendService = () => {
     }
   }
 
-  const unfriend = async (receiverId, currentUser) => {
-    const senderId = currentUser?.userId
-    try {
-      if (senderId === receiverId) throw new ApiBadRequestError("you cant unfriend yourself")
-      const existingUserSender = await userRepo.findUnique({
-        where: {
-          id: senderId
-        }
-      })
 
-      const existingUserReceiver = await userRepo.findUnique({
-        where: {
-          id: receiverId
-        }
-      })
-      if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
-
-      const existingFriendship = await userFriendRepo.findFirst({
-        where: {
-          senderId: existingUserSender.id,
-          receiverId: existingUserReceiver.id,
-          confirmed: true
-        }
-      })
-      if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
-
-      const deletedFriendship = await userFriendRepo.delete({
-        where: {
-          id: existingFriendship.id
-        }
-      })
-      return deletedFriendship
-    } catch (error) {
-      throw prismaError(error)
-    }
-  }
 
   const getUserHasLikeByCurrentUser = async (currentUser, params) => {
     try {
@@ -179,7 +207,7 @@ const FriendService = () => {
           confirmed: true,
         }
       })
-      
+
       const mapperResponse = {
         hasFollow: Boolean(friendship),
         confirmed: friendship?.confirmed
@@ -194,9 +222,9 @@ const FriendService = () => {
 
   return {
     followUser,
+    unfollowUser,
     confirmFriend,
     unconfirmFriend,
-    unfriend,
     getUserHasLikeByCurrentUser
   }
 }
