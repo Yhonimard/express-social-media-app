@@ -10,11 +10,10 @@ import {
 } from "@mantine/core";
 import { useSelector } from "react-redux";
 import CommentMenuComponent from "./commentMenu";
-import moment from "moment/moment";
 
 const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
   const currentUser = useSelector((state) => state.auth.user);
-
+  
   return (
     <>
       <Group style={{ flexWrap: "nowrap" }}>

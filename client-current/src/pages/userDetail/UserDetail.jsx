@@ -20,6 +20,7 @@ import useGetUserHasFollow from "@/features/friend/useGetUserHasFollow";
 import { useSelector } from "react-redux";
 import useFollowUser from "@/features/friend/useFollowUser";
 import useUnfollowUser from "@/features/friend/useUnfollowUser";
+import useGetUserProfileByUserId from "@/features/user/useGetUserProfileByUserId";
 
 const UserDetailPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,17 +30,20 @@ const UserDetailPage = () => {
   const currentUser = useSelector(s => s.auth.user)
 
   const userQuery = useGetUserDetail(params.uid)
+  const profileQuery = useGetUserProfileByUserId(params.uid)
   const { mutate: followUser } = useFollowUser({ currUserId: currentUser.id, receiverId: params.uid })
   const { mutate: unfollowUser } = useUnfollowUser({ currUserid: currentUser.id, receiverId: params.uid })
   const friendQuery = useGetUserHasFollow({ currUserId: currentUser.id, receiverId: params.uid })
 
-  if (userQuery.isLoading || friendQuery.isLoading) return <LoadingOverlay visible />
-  if (userQuery.isError || friendQuery.isError) return <Navigate to={`/`} />
+  if (userQuery.isLoading || friendQuery.isLoading || profileQuery.isLoading) return <LoadingOverlay visible />
+  if (userQuery.isError || friendQuery.isError || profileQuery.isLoading) return <Navigate to={`/`} />
 
   const followOrUnfollUser = (hasFollow) => {
     if (hasFollow) unfollowUser(null)
     if (!hasFollow) followUser(null)
   }
+
+
   return (
     <Container size={`md`}>
       <Flex
@@ -48,21 +52,21 @@ const UserDetailPage = () => {
         direction={`column`}
         gap={20}
       >
-        <Group justify="space-between" pr={40}>
-          <Group>
+        <Flex justify={`space-between`} align={`center`} direction={{ base: "column" }} gap={35}>
+          <Group w={`100%`}>
             <Avatar
               src={`${import.meta.env.VITE_API_BASE_URL}/${userQuery.data.photoProfile}`}
               size={`xl`}
             />
             <Stack gap={0}>
               <Title order={3}>{userQuery.data.username}</Title>
-              <Text order={4}>{userQuery.data.bio}</Text>
+              <Text order={4}>{profileQuery.data.name}</Text>
             </Stack>
           </Group>
-          <Box>
-            <Button color="gray" onClick={() => followOrUnfollUser(friendQuery.data.hasFollow)}>{friendQuery.data.hasFollow ? friendQuery.data.confirmed ? "Unfollow" : 'Requested' : "Follow"}</Button>
+          <Box w={`100%`}>
+            <Button color="gray" fullWidth onClick={() => followOrUnfollUser(friendQuery.data.hasFollow)}>{friendQuery.data.hasFollow ? friendQuery.data.confirmed ? "Unfollow" : 'Requested' : "Follow"}</Button>
           </Box>
-        </Group>
+        </Flex>
         <Box>
           <Tabs
             value={tabsLocation || "post"}
@@ -72,10 +76,10 @@ const UserDetailPage = () => {
               <Tabs.Tab value="profile">profile</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="post">
-              <UserDetailPost params={params} />
+              <UserDetailPost params={params} username={userQuery.data.username} />
             </Tabs.Panel>
             <Tabs.Panel value="profile">
-              <UserDetailProfile userId={params.uid} />
+              <UserDetailProfile profileData={profileQuery.data} />
             </Tabs.Panel>
           </Tabs>
         </Box>

@@ -1,12 +1,9 @@
 import Icon from "@/assets/icon";
-import useGetUserProfileByUserId from "@/features/user/useGetUserProfileByUserId";
-import { Group, LoadingOverlay, Stack, Text } from "@mantine/core";
+import { Group, Stack, Text } from "@mantine/core";
 import moment from "moment";
-const UserDetailProfile = ({ userId, }) => {
+const UserDetailProfile = ({ profileData }) => {
 
-  const { data: profileData, isLoading } = useGetUserProfileByUserId(userId)
 
-  if (isLoading) return <LoadingOverlay visible />
   return (
     <Stack px={20}>
       {profileData.phone &&

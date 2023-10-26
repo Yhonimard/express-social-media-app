@@ -16,7 +16,7 @@ const ProfileLikes = () => {
             {p.data.length < 1 && <Text>you have not like post yet</Text>}
             {p.data.map(p => (
               <ProfileLikesCard
-                key={p.id}  
+                key={p.id}
                 author={p.author}
                 content={p.content}
                 createdAt={p.createdAt}

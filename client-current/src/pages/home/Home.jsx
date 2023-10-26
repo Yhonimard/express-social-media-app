@@ -1,9 +1,7 @@
 import post from "@/components/Post";
 import useGetAllPost from "@/features/post/useGetAllPost";
-import globalReducer from "@/redux/globalReducer";
-import { Button, Container, LoadingOverlay, SimpleGrid, Stack } from "@mantine/core";
-import { Fragment, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { Button, Container, LoadingOverlay, SimpleGrid } from "@mantine/core";
+import { Fragment } from "react";
 
 const HomePage = () => {
   const {
@@ -31,18 +29,21 @@ const HomePage = () => {
             </Fragment>
           ))}
       </SimpleGrid>
-      <Button
-        my={20}
-        fullWidth
-        onClick={fetchNextPage}
-        color="gray"
-        style={{
-          visibility:
-            hasNextPage && !isFetchingNextPage ? "visible" : "hidden",
-        }}
-      >
-        Load More
-      </Button>
+      {hasNextPage && (
+
+        <Button
+          my={20}
+          fullWidth
+          onClick={fetchNextPage}
+          color="gray"
+        // style={{
+        //   visibility:
+        //     hasNextPage && !isFetchingNextPage ? "visible" : "hidden",
+        // }}
+        >
+          Load More
+        </Button>
+      )}
       <post.create />
     </Container>
   );

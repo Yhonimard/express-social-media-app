@@ -58,6 +58,7 @@ const UserService = () => {
           userId: existingUser.id,
         },
         select: {
+          name: true,
           bio: true,
           birthday: true,
           createdAt: true,
@@ -89,6 +90,7 @@ const UserService = () => {
             userId: currentUser.userId,
           },
           data: {
+            name: data.name !== null ? data.name : null,
             bio: data.bio !== null ? data.bio : null,
             birthday: data.birthday !== null ? data.birthday : null,
             phone: !isNaN(data.phone) ? data.phone : null,

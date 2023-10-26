@@ -89,19 +89,21 @@ const PostService = () => {
         },
       });
 
-      const totalData = await postRepo.count();
-      const totalPages = Math.ceil(totalData / size);
-      const currentPageData = posts.length;
-      const isLast = pageNo === totalPages;
+      const postCount = await postRepo.count()
+      return toPaginationResponseHelper(postCount, posts, { pageNo, size })
+      // const totalData = await postRepo.count();
+      // const totalPages = Math.ceil(totalData / size);
+      // const currentPageData = posts.length;
+      // const isLast = pageNo === totalPages;
 
-      return {
-        currentPage: pageNo,
-        currentPageData,
-        totalData,
-        totalPages,
-        isLast,
-        data: posts,
-      };
+      // return {
+      //   currentPage: pageNo,
+      //   currentPageData,
+      //   totalData,
+      //   totalPages,
+      //   isLast,
+      //   data: posts,
+      // };
     } catch (error) {
       throw prismaError(error);
     }

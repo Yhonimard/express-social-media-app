@@ -13,6 +13,7 @@ import {
   Divider,
   Group,
   Image,
+  LoadingOverlay,
   Menu,
   rem,
   Stack,
@@ -67,8 +68,7 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
   });
 
   const { mutate: updatePost } = useUpdatePost(postId);
-  const { data: commentsData, isSuccess: isSuccessFetchComment } =
-    useGetListCommentByPostId(postId, { size: 1 });
+  const { data: commentsData, isSuccess: isSuccessFetchComment, isLoading } = useGetListCommentByPostId(postId, { size: 1 });
 
   const { mutate: deletePost } = useDeletePost(false, postId);
 
@@ -78,6 +78,9 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
     if (currentUser.id === uid) navigate("/profile")
     if (currentUser.id !== uid) navigate(`/user/${uid}`)
   }
+
+  if (isLoading) return <LoadingOverlay />
+
   return (
     <>
       <Card>

@@ -8,21 +8,21 @@ import {
   Divider,
   FileButton,
   Group,
+  LoadingOverlay,
   Paper,
   SimpleGrid,
-  Stack,
   Text,
-  TextInput,
+  TextInput
 } from "@mantine/core";
 import {
   AddPhotoAlternate as IconAddPhoto,
   Send as IconSend,
 } from "@mui/icons-material";
 import { useFormik } from "formik";
+import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import classes from "./ProfilePost.module.css";
 import ProfilePostCardComponent from "./profilePostCard";
-import { Fragment } from "react";
 
 const ProfilePost = () => {
 
@@ -31,6 +31,7 @@ const ProfilePost = () => {
     isSuccess: isSuccessFetchPost,
     hasNextPage,
     fetchNextPage,
+    isLoading
   } = useGetPostListByUser();
 
   const createPostFormik = useFormik({
@@ -49,6 +50,9 @@ const ProfilePost = () => {
 
   const { mutate: addPostByUser } = useCreatePostByUser(currentUser.id);
 
+
+
+  if (isLoading) return <LoadingOverlay />
   return (
     <>
       <Paper>
@@ -129,15 +133,16 @@ const ProfilePost = () => {
             </Fragment>
           ))}
       </SimpleGrid>
-      <Button
-        onClick={fetchNextPage}
-        style={{ visibility: hasNextPage ? "visible" : "hidden" }}
-        fullWidth
-        color="gray"
-        variant="filled"
-        my={20}>
-        see more your post
-      </Button>
+      {hasNextPage && (
+        <Button
+          onClick={fetchNextPage}
+          fullWidth
+          color="gray"
+          variant="filled"
+          my={20}>
+          see more your post
+        </Button>
+      )}
     </>
   );
 };

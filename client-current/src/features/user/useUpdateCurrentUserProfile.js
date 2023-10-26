@@ -21,6 +21,7 @@ const useUpdateCurrentUserProfile = (uid) => {
         queryClient.setQueryData([GET_CURRENT_USER_PROFILE_NAME, uid], (oldData) => {
           return {
             ...oldData,
+            name: newData.name,
             bio: newData.bio,
             birthday: newData.birthday,
             phone: newData.phone,
