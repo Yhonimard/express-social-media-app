@@ -1,0 +1,13 @@
+[Unit]
+Description=sosmed-api
+
+[Service]
+WorkingDirectory=/home/yhoniserver/web-sosmed/api/build/index.js
+ExecStart=/home/yhoniserver/.nvm/versions/node/v18.18.0/bin /home/yhoniserver/web-sosmed/api/build/index.js
+Restart=always
+SyslogIdentifier=sosmed-api-syslog
+User=root
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

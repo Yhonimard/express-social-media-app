@@ -41,6 +41,34 @@ async function main() {
     }
   })
 
+  const user4 = await db.user.create({
+    data: {
+      password: await bcrypt.hash("yhonimard", 5),
+      photoProfile: "storage/img_seed/photo-profile-4.jpeg",
+      username: "yhonimard",
+      profile: {
+        create: {}
+      }
+    }
+  })
+
+  await db.userFriend.createMany({
+    data: [
+      {
+        senderId: user2.id,
+        receiverId: user1.id
+      },
+      {
+        senderId: user3.id,
+        receiverId: user1.id
+      },
+      {
+        senderId: user4.id,
+        receiverId: user1.id
+      },
+    ]
+  })
+
   await db.post.createMany({
     data: [
       {

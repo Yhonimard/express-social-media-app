@@ -5,6 +5,9 @@ import ApiErrorResponse from "../exception/ApiErrorResponse"
 import ApiNotFoundError from "../exception/ApiNotFoundError"
 import prismaError from "../exception/prisma-error"
 import customPrismaError from "../exception/custom-prisma-error"
+import paginationHelper from "../helper/pagination.helper"
+import toPaginationResponseHelper from "../helper/to-pagination-response.helper"
+import ApiForbiddenError from "../exception/ApiForbiddenError"
 
 const FriendService = () => {
 
@@ -113,41 +116,209 @@ const FriendService = () => {
     }
   }
 
-  const confirmFriend = async (senderId, currentUser) => {
-    const receiverId = currentUser?.userId
+  const getUserHasFollow = async (currentUser, params) => {
     try {
-      const existingUserSender = await userRepo.findUnique({
+      const { receiverId } = params
+      const friendship = await userFriendRepo.findUnique({
         where: {
-          id: senderId
-        }
-      })
-
-      const existingUserReceiver = await userRepo.findUnique({
-        where: {
-          id: receiverId
-        }
-      })
-      if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
-
-      const existingFriendship = await userFriendRepo.findFirst({
-        where: {
-          senderId: existingUserSender.id,
-          receiverId: existingUserReceiver.id,
-        }
-      })
-      if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
-      if (existingFriendship?.confirmed) throw new ApiBadRequestError("you have become friend with this user")
-      if (receiverId !== existingFriendship?.receiverId) throw new ApiErrorResponse("youare not allowed to confirm this user friendship", httpStatus.FORBIDDEN)
-
-      const confirmedFriendship = await userFriendRepo.update({
-        where: {
-          id: existingFriendship.id
+          senderId_receiverId: {
+            senderId: currentUser.userId,
+            receiverId
+          }
         },
-        data: {
+        select: {
+          confirmed: true,
+        }
+      })
+
+      const mapperResponse = {
+        hasFollow: Boolean(friendship),
+        confirmed: friendship?.confirmed
+      }
+
+      return mapperResponse
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const getCurrentUserFriendRequest = async (currentUser, query) => {
+    try {
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+      const friendsReq = await userFriendRepo.findMany({
+        where: {
+          receiver: {
+            id: currentUser.userId
+          },
+          confirmed: false
+        },
+
+        select: {
+          id: true,
+          confirmed: true,
+          sender: {
+            select: {
+              username: true,
+              id: true,
+              photoProfile: true,
+              profile: {
+                select: {
+                  name: true
+                }
+              }
+            },
+          },
+          createdAt: true,
+        },
+        take,
+        skip
+      })
+
+      const mapperData = friendsReq.map(f => ({
+        id: f.id,
+        confirmed: f.confirmed,
+        createdAt: f.createdAt,
+        user: {
+          id: f.sender.id,
+          photoProfile: f.sender.photoProfile,
+          username: f.sender.username,
+          name: f.sender.profile.name,
+        }
+      }))
+
+      const friendReqCount = await userFriendRepo.count({
+        where: {
+          receiver: {
+            id: currentUser.id
+          },
+          confirmed: false
+        }
+      })
+
+      return toPaginationResponseHelper(friendReqCount, mapperData, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const getCurrentUserFollowing = async (currentUser, query) => {
+    try {
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+      const friends = await userFriendRepo.findMany({
+        where: {
+          sender: {
+            id: currentUser.userId
+          },
+          confirmed: true
+        },
+        select: {
+          id: true,
+          receiver: {
+            select: {
+              id: true,
+              username: true,
+              photoProfile: true,
+              profile: {
+                select: {
+                  name: true
+                }
+              }
+            }
+
+          }
+
+        },
+        skip,
+        take
+      })
+
+      const friendMapper = friends.map(f => ({
+        id: f.id,
+        user: {
+          id: f.receiver.id,
+          username: f.receiver.username,
+          name: f.receiver.profile.name,
+          photoProfile: f.receiver.photoProfile
+        }
+      }))
+
+      const friendCounts = await userFriendRepo.count({
+        where: {
+          sender: {
+            id: currentUser.userId
+          },
           confirmed: true
         }
       })
-      return confirmedFriendship
+
+      return toPaginationResponseHelper(friendCounts, friendMapper, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const confirmFriend = async (senderId, currentUser) => {
+    const receiverId = currentUser?.userId
+    try {
+      // const existingUserSender = await userRepo.findUnique({
+      //   where: {
+      //     id: senderId
+      //   }
+      // })
+
+      // const existingUserReceiver = await userRepo.findUnique({
+      //   where: {
+      //     id: receiverId
+      //   }
+      // })
+      // if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
+
+      // const existingFriendship = await userFriendRepo.findFirst({
+      //   where: {
+      //     senderId: existingUserSender.id,
+      //     receiverId: existingUserReceiver.id,
+      //   }
+      // })
+      // if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
+      // if (existingFriendship?.confirmed) throw new ApiBadRequestError("you have become friend with this user")
+      // if (receiverId !== existingFriendship?.receiverId) throw new ApiErrorResponse("youare not allowed to confirm this user friendship", httpStatus.FORBIDDEN)
+
+      // const confirmedFriendship = await userFriendRepo.update({
+      //   where: {
+      //     id: existingFriendship.id
+      //   },
+      //   data: {
+      //     confirmed: true
+      //   }
+      // })
+
+      const trx = await db.$transaction(async trx => {
+        const confirmedFriendship = await trx.userFriend.findUnique({
+          where: {
+            senderId_receiverId: {
+              senderId,
+              receiverId
+            },
+          }
+        })
+
+        if (!confirmedFriendship) throw new ApiBadRequestError("That user hasn't follow you yet")
+        if (currentUser.userId !== confirmedFriendship.receiverId) throw new ApiForbiddenError("you cant confirm this user friend")
+        if (confirmedFriendship?.confirmed) throw new ApiBadRequestError("you have been confirm this user")
+
+        const confirmedUser = await trx.userFriend.update({
+          where: {
+            id: confirmedFriendship.id,
+            confirmed: false
+          },
+          data: {
+            confirmed: true
+          }
+        })
+
+        return confirmedUser
+      })
+      return trx
     } catch (error) {
       throw prismaError(error)
     }
@@ -192,41 +363,15 @@ const FriendService = () => {
   }
 
 
-
-  const getUserHasLikeByCurrentUser = async (currentUser, params) => {
-    try {
-      const { receiverId } = params
-      const friendship = await userFriendRepo.findUnique({
-        where: {
-          senderId_receiverId: {
-            senderId: currentUser.userId,
-            receiverId
-          }
-        },
-        select: {
-          confirmed: true,
-        }
-      })
-
-      const mapperResponse = {
-        hasFollow: Boolean(friendship),
-        confirmed: friendship?.confirmed
-      }
-
-      return mapperResponse
-    } catch (error) {
-      throw prismaError(error)
-    }
-  }
-
-
   return {
     followUser,
     unfollowUser,
+    getUserHasFollow,
+    getCurrentUserFriendRequest,
+    getCurrentUserFollowing,
     confirmFriend,
     unconfirmFriend,
-    getUserHasLikeByCurrentUser
   }
 }
 
-export default FriendService
+export default FriendService 

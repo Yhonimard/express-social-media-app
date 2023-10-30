@@ -52,10 +52,43 @@ const getUserHasFollow = {
   })
 }
 
+const getCurrentUserFriendRequestValidation = {
+  query: Joi.object().keys({
+    pageNo: Joi.number().required().empty().min(1).messages({
+      "number.empty": "page no is required!!",
+      "number.min": "size must be at least 1",
+      "any.required": "page no is required!!",
+    }),
+    size: Joi.number().required().empty().min(1).messages({
+      "number.empty": "size is required!!",
+      "number.min": "size must be at least 1",
+      "any.required": "size is required!!",
+    })
+  })
+}
+
+const getUserFollowingValidation = {
+  query: Joi.object().keys({
+    pageNo: Joi.number().required().empty().min(1).messages({
+      "number.empty": "page no is required!!",
+      "number.min": "size must be at least 1",
+      "any.required": "page no is required!!",
+    }),
+    size: Joi.number().required().empty().min(1).messages({
+      "number.empty": "size is required!!",
+      "number.min": "size must be at least 1",
+      "any.required": "size is required!!",
+    })
+  })
+}
+
+
 export default {
   addFriend,
   confirmFriend,
   unconfirmFriend,
   unfollowUser,
-  getUserHasFollow
+  getUserHasFollow,
+  getCurrentUserFriendRequestValidation,
+  getUserFollowingValidation
 }

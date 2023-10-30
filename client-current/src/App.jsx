@@ -1,4 +1,4 @@
-import { Box, LoadingOverlay } from "@mantine/core";
+import { LoadingOverlay } from "@mantine/core";
 import { useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import api from "./api";

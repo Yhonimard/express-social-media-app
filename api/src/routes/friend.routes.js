@@ -70,12 +70,106 @@ routes.route("/friend/:receiverId/unfollow")
      */
   .delete(jwtVerify, friendController.unfollowUser)
 
+routes.route("/user/:receiverId/friend")
+  /**
+      * @swagger
+      * /api/v1/user/{receiverId}/friend:
+      *  get:
+      *    summary: get user has follow
+      *    tags: [Friend]
+      *    description: api for get user has follow
+      *    security:
+      *      - jwt-auth: []
+      *    parameters:
+      *     - in: path
+      *       name: receiverId
+      *       description: user who you added to friend
+      *    responses:
+      *      200:
+      *        description: success 
+      *      401:
+      *        description: Unauthorized
+      *      400:
+      *        description: params validation error / you cant unfriend yourself
+      *      404:
+      *        description: user not found / friendship not found
+      *      500:
+      *        description: something went wrong
+      */
+  .get(jwtVerify, friendController.getUserHasFollow)
 
+routes.route("/user/friend/request")
+  /**
+       * @swagger
+       * /api/v1/user/friend/request:
+       *  get:
+       *    summary: get user current user friend requst
+       *    tags: [Friend]
+       *    description: api for get current user friend request
+       *    parameters:
+       *      - in: query
+       *        name: pageNo
+       *        description: for get the number of page
+       *        schema:
+       *          type: number
+       *          example: 1
+       *      - in: query
+       *        name: size
+       *        description: for get the size of page
+       *        schema:
+       *          type: number
+       *          example: 4
+       *    security:
+       *      - jwt-auth: []
+       *    responses:
+       *      200:
+       *        description: success 
+       *      401:
+       *        description: Unauthorized
+       *      500:
+       *        description: something went wrong
+       */
+  .get(jwtVerify, friendController.getCurrentUserFriendRequest)
 
-routes.route("/friend/:senderId/confirm-friend")
+routes.route("/user/friend/following")
+  /**
+       * @swagger
+       * /api/v1/user/friend/following:
+       *  get:
+       *    tags: [Friend]
+       *    summary: get current user following
+       *    description: api get current user following 
+       *    parameters:
+       *      - in: query
+       *        name: pageNo
+       *        description: for get the number of page
+       *        schema:
+       *          type: number
+       *          example: 1
+       *      - in: query
+       *        name: size
+       *        description: for get the size of page
+       *        schema:
+       *          type: number
+       *          example: 4
+       *    security:
+       *      - jwt-auth: []
+       *    responses:
+       *      200:
+       *        description: success 
+       *      400:
+       *        description: validation error
+       *      401:
+       *        description: Unauthorized
+       *      500:
+       *        description: something went wrong
+       */
+  .get(jwtVerify, friendController.getCurrentUserFollowing)
+
+routes.route("/friend/:senderId/confirm")
   /**
      * @swagger
-       * /api/v1/friend/{senderId}/confirm-friend:
+     * /api/v1/friend/{senderId}/confirm:
      *  patch:
      *    summary: confirm user friend
      *    tags: [Friend]
@@ -102,10 +196,10 @@ routes.route("/friend/:senderId/confirm-friend")
      */
   .patch(jwtVerify, friendController.confirmFriend)
 
-routes.route("/friend/:senderId/unconfirm-friend")
+routes.route("/friend/:senderId/unconfirm")
   /**
      * @swagger
-     * /api/v1/friend/{senderId}/unconfirm-friend:
+     * /api/v1/friend/{senderId}/unconfirm:
      *  delete:
      *    summary: unconfirm user friend
      *    tags: [Friend] 
@@ -133,33 +227,6 @@ routes.route("/friend/:senderId/unconfirm-friend")
   .delete(jwtVerify, friendController.unconfirmFriend)
 
 
-routes.route("/friend/:receiverId")
-  /**
-      * @swagger
-      * /api/v1/friend/{receiverId}:
-      *  delete:
-      *    summary: get user has follow
-      *    tags: [Friend]
-      *    description: api for get user has follow
-      *    security:
-      *      - jwt-auth: []
-      *    parameters:
-      *     - in: path
-      *       name: receiverId
-      *       description: user who you added to friend
-      *    responses:
-      *      200:
-      *        description: success 
-      *      401:
-      *        description: Unauthorized
-      *      400:
-      *        description: params validation error / you cant unfriend yourself
-      *      404:
-      *        description: user not found / friendship not found
-      *      500:
-      *        description: something went wrong
-      */
-  .get(jwtVerify, friendController.getUserHasLikeByCurrentUser)
 
 
 const friendRoutes = routes

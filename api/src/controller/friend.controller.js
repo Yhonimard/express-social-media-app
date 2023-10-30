@@ -33,6 +33,39 @@ const FriendController = () => {
     }
   }
 
+  const getUserHasFollow = async (req, res, next) => {
+    try {
+      const { error } = validation.getUserHasFollow.params.validate(req.params)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await friendService.getUserHasFollow(req.user, req.params)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const getCurrentUserFriendRequest = async (req, res, next) => {
+    try {
+      const { error } = validation.getCurrentUserFriendRequestValidation.query.validate(req.query)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await friendService.getCurrentUserFriendRequest(req.user, req.query)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const getCurrentUserFollowing = async (req, res, next) => {
+    try {
+      const { error } = validation.getUserFollowingValidation.query.validate(req.query)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await friendService.getCurrentUserFollowing(req.user, req.query)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
   const confirmFriend = async (req, res, next) => {
     const { params, user } = req
     const currentUser = user
@@ -59,25 +92,14 @@ const FriendController = () => {
     }
   }
 
-
-
-  const getUserHasLikeByCurrentUser = async (req, res, next) => {
-    try {
-      const { error } = validation.getUserHasFollow.params.validate(req.params)
-      if (error) throw new ApiBadRequestError(error.message)
-      const response = await friendService.getUserHasLikeByCurrentUser(req.user, req.params)
-      res.json(response)
-    } catch (error) {
-      return next(error)
-    }
-  }
-
   return {
     followFriend,
     unfollowUser,
+    getUserHasFollow,
+    getCurrentUserFriendRequest,
+    getCurrentUserFollowing,
     confirmFriend,
     unconfirmFriend,
-    getUserHasLikeByCurrentUser
   }
 
 }

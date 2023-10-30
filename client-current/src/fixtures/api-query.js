@@ -17,3 +17,5 @@ export const GET_USER_PROFILE_BY_UID = "user-profile-by-uid"
 export const GET_POST_HAS_LIKE_CURRENT_USER_NAME = "post_has_like_current_user/get"
 
 export const FRIEND_QUERY_NAME = "user_friend"
+
+export const GET_CURRENT_USER_FOLLOWING = "getCurrentUserFollowing"

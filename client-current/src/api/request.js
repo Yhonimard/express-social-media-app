@@ -203,7 +203,7 @@ const getUserProfileByUserId = async (uid) => {
 
 
 const getUserHasFollow = async (receiverId) => {
-  const res = await api.instance.request.get(`/friend/${receiverId}`)
+  const res = await api.instance.request.get(`/user/${receiverId}/friend`)
   return res.data
 }
 
@@ -214,6 +214,33 @@ const followUser = async (receiverId) => {
 
 const unfollowUser = async (receiverId) => {
   const res = await api.instance.request.delete(`/friend/${receiverId}/unfollow`)
+  return res.data
+}
+const getRequestedFriendByCurrentUser = async (query) => {
+  const { pageNo, size } = query
+  const res = await api.instance.request.get(`/user/friend/request`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
+const getCurrentUserFollowing = async (query) => {
+  const { pageNo, size } = query
+  const res = await api.instance.request.get(`/user/friend/following`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+
+  return res.data
+}
+
+const confirmUser = async (senderId) => {
+  const res = await api.instance.request.patch(`/friend/${senderId}/confirm`)
   return res.data
 }
 
@@ -246,5 +273,8 @@ export default {
   getUserProfileByUserId,
   getUserHasFollow,
   followUser,
-  unfollowUser
+  unfollowUser,
+  getRequestedFriendByCurrentUser,
+  getCurrentUserFollowing,
+  confirmUser
 };
