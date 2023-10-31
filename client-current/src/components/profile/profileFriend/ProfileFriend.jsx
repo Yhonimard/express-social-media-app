@@ -1,4 +1,4 @@
-import { Box, Paper, SimpleGrid, Title } from "@mantine/core"
+import { Box, Divider, Paper, SimpleGrid, Title } from "@mantine/core"
 import ProfileFriendCard from "./ProfileFriendCard"
 import ProfileFriendList from "./ProfileFriendList"
 import ProfileFriendRequestList from "./ProfileFriendRequestList"
@@ -8,6 +8,7 @@ const ProfileFriend = () => {
     <Box>
       <Box p={5}>
         <ProfileFriendRequestList />
+        <Divider mb={`sm`} />
         <ProfileFriendList />
       </Box>
     </Box>

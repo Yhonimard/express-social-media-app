@@ -244,6 +244,11 @@ const confirmUser = async (senderId) => {
   return res.data
 }
 
+const unconfirmUser = async (senderId) => {
+  const res = await api.instance.request.delete(`/friend/${senderId}/unconfirm`)
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -276,5 +281,6 @@ export default {
   unfollowUser,
   getRequestedFriendByCurrentUser,
   getCurrentUserFollowing,
-  confirmUser
+  confirmUser,
+  unconfirmUser
 };

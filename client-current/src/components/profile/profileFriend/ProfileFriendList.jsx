@@ -1,31 +1,30 @@
-import { LoadingOverlay, SimpleGrid, Title } from "@mantine/core"
-import ProfileFriendCard from "./ProfileFriendCard"
+import { LoadingOverlay, Tabs, Title } from "@mantine/core"
 import useGetCurrentUserFollowing from "@/features/friend/useGetCurrentUserFollowing"
 import { useSelector } from "react-redux"
-import { Fragment } from "react"
+import { useState } from "react"
+import ProfileFriendListFollowing from "./ProfileFriendListFollowing"
 
 const ProfileFriendList = () => {
+  const [tabsLocation, setTabsLocation] = useState("Following")
+
   const currentUser = useSelector(s => s.auth.user)
   const userFriendQuery = useGetCurrentUserFollowing(currentUser.id)
   if (userFriendQuery.isLoading) return <LoadingOverlay visible />
   return (
     <>
-      <Title order={4} mb={10}>List Friend</Title>
-      <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>
-        {userFriendQuery.data.pages.map((p, i) => (
-          <Fragment key={i}>
-            {p.data.map(f => (
-              <ProfileFriendCard key={f.id}
-                photoProfile={f.user.photoProfile}
-                username={f.user.username}
-                name={f.user.name}
-                userId={f.user.id}
-              />
-            ))}
-
-          </Fragment>
-        ))}
-      </SimpleGrid>
+      <Title order={4} mb={10}>List {tabsLocation}</Title>
+      <Tabs value={tabsLocation} onChange={(e) => setTabsLocation(e)}>
+        <Tabs.List grow justify="center" >
+          <Tabs.Tab value="Following">Following</Tabs.Tab>
+          <Tabs.Tab value="Followers">Followers</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="Following">
+          <ProfileFriendListFollowing />
+        </Tabs.Panel>
+        <Tabs.Panel value="Followers">
+          Followers
+        </Tabs.Panel>
+      </Tabs>
     </>
   )
 }

@@ -65,7 +65,6 @@ const FriendService = () => {
             }
           }
         }).catch((reason) => {
-          console.log('reason', JSON.stringify(reason))
           throw customPrismaError(reason, { msgP2002: `you have been follow this user`, msgP2025: "user not found" })
         })
 
@@ -292,7 +291,7 @@ const FriendService = () => {
       //   }
       // })
 
-      const trx = await db.$transaction(async trx => {
+      await db.$transaction(async trx => {
         const confirmedFriendship = await trx.userFriend.findUnique({
           where: {
             senderId_receiverId: {
@@ -306,7 +305,7 @@ const FriendService = () => {
         if (currentUser.userId !== confirmedFriendship.receiverId) throw new ApiForbiddenError("you cant confirm this user friend")
         if (confirmedFriendship?.confirmed) throw new ApiBadRequestError("you have been confirm this user")
 
-        const confirmedUser = await trx.userFriend.update({
+        await trx.userFriend.update({
           where: {
             id: confirmedFriendship.id,
             confirmed: false
@@ -316,47 +315,68 @@ const FriendService = () => {
           }
         })
 
-        return confirmedUser
       })
-      return trx
     } catch (error) {
       throw prismaError(error)
     }
   }
 
   const unconfirmFriend = async (senderId, currentUser) => {
-    const receiverId = currentUser?.userId
     try {
-      const existingUserSender = await userRepo.findUnique({
-        where: {
-          id: senderId
-        }
-      })
+      // const existingUserSender = await userRepo.findUnique({
+      //   where: {
+      //     id: senderId
+      //   }
+      // })
+      //
+      // const existingUserReceiver = await userRepo.findUnique({
+      //   where: {
+      //     id: receiverId
+      //   }
+      // })
+      // if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
+      //
+      // const existingFriendship = await userFriendRepo.findFirst({
+      //   where: {
+      //     senderId: existingUserSender.id,
+      //     receiverId: existingUserReceiver.id,
+      //     confirmed: false
+      //   }
+      // })
+      // if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
+      // if (existingFriendship.receiverId !== receiverId) throw new ApiErrorResponse("you are not allowed to unconfirm this user friendship", httpStatus.FORBIDDEN)
+      //
+      // const deletedFriendship = await userFriendRepo.delete({
+      //   where: {
+      //     id: existingFriendship.id,
+      //   }
+      // })
 
-      const existingUserReceiver = await userRepo.findUnique({
-        where: {
-          id: receiverId
-        }
-      })
-      if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
 
-      const existingFriendship = await userFriendRepo.findFirst({
-        where: {
-          senderId: existingUserSender.id,
-          receiverId: existingUserReceiver.id,
-          confirmed: false
-        }
-      })
-      if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
-      if (existingFriendship.receiverId !== receiverId) throw new ApiErrorResponse("you are not allowed to unconfirm this user friendship", httpStatus.FORBIDDEN)
+      await db.$transaction(async tr => {
+        if (senderId === currentUser.userId) throw new ApiForbiddenError("you cant unconfirm yourself")
 
-      const deletedFriendship = await userFriendRepo.delete({
-        where: {
-          id: existingFriendship.id,
-        }
-      })
+        const existingFriendship = await tr.userFriend.findUnique({
+          where: {
+            senderId_receiverId: {
+              senderId,
+              receiverId: currentUser.userId
+            }
+          }
+        })
+        if (!existingFriendship) throw new ApiBadRequestError("That user hasn't follow you yet")
+        if (currentUser.userId !== existingFriendship.receiverId) throw new ApiForbiddenError("you cant confirm this user follower")
+        if (existingFriendship?.confirmed) throw new ApiBadRequestError("you have been confirm this user")
 
-      return deletedFriendship
+        await tr.userFriend.delete({
+          where: {
+            senderId_receiverId: {
+              senderId,
+              receiverId: currentUser.userId
+            }
+          },
+        })
+      })
     } catch (error) {
       throw prismaError(error)
     }
