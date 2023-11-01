@@ -1,12 +1,19 @@
+import useUnfollowUser from "@/features/friend/useUnfollowUser"
 import { ActionIcon, Avatar, Button, Card, Group, Stack, Text } from "@mantine/core"
+import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
-const ProfileFriendCard = ({ username, name, photoProfile, userId }) => {
+const ProfileFriendFollowingCard = ({ username, name, photoProfile, userId }) => {
   const navigate = useNavigate()
+  const currentUser = useSelector(s => s.auth.user)
+  const { mutate: unfollowUser } = useUnfollowUser({ currUserid: currentUser.id, receiverId: userId })
+  const unfollowUserHandler = () => {
+    unfollowUser(null)
+  }
   return (
-    <Card onClick={() => navigate(`/user/${userId}`)}>
+    <Card >
       <Card.Section>
-        <Group justify="space-between" px={15} py={10}>
+        <Group justify="space-between" px={15} py={10} onClick={() => navigate(`/user/${userId}`)}>
           <ActionIcon radius={`xl`} color="gray" variant="subtle" >
             <Avatar src={`${import.meta.env.VITE_API_BASE_URL}/${photoProfile}`} onClick={() => navigate(`/user/${userId}`)} />
           </ActionIcon>
@@ -14,11 +21,11 @@ const ProfileFriendCard = ({ username, name, photoProfile, userId }) => {
             <Text lh={1}>{username}</Text>
             <Text size="sm" mt={name ? "0" : "20.28"} >{name}</Text>
           </Stack>
-          <Button color="gray" size="xs">Unfollow</Button>
         </Group>
+        <Button color="gray" size="xs" onClick={unfollowUserHandler}>Unfollow</Button>
       </Card.Section>
     </Card>
   )
 }
 
-export default ProfileFriendCard
+export default ProfileFriendFollowingCard

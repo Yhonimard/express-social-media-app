@@ -249,6 +249,16 @@ const unconfirmUser = async (senderId) => {
   return res.data
 }
 
+const getCurrentUserFollowers = async ({ pageNo, size }) => {
+  const res = await api.instance.request.get(`/user/friend/followers`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -282,5 +292,6 @@ export default {
   getRequestedFriendByCurrentUser,
   getCurrentUserFollowing,
   confirmUser,
-  unconfirmUser
+  unconfirmUser,
+  getCurrentUserFollowers
 };

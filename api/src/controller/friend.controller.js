@@ -92,6 +92,27 @@ const FriendController = () => {
     }
   }
 
+  const getCurrentUserFollowers = async (req, res, next) => {
+    try {
+      const { error } = validation.getCurrentUserFollowers.query.validate(req.query)
+      if (error) throw new ApiBadRequestError(error.message)
+      const response = await friendService.getCurrentuserFollowers(req.user, req.query)
+      res.json(response)
+    } catch (err) {
+      return next(err)
+    }
+
+  }
+
+  const deleteFollowers = async (req, res, next) => {
+    try {
+      await friendService.deleteFollowers(req.user, req.params)
+      res.json({ message: "success delete followers" })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
   return {
     followFriend,
     unfollowUser,
@@ -100,6 +121,8 @@ const FriendController = () => {
     getCurrentUserFollowing,
     confirmFriend,
     unconfirmFriend,
+    getCurrentUserFollowers,
+    deleteFollowers
   }
 
 }

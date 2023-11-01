@@ -259,37 +259,6 @@ const FriendService = () => {
   const confirmFriend = async (senderId, currentUser) => {
     const receiverId = currentUser?.userId
     try {
-      // const existingUserSender = await userRepo.findUnique({
-      //   where: {
-      //     id: senderId
-      //   }
-      // })
-
-      // const existingUserReceiver = await userRepo.findUnique({
-      //   where: {
-      //     id: receiverId
-      //   }
-      // })
-      // if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
-
-      // const existingFriendship = await userFriendRepo.findFirst({
-      //   where: {
-      //     senderId: existingUserSender.id,
-      //     receiverId: existingUserReceiver.id,
-      //   }
-      // })
-      // if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
-      // if (existingFriendship?.confirmed) throw new ApiBadRequestError("you have become friend with this user")
-      // if (receiverId !== existingFriendship?.receiverId) throw new ApiErrorResponse("youare not allowed to confirm this user friendship", httpStatus.FORBIDDEN)
-
-      // const confirmedFriendship = await userFriendRepo.update({
-      //   where: {
-      //     id: existingFriendship.id
-      //   },
-      //   data: {
-      //     confirmed: true
-      //   }
-      // })
 
       await db.$transaction(async trx => {
         const confirmedFriendship = await trx.userFriend.findUnique({
@@ -323,35 +292,6 @@ const FriendService = () => {
 
   const unconfirmFriend = async (senderId, currentUser) => {
     try {
-      // const existingUserSender = await userRepo.findUnique({
-      //   where: {
-      //     id: senderId
-      //   }
-      // })
-      //
-      // const existingUserReceiver = await userRepo.findUnique({
-      //   where: {
-      //     id: receiverId
-      //   }
-      // })
-      // if (!existingUserSender || !existingUserReceiver) throw new ApiNotFoundError("user not found")
-      //
-      // const existingFriendship = await userFriendRepo.findFirst({
-      //   where: {
-      //     senderId: existingUserSender.id,
-      //     receiverId: existingUserReceiver.id,
-      //     confirmed: false
-      //   }
-      // })
-      // if (!existingFriendship) throw new ApiNotFoundError("friendship not found")
-      // if (existingFriendship.receiverId !== receiverId) throw new ApiErrorResponse("you are not allowed to unconfirm this user friendship", httpStatus.FORBIDDEN)
-      //
-      // const deletedFriendship = await userFriendRepo.delete({
-      //   where: {
-      //     id: existingFriendship.id,
-      //   }
-      // })
-
 
       await db.$transaction(async tr => {
         if (senderId === currentUser.userId) throw new ApiForbiddenError("you cant unconfirm yourself")
@@ -382,6 +322,85 @@ const FriendService = () => {
     }
   }
 
+  const getCurrentuserFollowers = async (currentUser, query) => {
+    try {
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+
+      const followers = await userFriendRepo.findMany({
+        where: {
+          receiver: {
+            id: currentUser.userId
+          },
+          confirmed: true
+        },
+        select: {
+          id: true,
+          sender: {
+            select: {
+              id: true,
+              username: true,
+              profile: {
+                select: {
+                  name: true
+                }
+              },
+              photoProfile: true
+            }
+          }
+        },
+        skip,
+        take
+      })
+
+      const mapperFollowers = followers.map(f => ({
+        id: f.id,
+        user: {
+          id: f.sender.id,
+          photoProfile: f.sender.photoProfile,
+          username: f.sender.username,
+          name: f.sender.profile.name
+        }
+      }))
+
+      const followersCount = await userFriendRepo.count({
+        where: {
+          receiver: {
+            id: currentUser.userId,
+          },
+          confirmed: true
+        }
+      })
+
+      return toPaginationResponseHelper(followersCount, mapperFollowers, query)
+    } catch (err) {
+      throw prismaError(err)
+    }
+  }
+
+  const deleteFollowers = async (currentUser, params) => {
+    try {
+
+      await db.$transaction(async tr => {
+        await tr.userFriend.delete({
+          where: {
+            receiver: {
+              id: currentUser.userId
+            },
+            sender: {
+              id: params.senderId
+            },
+            confirmed: true
+          }
+        })
+      }).catch(reason => {
+        throw customPrismaError(reason, { msgP2025: "user not found" })
+      })
+
+    } catch (err) {
+      throw prismaError(err)
+    }
+  }
+
 
   return {
     followUser,
@@ -391,6 +410,8 @@ const FriendService = () => {
     getCurrentUserFollowing,
     confirmFriend,
     unconfirmFriend,
+    getCurrentuserFollowers,
+    deleteFollowers
   }
 }
 

@@ -1,5 +1,5 @@
 import api from "@/api"
-import { FRIEND_QUERY_NAME } from "@/fixtures/api-query"
+import { FRIEND_QUERY_NAME, GET_CURRENT_USER_FOLLOWING } from "@/fixtures/api-query"
 import globalReducer from "@/redux/globalReducer"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
@@ -12,22 +12,38 @@ const useUnfollowUser = ({ currUserid, receiverId }) => {
   }, {
     onMutate: async () => {
       await query.cancelQueries([FRIEND_QUERY_NAME, currUserid, receiverId])
-      const prevData = query.getQueryData([FRIEND_QUERY_NAME, currUserid, receiverId])
+      const prevUserReqData = query.getQueryData([FRIEND_QUERY_NAME, currUserid, receiverId])
 
-      query.setQueryData([FRIEND_QUERY_NAME, currUserid, receiverId], (oldData) => {
+      await query.cancelQueries([GET_CURRENT_USER_FOLLOWING, currUserid])
+      const prevUserFollowingData = query.getQueryData([GET_CURRENT_USER_FOLLOWING, currUserid])
+
+      query.setQueryData([FRIEND_QUERY_NAME, currUserid, receiverId], () => {
         return {
           hasFollow: false
         }
       })
 
+      query.setQueryData([GET_CURRENT_USER_FOLLOWING, currUserid], (oldData) => {
+        const newPagesData = oldData.pages.map(p => ({
+          ...p,
+          data: p.data.filter(f => f.id !== receiverId)
+        }))
+
+        return {
+          ...oldData,
+          pages: newPagesData
+        }
+      })
+
       return {
-        prevData
+        prevUserReqData,
+        prevUserFollowingData
       }
     },
     onError: (err, _var, ctx) => {
       const msg = err?.response?.data?.message
-      query.setQueryData([FRIEND_QUERY_NAME, currUserid, receiverId], ctx.prevData)
-      d.apply(globalReducer.action.showNotification({ message: msg || "something went wrong, please try again to unfollow user" }))
+      query.setQueryData([FRIEND_QUERY_NAME, currUserid, receiverId], ctx.prevUserReqData)
+      d(globalReducer.action.showNotification({ message: msg || "something went wrong, please try again to unfollow user" }))
     },
     onSettled: () => {
       query.invalidateQueries([FRIEND_QUERY_NAME, currUserid, receiverId])

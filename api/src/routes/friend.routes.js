@@ -227,6 +227,43 @@ routes.route("/friend/:senderId/unconfirm")
   .delete(jwtVerify, friendController.unconfirmFriend)
 
 
+routes.route("/user/friend/followers")
+  /**
+       * @swagger
+       * /api/v1/user/friend/followers:
+       *  get:
+       *    tags: [Friend]
+       *    summary: get current user followers
+       *    description: api get current user followers
+       *    parameters:
+       *      - in: query
+       *        name: pageNo
+       *        description: for get the number of page
+       *        schema:
+       *          type: number
+       *          example: 1
+       *      - in: query
+       *        name: size
+       *        description: for get the size of page
+       *        schema:
+       *          type: number
+       *          example: 4
+       *    security:
+       *      - jwt-auth: []
+       *    responses:
+       *      200:
+       *        description: success 
+       *      400:
+       *        description: validation error
+       *      401:
+       *        description: Unauthorized
+       *      500:
+       *        description: something went wrong
+       */
+  .get(jwtVerify, friendController.getCurrentUserFollowers)
+
+routes.route("/user/friend/followers")
+  .delete(friendController.deleteFollowers)
 
 
 const friendRoutes = routes
