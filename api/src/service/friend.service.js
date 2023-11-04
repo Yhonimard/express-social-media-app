@@ -377,23 +377,25 @@ const FriendService = () => {
     }
   }
 
-  const deleteFollowers = async (currentUser, params) => {
+  const deleteFollowers = async (currentUser, data) => {
     try {
-
       await db.$transaction(async tr => {
-        await tr.userFriend.delete({
+        const existingFollowers = await tr.userFriend.findUnique({
           where: {
-            receiver: {
-              id: currentUser.userId
-            },
-            sender: {
-              id: params.senderId
+            senderId_receiverId: {
+              senderId: data.senderId,
+              receiverId: currentUser.userId
             },
             confirmed: true
           }
         })
-      }).catch(reason => {
-        throw customPrismaError(reason, { msgP2025: "user not found" })
+        if (!existingFollowers) throw new ApiNotFoundError("This user hasn't followed you yet")
+
+        await tr.userFriend.delete({
+          where: {
+            id: existingFollowers.id
+          }
+        })
       })
 
     } catch (err) {

@@ -1,4 +1,4 @@
-import { Button, LoadingOverlay, SimpleGrid } from "@mantine/core"
+import { Button, LoadingOverlay, SimpleGrid, Text } from "@mantine/core"
 import ProfileCommentCard from "./ProfileCommentCard"
 import useGetCommentHasCommentedCurrentUser from "@/features/comment/useGetCommentHasCommentedCurrentUser"
 import { useSelector } from "react-redux"
@@ -15,6 +15,7 @@ const ProfileComment = () => {
       <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>
         {commentUserData.pages.map((p, i) => (
           <Fragment key={i}>
+            {p.data.length< 1 && <Text>you have not comment yet</Text>}
             {p.data.map(p => (
               <ProfileCommentCard key={p.id} title={p.title} createdAt={moment(p.createdAt).format("DD MMMM, YYYY")} postId={p.post.id} />
             ))}

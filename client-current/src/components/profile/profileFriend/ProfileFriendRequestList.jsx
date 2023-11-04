@@ -1,4 +1,4 @@
-import { Box, LoadingOverlay, SimpleGrid, Title } from "@mantine/core"
+import { Box, LoadingOverlay, SimpleGrid, Text, Title } from "@mantine/core"
 import ProfileFriendRequestCard from "./ProfileFriendRequestCard"
 import useGetRequestedFriendByCurrentUser from "@/features/friend/useGetRequestedFriendByCurrentUser"
 import { useSelector } from "react-redux"
@@ -15,6 +15,7 @@ const ProfileFriendRequestList = () => {
       <SimpleGrid cols={{ base: 1, sm: 2 }}>
         {requestFriendQuery.data.pages.map((p, i) => (
           <Fragment key={i}>
+            {p.data.length < 1 && <Text>you dont have followers request</Text>}
             {p.data.map(f => (
               <ProfileFriendRequestCard
                 key={f.id}

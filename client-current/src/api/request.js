@@ -53,7 +53,7 @@ const updatePostByPostId = async (postId, data) => {
 };
 
 const getSinglePost = async (postId) => {
-  const res = await api.instance.request.get(`/post/${postId}`);
+  const res = await api.instance.request.get(`/post/${postId}/detail`);
   return res.data;
 };
 
@@ -259,6 +259,35 @@ const getCurrentUserFollowers = async ({ pageNo, size }) => {
   return res.data
 }
 
+const deleteFollowers = async (data) => {
+  const res = await api.instance.request.delete(`/user/friend/followers`, {
+    data
+  })
+  return res.data
+}
+
+const searchPost = async ({ search, pageNo, size }) => {
+  const res = await api.instance.request.get(`/post/search`, {
+    params: {
+      search,
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
+const searchUser = async ({ search, pageNo, size }) => {
+  const res = await api.instance.request.get(`user/search`, {
+    params: {
+      search,
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
 export default {
   login,
   register,
@@ -293,5 +322,8 @@ export default {
   getCurrentUserFollowing,
   confirmUser,
   unconfirmUser,
-  getCurrentUserFollowers
+  getCurrentUserFollowers,
+  deleteFollowers,
+  searchPost,
+  searchUser
 };

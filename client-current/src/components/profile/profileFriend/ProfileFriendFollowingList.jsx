@@ -1,4 +1,4 @@
-import { LoadingOverlay, SimpleGrid, } from "@mantine/core"
+import { LoadingOverlay, SimpleGrid, Text, } from "@mantine/core"
 import useGetCurrentUserFollowing from "@/features/friend/useGetCurrentUserFollowing"
 import { Fragment, } from "react"
 import { useSelector } from "react-redux"
@@ -12,6 +12,7 @@ const ProfileFriendFollowingList = () => {
     <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} mt={20}>
       {userFriendQuery.data.pages.map((p, i) => (
         <Fragment key={i} >
+          {p.data.length < 1 && <Text>You have not followed anyone yet</Text>}
           {p.data.map(f => (
             <ProfileFriendFollowingCard key={f.id}
               photoProfile={f.user.photoProfile}

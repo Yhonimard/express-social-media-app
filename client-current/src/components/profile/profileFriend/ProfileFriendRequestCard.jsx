@@ -8,12 +8,12 @@ import { useNavigate } from "react-router-dom"
 const ProfileFriendRequestCard = ({ user }) => {
 
   const currentUser = useSelector(state => state.auth.user)
-  const { mutate: confirm } = useConfirmUser({ uid: currentUser.id })
+  const { mutate: confirm } = useConfirmUser({ uid: currentUser.id, senderId: user.id })
   const { mutate: unconfirm } = useUnconfirmUser({ uid: currentUser.id, senderId: user.id })
   const navigate = useNavigate()
 
-  const confirmUser = (senderId) => {
-    confirm(senderId)
+  const confirmUser = (user) => {
+    confirm(user)
   }
 
   const unconfirmUser = () => {
@@ -21,7 +21,7 @@ const ProfileFriendRequestCard = ({ user }) => {
   }
 
   return (
-    <Card onClick={() => navigate(`/user/${user.id}`)} style={{ cursor: "pointer" }}>
+    <Card style={{ cursor: "pointer" }}>
       <Card.Section>
         <Group justify="space-between" px={15} py={10}>
           <ActionIcon radius={`xl`} color="gray" variant="subtle" onClick={() => navigate(`/user/${user.id}`)}>
@@ -37,7 +37,7 @@ const ProfileFriendRequestCard = ({ user }) => {
                 <Icon.Cancel />
               </Tooltip>
             </ActionIcon>
-            <ActionIcon variant="subtle" color="gray" onClick={() => confirmUser(user.id)}>
+            <ActionIcon variant="subtle" color="gray" onClick={() => confirmUser(user)}>
               <Tooltip withArrow label="Confirm">
                 <Icon.Check />
               </Tooltip>

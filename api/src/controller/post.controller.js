@@ -183,6 +183,14 @@ const PostController = () => {
     }
   }
 
+  const searchPost = async (req, res, next) => {
+    try {
+      const response = await postService.searchPost(req.query)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
 
   return {
     createPost,
@@ -195,7 +203,8 @@ const PostController = () => {
     deletePostByUser,
     createPostByUser,
     getAllPostHasLikedCurrentUser,
-    getPostByAuthorId
+    getPostByAuthorId,
+    searchPost
   };
 };
 

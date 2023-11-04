@@ -468,6 +468,54 @@ const PostService = () => {
     }
   }
 
+  const searchPost = async (query) => {
+    try {
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+      const posts = await postRepo.findMany({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: query.search,
+              },
+            },
+            {
+              content: {
+                contains: query.search
+              }
+            }
+          ]
+        },
+        skip,
+        take,
+        orderBy: {
+          title: "asc",
+        },
+      })
+
+      const postsCount = await postRepo.count({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: query.search
+              }
+            },
+            {
+              content: {
+                contains: query.search
+              }
+            }
+          ]
+        }
+      })
+
+      return toPaginationResponseHelper(postsCount, posts, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     createPost,
     getAllPost,
@@ -479,7 +527,8 @@ const PostService = () => {
     deletePostByUser,
     createPostByUser,
     getAllPostHasLikedCurrentUser,
-    getPostByAuthorId
+    getPostByAuthorId,
+    searchPost
   };
 };
 

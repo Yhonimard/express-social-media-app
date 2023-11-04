@@ -147,5 +147,44 @@ routes.route("/user/:uid/profile")
      */
   .get(userController.getUserProfileByUserId)
 
+
+routes.route("/user/search")
+  /**
+     * @swagger
+     * /api/v1/user/search:
+     *  get:
+     *    summary: search user
+     *    tags: [User]
+     *    description: api for search user
+     *    parameters:
+     *      - in: query
+     *        name: search
+     *        description: search user by username or name
+     *        schema:
+     *          type: string
+     *      - in: query
+     *        name: pageNo
+     *        description: for get the page number
+     *        schema:
+     *          type: number
+     *          example: 1
+     *      - in: query
+     *        name: size
+     *        description: for get the size of page
+     *        schema:
+     *          type: number
+     *          example: 4
+     *    responses:
+     *      200:
+     *        description: success 
+     *      400:
+     *        description: validation query error
+     *      404:
+     *        description: user not found
+     *      500:
+     *        description: something went wrong
+     */
+  .get(userController.searchUserByUserId)
+
 const userRoutes = routes
 export default userRoutes

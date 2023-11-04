@@ -1,6 +1,8 @@
 import db from "../config/db";
 import ApiNotFoundError from "../exception/ApiNotFoundError";
 import prismaError from "../exception/prisma-error";
+import paginationHelper from "../helper/pagination.helper";
+import toPaginationResponseHelper from "../helper/to-pagination-response.helper";
 
 const UserService = () => {
   const userRepo = db.user;
@@ -128,12 +130,82 @@ const UserService = () => {
     }
   }
 
+  const searchUserByUserId = async (query) => {
+    try {
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+      const users = await userRepo.findMany({
+        where: {
+          OR: [
+            {
+              username: {
+                contains: query.search
+              },
+            },
+            {
+              profile: {
+                name: {
+                  contains: query.search
+                }
+              }
+            }
+          ]
+        },
+        orderBy: {
+          username: "asc"
+        },
+        select: {
+          id: true,
+          username: true,
+          photoProfile: true,
+          profile: {
+            select: {
+              name: true
+            }
+          }
+        },
+        take,
+        skip
+      })
+
+      const mapperUsers = users.map(u => ({
+        id: u.id,
+        username: u.username,
+        name: u.profile.name,
+        photoProfile: u.photoProfile
+      }))
+
+      const userCount = await userRepo.count({
+        where: {
+          OR: [
+            {
+              username: {
+                contains: query.search
+              },
+            },
+            {
+              profile: {
+                name: {
+                  contains: query.search
+                }
+              }
+            }
+          ]
+        }
+      })
+
+      return toPaginationResponseHelper(userCount, mapperUsers, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
   return {
     getUserById,
     getUserCurrent,
     updateProfile,
     getUserProfile,
-    getUserProfileByUserId
+    getUserProfileByUserId,
+    searchUserByUserId
   };
 };
 export default UserService;

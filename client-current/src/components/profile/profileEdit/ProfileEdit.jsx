@@ -28,7 +28,7 @@ const ProfileEditComponent = ({ currentUserProfile }) => {
     editProfileFormik.setValues({
       name: data?.name || "",
       bio: data?.bio || "",
-      birthday: new Date(data.birthday) || new Date(2004, 2, 20),
+      birthday: new Date(data?.birthday) || new Date(2004, 2, 20),
       phone: data?.phone,
     });
     toggleModal();

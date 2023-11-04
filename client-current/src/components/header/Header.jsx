@@ -1,3 +1,4 @@
+import Icon from "@/assets/icon";
 import {
   ActionIcon,
   Avatar,
@@ -10,29 +11,19 @@ import {
   TextInput,
   Tooltip,
   rem,
-  useMantineTheme,
+  useMantineTheme
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import classes from "./Header.module.css";
-import HeaderDrawerComponent from "./headerDrawer";
 import { useSelector } from "react-redux";
-import {
-  Favorite as IconFavorite,
-  Search as IconSearch,
-  Star as IconStar,
-  Message as IconMessage,
-  Settings as IconSettings,
-  SwapHoriz as IconSwapHoriz,
-  Logout as IconLogout,
-  Pause as IconPlayerPause,
-  Delete as IconDelete,
-} from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import classes from "./Header.module.css";
+import HeaderSearch from "./headerSearch/HeaderSearch";
+import HeaderDrawerComponent from "./headerDrawer";
 
 export default function HeaderComponent() {
   const theme = useMantineTheme();
-  const [openedDrawer, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure();
+  const [openedDrawer, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure();
+  const [openedModal, { toggle: toggleModal }] = useDisclosure()
   const user = useSelector((state) => state.auth.user);
 
   return (
@@ -53,13 +44,14 @@ export default function HeaderComponent() {
               />
             </Box>
             <TextInput
+              onClick={toggleModal}
               radius="xl"
               size="md"
               style={{ width: "40%" }}
               placeholder="Search..."
               rightSectionWidth={42}
               leftSection={
-                <IconSearch
+                <Icon.Search
                   style={{ width: rem(18), height: rem(18) }}
                   stroke={1.5}
                 />
@@ -70,7 +62,7 @@ export default function HeaderComponent() {
                   radius="xl"
                   color={theme.primaryColor}
                   variant="filled">
-                  <IconSearch
+                  <Icon.Search
                     style={{ width: rem(18), height: rem(18) }}
                     stroke={1.5}
                   />
@@ -101,7 +93,7 @@ export default function HeaderComponent() {
                   component={Link}
                   to={`/profile?tabs=likes`}
                   leftSection={
-                    <IconFavorite
+                    <Icon.Favorite
                       style={{ width: rem(16), height: rem(16) }}
                       color={theme.colors.red[6]}
                       stroke={1.5}
@@ -114,7 +106,7 @@ export default function HeaderComponent() {
                   component={Link}
                   to={`/profile?tabs=saved_post`}
                   leftSection={
-                    <IconStar
+                    <Icon.Star
                       style={{ width: rem(16), height: rem(16) }}
                       color={theme.colors.yellow[6]}
                       stroke={1.5}
@@ -127,7 +119,7 @@ export default function HeaderComponent() {
                   component={Link}
                   to={`/profile?tabs=comment`}
                   leftSection={
-                    <IconMessage
+                    <Icon.Message
                       style={{ width: rem(16), height: rem(16) }}
                       color={theme.colors.blue[6]}
                       stroke={1.5}
@@ -138,7 +130,7 @@ export default function HeaderComponent() {
                 <Menu.Label>Settings</Menu.Label>
                 <Menu.Item
                   leftSection={
-                    <IconSettings
+                    <Icon.Settings
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
@@ -147,7 +139,7 @@ export default function HeaderComponent() {
                 </Menu.Item>
                 <Menu.Item
                   leftSection={
-                    <IconSwapHoriz
+                    <Icon.SwapHoriz
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
@@ -156,7 +148,7 @@ export default function HeaderComponent() {
                 </Menu.Item>
                 <Menu.Item
                   leftSection={
-                    <IconLogout
+                    <Icon.Logout
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
@@ -167,7 +159,7 @@ export default function HeaderComponent() {
                 <Menu.Label>Danger zone</Menu.Label>
                 <Menu.Item
                   leftSection={
-                    <IconPlayerPause
+                    <Icon.Pause
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
@@ -177,7 +169,7 @@ export default function HeaderComponent() {
                 <Menu.Item
                   color="red"
                   leftSection={
-                    <IconDelete
+                    <Icon.Delete
                       style={{ width: rem(16), height: rem(16) }}
                       stroke={1.5}
                     />
@@ -189,6 +181,7 @@ export default function HeaderComponent() {
           </Group>
         </Container>
       </div>
+      <HeaderSearch opened={openedModal} toggle={toggleModal} />
     </div>
   );
 }

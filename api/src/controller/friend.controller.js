@@ -106,7 +106,7 @@ const FriendController = () => {
 
   const deleteFollowers = async (req, res, next) => {
     try {
-      await friendService.deleteFollowers(req.user, req.params)
+      await friendService.deleteFollowers(req.user, req.body)
       res.json({ message: "success delete followers" })
     } catch (error) {
       return next(error)

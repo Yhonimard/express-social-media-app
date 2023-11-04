@@ -166,10 +166,10 @@ routes
   .delete(jwtVerify, postController.deletePost);
 
 routes
-  .route("/post/:postId")
+  .route("/post/:postId/detail")
   /**
    * @swagger
-   * /api/v1/post/{postId}:
+   * /api/v1/post/{postId}/detail:
    *  get:
    *    summary: get post by id
    *    tags: [Post]
@@ -376,7 +376,82 @@ routes
   .get(jwtVerify, postController.getAllPostHasLikedCurrentUser);
 
 
-routes.route(`/user/:uid/post`).get(postController.getPostByAuthorId)
+routes.route(`/user/:uid/post`)
+  /**
+     * @swagger
+     * /api/v1/user/{uid}/post:
+     *  get:
+     *    summary: get post by user id
+     *    tags: [Post]
+     *    description: api for get post by user id
+     *    parameters:
+     *      - in: path
+     *        name: uid
+     *        description: user id
+     *        schema:
+     *          type: string
+     *      - in: query
+     *        name: pageNo
+     *        description: for get the number of page
+     *        schema:
+     *          type: string
+     *          example: 1
+     *      - in: query
+     *        name: size
+     *        description: for get the size of page
+     *        schema:
+     *          type: string
+     *          example: 4
+     *    responses:
+     *      200:
+     *        description: success 
+     *      400:
+     *        description: validation query error
+     *      404:
+     *        description: user not found
+     *      500:
+     *        description: something went wrong
+     */
+  .get(postController.getPostByAuthorId)
+
+
+routes.route("/post/search")
+  /**
+      * @swagger
+      * /api/v1/post/search:
+      *  get:
+      *    summary: search post
+      *    tags: [Post]
+      *    description: api for search post
+      *    parameters:
+      *      - in: query
+      *        name: search
+      *        description: search post by title or content
+      *        schema:
+      *          type: string
+      *      - in: query
+      *        name: pageNo
+      *        description: for get the number of page
+      *        schema:
+      *          type: number
+      *          example: 1
+      *      - in: query
+      *        name: size
+      *        description: for get the size of page
+      *        schema:
+      *          type: number
+      *          example: 4
+      *    responses:
+      *      200:
+      *        description: success 
+      *      400:
+      *        description: validation query error
+      *      404:
+      *        description: user not found
+      *      500:
+      *        description: something went wrong
+      */
+  .get(postController.searchPost)
 
 const postRoutes = routes;
 export default postRoutes;

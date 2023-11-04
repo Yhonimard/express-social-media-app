@@ -7,8 +7,18 @@ import {
   ContactPhone,
   StickyNote2,
   Check,
-  Cancel
+  Cancel,
+  Search,
+  Star,
+  Message,
+  Settings,
+  SwapHoriz,
+  Logout,
+  Pause ,
+
 } from "@mui/icons-material";
+
+
 
 export default {
   Favorite,
@@ -20,5 +30,12 @@ export default {
   ContactPhone,
   StickyNote2,
   Check,
-  Cancel
+  Cancel,
+  Search,
+  Star,
+  Message,
+  Settings,
+  SwapHoriz,
+  Logout,
+  Pause
 }

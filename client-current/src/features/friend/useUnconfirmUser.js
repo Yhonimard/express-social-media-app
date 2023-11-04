@@ -1,7 +1,7 @@
 import api from "@/api"
-import { FRIEND_QUERY_NAME } from "@/fixtures/api-query"
+import { FRIEND_QUERY_NAME, } from "@/fixtures/api-query"
 import globalReducer from "@/redux/globalReducer"
-import { useQueryClient, useMutation, QueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
 
 
@@ -17,7 +17,6 @@ const useUnconfirmUser = ({ uid, senderId }) => {
       const prevReqFrienddata = await qc.getQueryData([FRIEND_QUERY_NAME, uid])
 
       qc.setQueryData([FRIEND_QUERY_NAME, uid], (oldData) => {
-
         return {
           ...oldData,
           pages: oldData.pages.map(p => ({
@@ -25,11 +24,10 @@ const useUnconfirmUser = ({ uid, senderId }) => {
             data: p.data.filter(f => f.id !== senderId)
           }))
         }
-
       })
 
       return {
-        prevReqFrienddata
+        prevReqFrienddata,
       }
     },
     onError: (err, _var, ctx) => {

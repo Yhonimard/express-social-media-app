@@ -263,7 +263,35 @@ routes.route("/user/friend/followers")
   .get(jwtVerify, friendController.getCurrentUserFollowers)
 
 routes.route("/user/friend/followers")
-  .delete(friendController.deleteFollowers)
+  /**
+       * @swagger
+       * /api/v1/user/friend/followers:
+       *  delete:
+       *    tags: [Friend]
+       *    summary: delete followers
+       *    description: api for delete followers
+       *    requestBody:
+       *      required: true
+       *      content:
+       *        application/json:
+       *          schema:
+       *            type: object
+       *            properties:
+       *              senderId:
+       *                type: string
+       *    security:
+       *      - jwt-auth: []
+       *    responses:
+       *      200:
+       *        description: success 
+       *      400:
+       *        description: validation error
+       *      401:
+       *        description: Unauthorized
+       *      500:
+       *        description: something went wrong
+       */
+  .delete(jwtVerify, friendController.deleteFollowers)
 
 
 const friendRoutes = routes

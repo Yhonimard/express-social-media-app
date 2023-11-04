@@ -37,6 +37,7 @@ model Post {
   comments  Comment[]
   likesBy   PostUserLike[]
 
+  @@index([title])
   @@map("post")
 }
 

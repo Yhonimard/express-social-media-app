@@ -6,6 +6,10 @@ const globalReducer = createSlice({
   initialState: {
     loadingOverlay: {
       isOpen: false
+    },
+    headerSearch: {
+      tabsLocation: "Post",
+      searchValue: ""
     }
   },
   reducers: {
@@ -14,7 +18,13 @@ const globalReducer = createSlice({
     },
     showNotification: (state, { payload }) => {
       const { message, status: variant } = payload
-      enqueueSnackbar({ message, variant: variant || "success" })
+      enqueueSnackbar({ variant: variant || "success", message: message || "something went wrong, please try again" })
+    },
+    setHeaderSearchTabsLocation: (state, { payload }) => {
+      state.headerSearch.tabsLocation = payload.tabsLocation
+    },
+    setHeaderSearchValue: (state, { payload }) => {
+      state.headerSearch.searchValue = payload.searchValue
     }
   }
 })

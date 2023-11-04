@@ -47,6 +47,7 @@ const UserController = () => {
       phone: String(req.body.phone),
     };
     try {
+      console.log('data', data)
       const { error } = validation.updateProfile.body.validate(data);
       if (error) throw new ApiBadRequestError(error.message);
 
@@ -69,12 +70,23 @@ const UserController = () => {
     }
   }
 
+  const searchUserByUserId = async (req, res, next) => {
+    try {
+      const response = await userService.searchUserByUserId(req.query)
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+
+  }
+
   return {
     getUserById,
     getUserCurrent,
     updateProfile,
     getUserProfile,
-    getUserProfileByUserId
+    getUserProfileByUserId,
+    searchUserByUserId
   };
 };
 

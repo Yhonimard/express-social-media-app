@@ -66,6 +66,21 @@ async function main() {
         senderId: user4.id,
         receiverId: user1.id
       },
+      {
+        senderId: user1.id,
+        receiverId: user2.id,
+        confirmed: true
+      },
+      {
+        senderId: user1.id,
+        receiverId: user3.id,
+        confirmed: true
+      },
+      {
+        senderId: user1.id,
+        receiverId: user4.id,
+        confirmed: true
+      }
     ]
   })
 

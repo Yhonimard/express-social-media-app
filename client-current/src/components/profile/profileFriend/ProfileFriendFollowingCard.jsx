@@ -13,16 +13,16 @@ const ProfileFriendFollowingCard = ({ username, name, photoProfile, userId }) =>
   return (
     <Card >
       <Card.Section>
-        <Group justify="space-between" px={15} py={10} onClick={() => navigate(`/user/${userId}`)}>
+        <Group justify="space-between" px={15} py={10} wrap="nowrap">
           <ActionIcon radius={`xl`} color="gray" variant="subtle" >
             <Avatar src={`${import.meta.env.VITE_API_BASE_URL}/${photoProfile}`} onClick={() => navigate(`/user/${userId}`)} />
           </ActionIcon>
-          <Stack gap={0} style={{ flexGrow: 1 }}>
+          <Stack gap={0} style={{ flexGrow: 1 }} w={`50%`}>
             <Text lh={1}>{username}</Text>
             <Text size="sm" mt={name ? "0" : "20.28"} >{name}</Text>
           </Stack>
+          <Button color="gray" size="xs" onClick={unfollowUserHandler}>Unfollow</Button>
         </Group>
-        <Button color="gray" size="xs" onClick={unfollowUserHandler}>Unfollow</Button>
       </Card.Section>
     </Card>
   )

@@ -22,4 +22,7 @@ export const GET_CURRENT_USER_FOLLOWING = "getCurrentUserFollowing"
 
 export const GET_CURRENT_USER_FOLLOWERS_QUERY_NAME = "getCurrentUserFollowers"
 
+export const SEARCH_POST_QUERY_NAME = "searchpost"
+
+export const SEARCH_USER_QUERY_NAME = "searchUser"
 

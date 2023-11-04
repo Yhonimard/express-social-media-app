@@ -5,7 +5,7 @@ import commentReducer from "./commentReducer"
 
 
 const rootReducer = combineReducers({
-  global: globalReducer.init,
+  global: globalReducer.persist,
   auth: authReducer.persist,
   comment: commentReducer.init
 })

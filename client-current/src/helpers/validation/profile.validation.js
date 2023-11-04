@@ -1,8 +1,9 @@
 import * as yup from "yup";
 
 const updateProfileValidation = yup.object({
-  bio: yup.string().min(5).max(200).notRequired(),
-  birthday: yup.date().max(new Date()).notRequired(),
+  name: yup.string().min(5).max(200).notRequired().nullable(),
+  bio: yup.string().min(5).max(200).notRequired().nullable(),
+  birthday: yup.date().max(new Date()).notRequired().nullable(),
   phone: yup
     .number()
     .notRequired()
