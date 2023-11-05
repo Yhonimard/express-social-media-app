@@ -58,12 +58,12 @@ const ProfilePage = () => {
           <Tabs
             value={tabsLocation || "post"}
             onChange={(e) => setSearchParams({ tabs: e })}>
-            <Tabs.List mb={20}>
-              <Tabs.Tab value="post">post</Tabs.Tab>
-              <Tabs.Tab value="profile">profile</Tabs.Tab>
-              <Tabs.Tab value="likes">likes</Tabs.Tab>
-              <Tabs.Tab value="comment">comment</Tabs.Tab>
-              <Tabs.Tab value="friend">friend</Tabs.Tab>
+            <Tabs.List mb={20} grow justify="center">
+              <Tabs.Tab value="post">Post</Tabs.Tab>
+              <Tabs.Tab value="profile">Profile</Tabs.Tab>
+              <Tabs.Tab value="likes">Likes</Tabs.Tab>
+              <Tabs.Tab value="comment">Comment</Tabs.Tab>
+              <Tabs.Tab value="friend">Friend</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="post">
               <ProfilePostComponent />

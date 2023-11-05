@@ -10,7 +10,7 @@ const useGetAllPost = () => {
     {
       getNextPageParam: (_lastPage, pages) => {
         if (!_lastPage?.isLast) return pages.length + 1
-        else return undefined
+        else return undefined 
       }
     })
 }

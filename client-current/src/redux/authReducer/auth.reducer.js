@@ -18,6 +18,13 @@ const authReducer = createSlice({
       state.user.photoProfile = payload.photoProfile
       state.user.token = payload.token
       state.user.isAuthorized = true
+    },
+    logoutUser: (state, { payload }) => {
+      state.user.id = null
+      state.user.username = null
+      state.user.photoProfile = null
+      state.user.token = null
+      state.user.isAuthorized = false
     }
   }
 })

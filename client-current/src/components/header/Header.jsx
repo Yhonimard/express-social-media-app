@@ -14,17 +14,23 @@ import {
   useMantineTheme
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import classes from "./Header.module.css";
 import HeaderSearch from "./headerSearch/HeaderSearch";
 import HeaderDrawerComponent from "./headerDrawer";
+import authReducer from "@/redux/authReducer";
 
 export default function HeaderComponent() {
   const theme = useMantineTheme();
   const [openedDrawer, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure();
   const [openedModal, { toggle: toggleModal }] = useDisclosure()
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch()
+
+  const logoutUser = () => {
+    dispatch(authReducer.action.logoutUser())
+  }
 
   return (
     <div>
@@ -104,19 +110,6 @@ export default function HeaderComponent() {
 
                 <Menu.Item
                   component={Link}
-                  to={`/profile?tabs=saved_post`}
-                  leftSection={
-                    <Icon.Star
-                      style={{ width: rem(16), height: rem(16) }}
-                      color={theme.colors.yellow[6]}
-                      stroke={1.5}
-                    />
-                  }>
-                  Saved posts
-                </Menu.Item>
-
-                <Menu.Item
-                  component={Link}
                   to={`/profile?tabs=comment`}
                   leftSection={
                     <Icon.Message
@@ -129,24 +122,7 @@ export default function HeaderComponent() {
                 </Menu.Item>
                 <Menu.Label>Settings</Menu.Label>
                 <Menu.Item
-                  leftSection={
-                    <Icon.Settings
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
-                  }>
-                  Account settings
-                </Menu.Item>
-                <Menu.Item
-                  leftSection={
-                    <Icon.SwapHoriz
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
-                  }>
-                  Change account
-                </Menu.Item>
-                <Menu.Item
+                  onClick={logoutUser}
                   leftSection={
                     <Icon.Logout
                       style={{ width: rem(16), height: rem(16) }}
@@ -154,27 +130,6 @@ export default function HeaderComponent() {
                     />
                   }>
                   Logout
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Label>Danger zone</Menu.Label>
-                <Menu.Item
-                  leftSection={
-                    <Icon.Pause
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
-                  }>
-                  Pause subscription
-                </Menu.Item>
-                <Menu.Item
-                  color="red"
-                  leftSection={
-                    <Icon.Delete
-                      style={{ width: rem(16), height: rem(16) }}
-                      stroke={1.5}
-                    />
-                  }>
-                  Delete account
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>

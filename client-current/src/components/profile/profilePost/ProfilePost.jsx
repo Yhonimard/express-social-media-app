@@ -23,6 +23,7 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import classes from "./ProfilePost.module.css";
 import ProfilePostCardComponent from "./profilePostCard";
+import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
 const ProfilePost = () => {
 
@@ -31,7 +32,8 @@ const ProfilePost = () => {
     isSuccess: isSuccessFetchPost,
     hasNextPage,
     fetchNextPage,
-    isLoading
+    isLoading,
+    isFetchingNextPage
   } = useGetPostListByUser();
 
   const createPostFormik = useFormik({
@@ -50,7 +52,7 @@ const ProfilePost = () => {
 
   const { mutate: addPostByUser } = useCreatePostByUser(currentUser.id);
 
-
+  const { inViewRef, isShowBtn } = useInfiniteScroll(fetchNextPage)
 
   if (isLoading) return <LoadingOverlay />
   return (
@@ -132,17 +134,20 @@ const ProfilePost = () => {
               ))}
             </Fragment>
           ))}
+        {isShowBtn && (
+          <Button
+            onClick={fetchNextPage}
+            fullWidth
+            ref={inViewRef}
+            style={{ visibility: "hidden" }}
+            color="gray"
+            variant="filled"
+            disabled={!hasNextPage || isFetchingNextPage}
+            my={20}>
+            see more your post
+          </Button>
+        )}
       </SimpleGrid>
-      {hasNextPage && (
-        <Button
-          onClick={fetchNextPage}
-          fullWidth
-          color="gray"
-          variant="filled"
-          my={20}>
-          see more your post
-        </Button>
-      )}
     </>
   );
 };

@@ -22,7 +22,7 @@ const HeaderSearch = ({ opened, toggle }) => {
   const postQuery = useSearchPost(searchValue)
 
   return (
-    <Modal opened={opened} onClose={toggle} title={`Search ${headerSearch.tabsLocation}`} >
+    <Modal opened={opened} onClose={toggle} title={`Search ${headerSearch.tabsLocation}`} size={`lg`}>
       <TextInput
         radius="xl"
         value={headerSearch.searchValue}
@@ -71,7 +71,7 @@ const HeaderSearch = ({ opened, toggle }) => {
           </SimpleGrid>
         </Tabs.Panel>
         <Tabs.Panel value="People">
-          <SimpleGrid cols={1}>
+          <SimpleGrid cols={1} mt={15}>
             {userQuery.data?.pages.map((p, i) => (
               <Fragment key={i}>
                 {p.data.map(p => (

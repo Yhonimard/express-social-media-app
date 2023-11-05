@@ -41,7 +41,7 @@ const PostController = () => {
       });
       if (error) throw new ApiBadRequestError(error.message);
       const response = await postService.getAllPost(pageNo, size, commentSize);
-      res.status(httpStatus.OK).json(response);
+      setTimeout(() => res.status(httpStatus.OK).json(response), 800)
     } catch (error) {
       return next(error);
     }
