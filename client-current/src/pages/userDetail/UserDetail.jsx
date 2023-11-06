@@ -79,7 +79,7 @@ const UserDetailPage = () => {
               <UserDetailPost params={params} username={userQuery.data.username} />
             </Tabs.Panel>
             <Tabs.Panel value="profile">
-              <UserDetailProfile profileData={profileQuery.data} />
+              <UserDetailProfile profileData={profileQuery.data} username={userQuery.data.username} />
             </Tabs.Panel>
           </Tabs>
         </Box>

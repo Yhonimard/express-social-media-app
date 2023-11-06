@@ -1,7 +1,7 @@
 import Icon from "@/assets/icon";
 import { Group, Stack, Text } from "@mantine/core";
 import moment from "moment";
-const UserDetailProfile = ({ profileData }) => {
+const UserDetailProfile = ({ profileData, username }) => {
 
 
   return (
@@ -26,7 +26,7 @@ const UserDetailProfile = ({ profileData }) => {
       }
       {
         !profileData.phone && !profileData.bio && !profileData.birthday &&
-        <Text>you dont have profile please update it first</Text>
+        <Text>{username} dont have updated profile</Text>
       }
     </Stack >
   );

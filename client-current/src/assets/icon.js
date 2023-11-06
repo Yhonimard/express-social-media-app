@@ -14,7 +14,11 @@ import {
   Settings,
   SwapHoriz,
   Logout,
-  Pause ,
+  Pause,
+  Twitter,
+  YoutubeSearchedFor,
+  Instagram,
+  WhatsApp
 
 } from "@mui/icons-material";
 
@@ -37,5 +41,9 @@ export default {
   Settings,
   SwapHoriz,
   Logout,
-  Pause
+  Pause,
+  Twitter,
+  Youtube: YoutubeSearchedFor,
+  Instagram,
+  WhatsApp
 }

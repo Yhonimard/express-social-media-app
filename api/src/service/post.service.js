@@ -486,6 +486,11 @@ const PostService = () => {
             }
           ]
         },
+        select: {
+          id: true,
+          title: true,
+          content: true
+        },
         skip,
         take,
         orderBy: {

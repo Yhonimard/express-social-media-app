@@ -32,7 +32,6 @@ const HomePage = () => {
         ))}
         {isShowBtn && (
           <Button
-            my={20}
             fullWidth
             onClick={fetchNextPage}
             ref={inViewRef}

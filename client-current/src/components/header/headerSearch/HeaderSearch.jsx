@@ -2,10 +2,12 @@ import Icon from "@/assets/icon"
 import useSearchPost from "@/features/post/useSearchPost"
 import useSearchUser from "@/features/user/useSearchUser"
 import globalReducer from "@/redux/globalReducer"
-import { ActionIcon, Button, Card, Modal, SimpleGrid, Tabs, TextInput, rem, useMantineTheme } from "@mantine/core"
+import { ActionIcon, Button, Modal, SimpleGrid, Tabs, TextInput, rem, useMantineTheme } from "@mantine/core"
 import { Fragment } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useDebounce } from "use-debounce"
+import HeaderSearchPostCard from "./HeaderSearchPostCard"
+import HeaderSearchUserCard from "./HeaderSearchUserCard"
 
 const HeaderSearch = ({ opened, toggle }) => {
   const theme = useMantineTheme()
@@ -59,9 +61,7 @@ const HeaderSearch = ({ opened, toggle }) => {
             {postQuery.data?.pages.map((p, i) => (
               <Fragment key={i}>
                 {p.data.map(p => (
-                  <Card key={p.id}>
-                    {p.title}
-                  </Card>
+                  <HeaderSearchPostCard key={p.id} title={p.title} content={p.content} pid={p.id} toggle={toggle} />
                 ))}
               </Fragment>
             ))}
@@ -74,10 +74,8 @@ const HeaderSearch = ({ opened, toggle }) => {
           <SimpleGrid cols={1} mt={15}>
             {userQuery.data?.pages.map((p, i) => (
               <Fragment key={i}>
-                {p.data.map(p => (
-                  <Card key={p.id}>
-                    {p.username}
-                  </Card>
+                {p.data.map(u => (
+                  <HeaderSearchUserCard key={u.id} user={u} toggle={toggle} />
                 ))}
               </Fragment>
             ))}
