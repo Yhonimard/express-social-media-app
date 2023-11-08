@@ -161,7 +161,35 @@ async function main() {
       },
     ]
   })
-  await db.comment.create()
+
+  const posts = await db.post.findMany()
+
+  await db.comment.createMany({
+    data: [
+      {
+        authorId: user2.id,
+        postId: posts[0].id,
+        title: "wow greats 0"
+      },
+      {
+        authorId: user2.id,
+        postId: posts[1].id,
+        title: "wow greats 1"
+      },
+      {
+        authorId: user2.id,
+        postId: posts[2].id,
+        title: "wow greats 2"
+      },
+      {
+        authorId: user2.id,
+        postId: posts[3].id,
+        title: "wow greats 3"
+      },
+    ]
+  })
+
+
 }
 
 

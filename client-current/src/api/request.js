@@ -278,11 +278,34 @@ const searchPost = async ({ search, pageNo, size }) => {
 }
 
 const searchUser = async ({ search, pageNo, size }) => {
-  const res = await api.instance.request.get(`user/search`, {
+  const res = await api.instance.request.get(`/user/search`, {
     params: {
       search,
       pageNo,
       size
+    }
+  })
+  return res.data
+}
+
+const getCurrentUserHasLikeComment = async ({ cid }) => {
+  const res = await api.instance.request.get(`/post/comment/${cid}/like`)
+  return res.data
+}
+
+const likeComment = async ({ cid }) => {
+  const res = await api.instance.request.post('/post/comment/like',
+    {
+      coommentId: cid
+    }
+  )
+  return res.data
+}
+
+const unlikeComment = async ({ cid }) => {
+  const res = await api.instance.request.delete(`/post/comment/unlike`, {
+    data: {
+      commentId: cid
     }
   })
   return res.data
@@ -325,5 +348,8 @@ export default {
   getCurrentUserFollowers,
   deleteFollowers,
   searchPost,
-  searchUser
+  searchUser,
+  getCurrentUserHasLikeComment,
+  likeComment,
+  unlikeComment,
 };

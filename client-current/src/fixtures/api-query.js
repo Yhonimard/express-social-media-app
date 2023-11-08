@@ -26,3 +26,4 @@ export const SEARCH_POST_QUERY_NAME = "searchpost"
 
 export const SEARCH_USER_QUERY_NAME = "searchUser"
 
+export const GET_USER_HAS_LIKE_COMMENT_QUERY_NAME = "hasLikeComment"
