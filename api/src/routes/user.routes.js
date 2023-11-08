@@ -4,7 +4,7 @@ import jwtVerify from "../middleware/jwt-verify";
 import db from "../config/db";
 
 const routes = Router()
-const userController = UserController()
+const controller = UserController()
 /**
  * @swagger
  *  tags:
@@ -37,7 +37,7 @@ routes.route("/user/:userId/detail")
      *      500:
      *        description: something went wrong
      */
-  .get(userController.getUserById)
+  .get(controller.getUserById)
 
 routes.route("/user/current")
   /**
@@ -59,7 +59,7 @@ routes.route("/user/current")
      *      500:
      *        description: something went wrong
      */
-  .get(jwtVerify, userController.getUserCurrent)
+  .get(jwtVerify, controller.getUserCurrent)
 
 routes.route("/user/profile")
   /**
@@ -81,7 +81,7 @@ routes.route("/user/profile")
    *      500:
    *        description: something went wrong
   */
-  .get(jwtVerify, userController.getUserProfile)
+  .get(jwtVerify, controller.getUserProfile)
 
 routes.route("/user/profile")
   /**
@@ -119,7 +119,7 @@ routes.route("/user/profile")
      *      500:
      *        description: something went wrong
      */
-  .patch(jwtVerify, userController.updateProfile)
+  .patch(jwtVerify, controller.updateProfile)
 
 routes.route("/user/:uid/profile")
   /**
@@ -145,7 +145,7 @@ routes.route("/user/:uid/profile")
      *      500:
      *        description: something went wrong
      */
-  .get(userController.getUserProfileByUserId)
+  .get(controller.getUserProfileByUserId)
 
 
 routes.route("/user/search")
@@ -184,7 +184,7 @@ routes.route("/user/search")
      *      500:
      *        description: something went wrong
      */
-  .get(userController.searchUserByUserId)
+  .get(controller.searchUserByUserId)
 
 const userRoutes = routes
 export default userRoutes

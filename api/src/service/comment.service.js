@@ -12,6 +12,7 @@ const CommentService = () => {
   const userRepo = db.user
   const postRepo = db.post
   const commentRepo = db.comment
+  const commentPostLikeRepo = db.commentPostLike
 
   const createComment = async (postId, { userId }, data) => {
     try {
@@ -219,12 +220,98 @@ const CommentService = () => {
     }
   }
 
+
+  const likeCommentByCurruser = async (currUser, body) => {
+    try {
+
+      await db.$transaction(async trx => {
+
+        const existingLike = await trx.commentPostLike.findUnique({
+          where: {
+            userId_commentId: {
+              commentId: body.commentId,
+              userId: currUser.userId
+            }
+          }
+        })
+
+        if (existingLike) throw new ApiBadRequestError("you have been like this comment")
+
+        await trx.commentPostLike.create({
+          data: {
+            comment: {
+              connect: {
+                id: body.commentId,
+              },
+            },
+            user: {
+              connect: {
+                id: currUser.userId
+              }
+            }
+          }
+        })
+      })
+
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const unlikeCommentByCurrentUser = async (currUser, body) => {
+    try {
+      await db.$transaction(async tr => {
+        const existingLike = await tr.commentPostLike.findUnique({
+          where: {
+            userId_commentId: {
+              userId: currUser.userId,
+              commentId: body.commentId
+            }
+          }
+        })
+
+        if (!existingLike) throw new ApiBadRequestError("you have not like this comment yet")
+
+        await tr.commentPostLike.delete({
+          where: {
+            id: existingLike.id
+          }
+        })
+
+      })
+
+
+    } catch (err) {
+      throw prismaError(err)
+    }
+  }
+
+  const getCurrUserHasLikeComment = async (currUser, params) => {
+    try {
+      const hasLike = await commentPostLikeRepo.findUnique({
+        where: {
+          userId_commentId: {
+            userId: currUser.userId,
+            commentId: params.cid
+          }
+        }
+      })
+      return Boolean(hasLike)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+
   return {
     createComment,
     getCommentByPostId,
     updateCommentByPostId,
     deleteCommentByPostId,
-    getCommentHasCommentedCurrentUser
+    getCommentHasCommentedCurrentUser,
+    likeCommentByCurruser,
+    unlikeCommentByCurrentUser,
+    getCurrUserHasLikeComment
   }
 }
 export default CommentService

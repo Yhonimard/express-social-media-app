@@ -3,7 +3,7 @@ import FriendController from "../controller/friend.controller";
 import jwtVerify from "../middleware/jwt-verify";
 
 const routes = Router()
-const friendController = FriendController()
+const controller = FriendController()
 /**
  * @swagger
  *  tags:
@@ -37,7 +37,7 @@ routes.route("/friend/:receiverId/follow")
      *      500:
      *        description: something went wrong
      */
-  .post(jwtVerify, friendController.followFriend)
+  .post(jwtVerify, controller.followFriend)
 
 
 routes.route("/friend/:receiverId/unfollow")
@@ -68,7 +68,7 @@ routes.route("/friend/:receiverId/unfollow")
      *      500:
      *        description: something went wrong
      */
-  .delete(jwtVerify, friendController.unfollowUser)
+  .delete(jwtVerify, controller.unfollowUser)
 
 routes.route("/user/:receiverId/friend")
   /**
@@ -96,7 +96,7 @@ routes.route("/user/:receiverId/friend")
       *      500:
       *        description: something went wrong
       */
-  .get(jwtVerify, friendController.getUserHasFollow)
+  .get(jwtVerify, controller.getUserHasFollow)
 
 routes.route("/user/friend/request")
   /**
@@ -129,7 +129,7 @@ routes.route("/user/friend/request")
        *      500:
        *        description: something went wrong
        */
-  .get(jwtVerify, friendController.getCurrentUserFriendRequest)
+  .get(jwtVerify, controller.getCurrentUserFriendRequest)
 
 routes.route("/user/friend/following")
   /**
@@ -164,7 +164,7 @@ routes.route("/user/friend/following")
        *      500:
        *        description: something went wrong
        */
-  .get(jwtVerify, friendController.getCurrentUserFollowing)
+  .get(jwtVerify, controller.getCurrentUserFollowing)
 
 routes.route("/friend/:senderId/confirm")
   /**
@@ -194,7 +194,7 @@ routes.route("/friend/:senderId/confirm")
      *      500:
      *        description: something went wrong
      */
-  .patch(jwtVerify, friendController.confirmFriend)
+  .patch(jwtVerify, controller.confirmFriend)
 
 routes.route("/friend/:senderId/unconfirm")
   /**
@@ -224,7 +224,7 @@ routes.route("/friend/:senderId/unconfirm")
      *      500:
      *        description: something went wrong
      */
-  .delete(jwtVerify, friendController.unconfirmFriend)
+  .delete(jwtVerify, controller.unconfirmFriend)
 
 
 routes.route("/user/friend/followers")
@@ -260,7 +260,7 @@ routes.route("/user/friend/followers")
        *      500:
        *        description: something went wrong
        */
-  .get(jwtVerify, friendController.getCurrentUserFollowers)
+  .get(jwtVerify, controller.getCurrentUserFollowers)
 
 routes.route("/user/friend/followers")
   /**
@@ -291,7 +291,7 @@ routes.route("/user/friend/followers")
        *      500:
        *        description: something went wrong
        */
-  .delete(jwtVerify, friendController.deleteFollowers)
+  .delete(jwtVerify, controller.deleteFollowers)
 
 
 const friendRoutes = routes

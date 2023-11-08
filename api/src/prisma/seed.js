@@ -150,17 +150,18 @@ async function main() {
         authorId: user1.id,
         content: "old rog",
         title: "still reliable",
-        image: "storage/img_seed/11.jpg"
+        image: "storage/img_seed/11.jpg",
+
       },
       {
         authorId: user2.id,
         content: "rog with cyan color",
         title: "beautifullls",
-        image: "storage/img_seed/12.jpg"
+        image: "storage/img_seed/12.jpg",
       },
-
     ]
   })
+  await db.comment.create()
 }
 
 

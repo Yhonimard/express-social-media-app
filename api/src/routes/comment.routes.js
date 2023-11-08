@@ -3,7 +3,7 @@ import CommentController from "../controller/comment.controller";
 import jwtVerify from "../middleware/jwt-verify";
 
 const routes = Router()
-const commentController = CommentController()
+const controller = CommentController()
 
 routes.route("/post/:postId/comment")
   /**
@@ -46,7 +46,7 @@ routes.route("/post/:postId/comment")
       *      500:
       *        description: something went wrong
       */
-  .post(jwtVerify, commentController.createComment)
+  .post(jwtVerify, controller.createComment)
 
 
 routes.route("/post/:postId/comment")
@@ -86,7 +86,7 @@ routes.route("/post/:postId/comment")
       *      500:
       *        description: something went wrong
       */
-  .get(commentController.getCommentByPostId)
+  .get(controller.getCommentByPostId)
 
 routes.route("/post/:postId/comment/:commentId")
   /**
@@ -137,7 +137,7 @@ routes.route("/post/:postId/comment/:commentId")
       *      500:
       *        description: something went wrong
       */
-  .patch(jwtVerify, commentController.updateCommentByPostId)
+  .patch(jwtVerify, controller.updateCommentByPostId)
 
 
 routes.route("/post/:postId/comment/:commentId")
@@ -177,7 +177,7 @@ routes.route("/post/:postId/comment/:commentId")
       *      500:
       *        description: something went wrong
       */
-  .delete(jwtVerify, commentController.deleteCommentByPostId)
+  .delete(jwtVerify, controller.deleteCommentByPostId)
 
 
 routes.route("/user/comment")
@@ -215,8 +215,107 @@ routes.route("/user/comment")
       *      500:
       *        description: something went wrong
       */
-  .get(jwtVerify, commentController.getCommentHasCommentedCurrentUser)
+  .get(jwtVerify, controller.getCommentHasCommentedCurrentUser)
 
+
+routes.route('/post/comment/like')
+  /**
+    * @swagger
+    * /api/v1/post/comment/like:
+    *  post:
+    *    summary: like comment
+    *    tags: [Comment]
+    *    description: api for like comment
+    *    security:
+    *     - jwt-auth: [] 
+    *    requestBody:
+    *     description: data for like comment
+    *     required: true
+    *     content:
+    *       application/json:
+    *         schema:
+    *           type: object
+    *           properties:
+    *             commentId:
+    *               type: string
+    *    responses:
+    *      200:
+    *        description: success like comment
+    *      400:
+    *        description: validation error 
+    *      401:
+    *        description: unauthorized
+    *      404:
+    *        description: post not found 
+    *      500:
+    *        description: something went wrong
+    */
+  .post(jwtVerify, controller.likeCommentByCurruser)
+
+routes.route('/post/comment/unlike')
+  /**
+     * @swagger
+     * /api/v1/post/comment/unlike:
+     *  delete:
+     *    summary: unlike comment
+     *    tags: [Comment]
+     *    description: api for unlike comment
+     *    security:
+     *     - jwt-auth: [] 
+     *    requestBody:
+     *     description: data for unlike comment
+     *     required: true
+     *     content:
+     *       application/json:
+     *         schema:
+     *           type: object
+     *           properties:
+     *             commentId:
+     *               type: string
+     *    responses:
+     *      200:
+     *        description: success unlike comment
+     *      400:
+     *        description: validation error 
+     *      401:
+     *        description: unauthorized
+     *      404:
+     *        description: post not found 
+     *      500:
+     *        description: something went wrong
+     */
+  .delete(jwtVerify, controller.unlikeCommentByCurrentUser)
+
+routes.route("/post/comment/:cid/like")
+  /**
+     * @swagger
+     * /api/v1/post/comment/{cid}/like:
+     *  get:
+     *    summary: get current user has like comment
+     *    tags: [Comment]
+     *    description: api for get current user has like comment
+     *    security:
+     *     - jwt-auth: [] 
+     *    parameters:
+     *      - in: path
+     *        name: cid
+     *        description: comment id
+     *        required: true
+     *        schema:
+     *          type: string
+     *    responses:
+     *      200:
+     *        description: success unlike comment
+     *      400:
+     *        description: validation error 
+     *      401:
+     *        description: unauthorized
+     *      404:
+     *        description: post not found 
+     *      500:
+     *        description: something went wrong
+     */
+  .get(jwtVerify, controller.getCurrUserHasLikeComment)
 
 const commentRoutes = routes
 export default commentRoutes

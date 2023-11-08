@@ -3,7 +3,7 @@ import PostLikeController from "../controller/post-like.controller";
 import jwtVerify from "../middleware/jwt-verify";
 
 const routes = Router();
-const postLikeController = PostLikeController();
+const controller = PostLikeController();
 
 /**
  * @swagger
@@ -37,7 +37,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .post(jwtVerify, postLikeController.likePost);
+  .post(jwtVerify, controller.likePost);
 
 routes
   .route("/post/:pid/like")
@@ -64,7 +64,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .delete(jwtVerify, postLikeController.unlikePost);
+  .delete(jwtVerify, controller.unlikePost);
 
 routes
   .route("/post/:pid/like/user")
@@ -91,7 +91,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .get(jwtVerify, postLikeController.getUserHasLikeByCurrentUser);
+  .get(jwtVerify, controller.getUserHasLikeByCurrentUser);
 
 const postLikeRoutes = routes;
 export default postLikeRoutes;

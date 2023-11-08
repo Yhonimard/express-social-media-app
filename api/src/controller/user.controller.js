@@ -5,7 +5,7 @@ import userValidation from "../validation/user.validation";
 import apiBadRequestError from "../exception/ApiBadRequestError";
 
 const UserController = () => {
-  const userService = UserService();
+  const service = UserService();
   const validation = userValidation;
 
   const getUserById = async (req, res, next) => {
@@ -13,7 +13,7 @@ const UserController = () => {
     try {
       const { error } = validation.getUserById.params.validate(params);
       if (error) throw new ApiBadRequestError(error.message);
-      const response = await userService.getUserById(params?.userId);
+      const response = await service.getUserById(params?.userId);
       res.json(response);
     } catch (error) {
       return next(error);
@@ -24,7 +24,7 @@ const UserController = () => {
     const { user } = req;
     const currentUser = user;
     try {
-      const response = await userService.getUserCurrent(currentUser);
+      const response = await service.getUserCurrent(currentUser);
       res.json({ message: "success get user user current", data: response });
     } catch (error) {
       return next(error);
@@ -33,7 +33,7 @@ const UserController = () => {
 
   const getUserProfile = async (req, res, next) => {
     try {
-      const response = await userService.getUserProfile(req.user);
+      const response = await service.getUserProfile(req.user);
 
       res.json(response);
     } catch (error) {
@@ -51,7 +51,7 @@ const UserController = () => {
       const { error } = validation.updateProfile.body.validate(data);
       if (error) throw new ApiBadRequestError(error.message);
 
-      await userService.updateProfile(req.user, data);
+      await service.updateProfile(req.user, data);
       res.json({ message: "success update user profile" });
     } catch (error) {
       return next(error);
@@ -63,7 +63,7 @@ const UserController = () => {
       const { error } = validation.getUserProfileByUserId.params.validate(req.params)
       if (error) throw new ApiBadRequestError(error.message)
 
-      const response = await userService.getUserProfileByUserId(req.params)
+      const response = await service.getUserProfileByUserId(req.params)
       res.json(response)
     } catch (error) {
       return next(error)
@@ -72,7 +72,7 @@ const UserController = () => {
 
   const searchUserByUserId = async (req, res, next) => {
     try {
-      const response = await userService.searchUserByUserId(req.query)
+      const response = await service.searchUserByUserId(req.query)
       res.json(response)
     } catch (error) {
       return next(error)

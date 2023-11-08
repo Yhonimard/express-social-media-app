@@ -3,7 +3,7 @@ import AuthController from "../controller/auth.controller";
 import upload from "../middleware/upload";
 
 const routes = Router()
-const authController = AuthController()
+const controller = AuthController()
 /**
  * @swagger
  *  tags:
@@ -43,7 +43,7 @@ routes.route("/auth/register")
    *      500:
    *        description: something went wrong
    */
-  .post(upload.image.single("photoProfile"), authController.registerUser)
+  .post(upload.image.single("photoProfile"), controller.registerUser)
 
 routes.route("/auth/login")
   /**
@@ -82,7 +82,7 @@ routes.route("/auth/login")
     *      500:
     *        description: something went wrong
     */
-  .post(authController.loginUser)
+  .post(controller.loginUser)
 
 const authRoutes = routes
 export default authRoutes

@@ -56,7 +56,7 @@ const FriendService = () => {
             receiver: {
               connect: {
                 id: receiverId
-              }
+              },
             },
             sender: {
               connect: {

@@ -5,7 +5,7 @@ import postValidation from "../validation/post.validation";
 
 const PostController = () => {
   const validation = postValidation;
-  const postService = PostService();
+  const service = PostService();
 
   const createPost = async (req, res, next) => {
     const { title, content } = req.body;
@@ -20,7 +20,7 @@ const PostController = () => {
       const { error } = validation.createPostValidation.body.validate(data);
       if (error) throw new ApiBadRequestError(error.message);
 
-      const response = await postService.createPost(data, user);
+      const response = await service.createPost(data, user);
 
       res
         .status(httpStatus.CREATED)
@@ -40,7 +40,7 @@ const PostController = () => {
         size,
       });
       if (error) throw new ApiBadRequestError(error.message);
-      const response = await postService.getAllPost(pageNo, size, commentSize);
+      const response = await service.getAllPost(pageNo, size, commentSize);
       setTimeout(() => res.status(httpStatus.OK).json(response), 800)
     } catch (error) {
       return next(error);
@@ -61,7 +61,7 @@ const PostController = () => {
       if (errorBody || errorParam)
         throw ApiBadRequestError(errorBody?.message || errorParam?.message);
 
-      const response = await postService.updatePost(postId, user, body);
+      const response = await service.updatePost(postId, user, body);
       res.json({ message: "success update post" });
     } catch (error) {
       return next(error);
@@ -78,7 +78,7 @@ const PostController = () => {
         validation.deletePostValidation.param.validate({ postId });
       if (errorParam) throw new ApiBadRequestError(errorParam?.message);
 
-      await postService.deletePost(postId, user);
+      await service.deletePost(postId, user);
       res.json({ message: "success delete post" });
     } catch (error) {
       return next(error);
@@ -88,7 +88,7 @@ const PostController = () => {
   const getPostById = async (req, res, next) => {
     const { params } = req;
     try {
-      const response = await postService.getPostById(params?.postId);
+      const response = await service.getPostById(params?.postId);
       res.json(response);
     } catch (error) {
       return next(error);
@@ -101,7 +101,7 @@ const PostController = () => {
     const size = parseInt(query.size) || 4;
 
     try {
-      const response = await postService.getAllPostByCurrentUser(
+      const response = await service.getAllPostByCurrentUser(
         pageNo,
         size,
         user
@@ -118,7 +118,7 @@ const PostController = () => {
         req.params
       );
       if (error) throw new ApiBadRequestError(error.message);
-      const response = await postService.updatePostByUser(
+      const response = await service.updatePostByUser(
         req?.user,
         req.params.pid,
         req.body
@@ -135,7 +135,7 @@ const PostController = () => {
       const { error } =
         validation.deletePostByUserValidation.param.validate(params);
       if (error) throw new ApiBadRequestError(error.message);
-      await postService.deletePostByUser(params.pid, currUser);
+      await service.deletePostByUser(params.pid, currUser);
       res.json({ message: `success delete post user ${currUser.username}` });
     } catch (error) {
       return next(error);
@@ -152,7 +152,7 @@ const PostController = () => {
       const { error } =
         validation.createPostByUserValidation.body.validate(data);
       if (error) throw new ApiBadRequestError(error.message);
-      const response = await postService.createPostByUser(currUser, data);
+      const response = await service.createPostByUser(currUser, data);
       res.status(httpStatus.CREATED).json(response);
     } catch (error) {
       return next(error);
@@ -160,7 +160,7 @@ const PostController = () => {
   };
   const getAllPostHasLikedCurrentUser = async (req, res, next) => {
     try {
-      const response = await postService.getAllPostHasLikedCurrentUser(
+      const response = await service.getAllPostHasLikedCurrentUser(
         req.user,
         req.query
       );
@@ -176,7 +176,7 @@ const PostController = () => {
 
       const { error: errQuery } = validation.getPostByAuthorId.query.validate(req.query)
       if (errParams || errQuery) throw new ApiBadRequestError(errParams?.message || errQuery?.message)
-      const response = await postService.getPostByAuthorId(req.params, req.query)
+      const response = await service.getPostByAuthorId(req.params, req.query)
       res.json(response)
     } catch (error) {
       return next(error)
@@ -185,7 +185,7 @@ const PostController = () => {
 
   const searchPost = async (req, res, next) => {
     try {
-      const response = await postService.searchPost(req.query)
+      const response = await service.searchPost(req.query)
       res.json(response)
     } catch (error) {
       return next(error)

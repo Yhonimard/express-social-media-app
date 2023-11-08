@@ -4,7 +4,7 @@ import upload from "../middleware/upload";
 import jwtVerify from "../middleware/jwt-verify";
 
 const routes = Router();
-const postController = PostController();
+const controller = PostController();
 /**
  * @swagger
  *  tags:
@@ -56,7 +56,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .post(jwtVerify, upload.image.single("image"), postController.createPost);
+  .post(jwtVerify, upload.image.single("image"), controller.createPost);
 
 routes
   .route("/post")
@@ -88,7 +88,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .get(postController.getAllPost);
+  .get(controller.getAllPost);
 
 routes
   .route("/post/:postId")
@@ -132,7 +132,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .patch(jwtVerify, postController.updatePost);
+  .patch(jwtVerify, controller.updatePost);
 
 routes
   .route("/post/:postId")
@@ -163,7 +163,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .delete(jwtVerify, postController.deletePost);
+  .delete(jwtVerify, controller.deletePost);
 
 routes
   .route("/post/:postId/detail")
@@ -186,7 +186,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .get(postController.getPostById);
+  .get(controller.getPostById);
 
 routes
   .route(`/user/post`)
@@ -220,7 +220,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .get(jwtVerify, postController.getAllPostByCurrentUser);
+  .get(jwtVerify, controller.getAllPostByCurrentUser);
 
 routes
   .route(`/user/post/:pid`)
@@ -264,7 +264,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .patch(jwtVerify, postController.updatePostByUser);
+  .patch(jwtVerify, controller.updatePostByUser);
 
 routes
   .route("/user/post/:pid")
@@ -295,7 +295,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .delete(jwtVerify, postController.deletePostByUser);
+  .delete(jwtVerify, controller.deletePostByUser);
 
 routes
   .route("/user/post")
@@ -334,7 +334,7 @@ routes
   .post(
     jwtVerify,
     upload.image.single("image"),
-    postController.createPostByUser
+    controller.createPostByUser
   );
 
 routes
@@ -373,7 +373,7 @@ routes
    *      500:
    *        description: something went wrong
    */
-  .get(jwtVerify, postController.getAllPostHasLikedCurrentUser);
+  .get(jwtVerify, controller.getAllPostHasLikedCurrentUser);
 
 
 routes.route(`/user/:uid/post`)
@@ -412,7 +412,7 @@ routes.route(`/user/:uid/post`)
      *      500:
      *        description: something went wrong
      */
-  .get(postController.getPostByAuthorId)
+  .get(controller.getPostByAuthorId)
 
 
 routes.route("/post/search")
@@ -451,7 +451,7 @@ routes.route("/post/search")
       *      500:
       *        description: something went wrong
       */
-  .get(postController.searchPost)
+  .get(controller.searchPost)
 
 const postRoutes = routes;
 export default postRoutes;

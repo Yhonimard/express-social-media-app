@@ -41,9 +41,22 @@ const getCommentHasCommentedCurrentUser = {
   })
 }
 
+const likeCommentByCurruserValidation = {
+  body: Joi.object().keys({
+    commentId: Joi.string().uuid().required().empty().label("comment")
+  })
+}
+const unlikeCommentByCurruserValidation = {
+  body: Joi.object().keys({
+    commentId: Joi.string().uuid().required().empty().label("comment")
+  })
+}
+
 export default {
   createCommentValidation,
   updateCommentValidation,
   deleteCommentValidation,
-  getCommentHasCommentedCurrentUser
+  getCommentHasCommentedCurrentUser,
+  likeCommentByCurruserValidation,
+  unlikeCommentByCurruserValidation,
 }
