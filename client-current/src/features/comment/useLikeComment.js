@@ -8,10 +8,10 @@ const useLikeComment = ({ cid, uid }) => {
     await api.request.likeComment({ cid })
   }, {
     onMutate: async () => {
-      await queryClient.cancelQueries([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid])
-      const prevData = queryClient.getQueryData([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid])
+      await queryClient.cancelQueries([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid, cid])
+      const prevData = queryClient.getQueryData([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid, cid])
 
-      queryClient.setQueryData([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid], oldData => {
+      queryClient.setQueryData([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid, cid], () => {
         return {
           hasLike: true
         }
@@ -22,10 +22,10 @@ const useLikeComment = ({ cid, uid }) => {
       }
     },
     onError: (err, _ctx, ctx) => {
-      queryClient.setQueryData([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid], ctx.prevData)
+      queryClient.setQueryData([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid, cid], ctx.prevData)
     },
     onSettled: () => {
-      queryClient.invalidateQueries([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid])
+      queryClient.invalidateQueries([GET_USER_HAS_LIKE_COMMENT_QUERY_NAME, uid, cid])
     }
 
   })

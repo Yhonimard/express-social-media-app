@@ -49,6 +49,7 @@ const PostDetailCardComponent = ({ postData, postId }) => {
     isSuccess: isFetchCommentSuccess,
   } = useGetListCommentByPostId(postId, { size: 2 });
 
+
   const handleDeletePost = (id) => {
     deletePost(id, {
       onSuccess: () => navigate("../.."),
@@ -184,7 +185,6 @@ const PostDetailCardComponent = ({ postData, postId }) => {
               variant="subtle"
               color="gray"
               size="xs">
-              {" "}
               see more comment
             </Button>
           )}

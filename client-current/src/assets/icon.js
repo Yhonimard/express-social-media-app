@@ -18,7 +18,8 @@ import {
   Twitter,
   YoutubeSearchedFor,
   Instagram,
-  WhatsApp
+  WhatsApp,
+  Reply
 
 } from "@mui/icons-material";
 
@@ -45,5 +46,6 @@ export default {
   Twitter,
   Youtube: YoutubeSearchedFor,
   Instagram,
-  WhatsApp
+  WhatsApp,
+  Reply
 }

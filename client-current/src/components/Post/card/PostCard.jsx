@@ -162,9 +162,9 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
         <Divider mt={`md`} />
         <CardSection inheritPadding>
           {isSuccessFetchComment &&
-            commentsData?.pages?.map((p) => {
+            commentsData?.pages?.map((p, i) => {
               return (
-                <Fragment key={p.data}>
+                <Fragment key={i}>
                   {p.data.length < 1 && <CommentNotFoundComponent />}
                   {p.data.length > 0 &&
                     p?.data?.map((c) => (
@@ -195,5 +195,4 @@ const PostCard = ({ author, content, title, image, createdAt, postId }) => {
     </>
   );
 };
-//
 export default PostCard;

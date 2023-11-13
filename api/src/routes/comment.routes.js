@@ -317,5 +317,170 @@ routes.route("/post/comment/:cid/like")
      */
   .get(jwtVerify, controller.getCurrUserHasLikeComment)
 
+routes.route("/post/comment/:cid/reply")
+  /**
+     * @swagger
+     * /api/v1/post/comment/{cid}/reply:
+     *  get:
+     *    summary: get reply comment by parent comment id
+     *    tags: [Comment]
+     *    description: api for get reply comment by parent comment id
+     *    parameters:
+     *      - in: path
+     *        name: cid
+     *        description: comment id
+     *        required: true
+     *        schema:
+     *          type: string
+     *      - in: query
+     *        name: pageNo
+     *        description: for get the number of page
+     *        required: true
+     *        schema:
+     *          type: number
+     *          example: 1
+     *      - in: query
+     *        name: size
+     *        description: for get the size of page
+     *        required: true
+     *        schema:
+     *          type: number
+     *          example: 4
+     *    responses:
+     *      200:
+     *        description: success get reply comment
+     *      400:
+     *        description: validation error 
+     *      401:
+     *        description: unauthorized
+     *      404:
+     *        description: post not found 
+     *      500:
+     *        description: something went wrong
+     */
+  .get(controller.getAllReplyCommentByCid)
+
+routes.route("/post/:pid/comment/:cid/reply")
+  /**
+     * @swagger
+     * /api/v1/post/{pid}/comment/{cid}/reply:
+     *  post:
+     *    summary: get reply comment by parent comment id
+     *    tags: [Comment]
+     *    description: api for get reply comment by parent comment id
+     *    security:
+     *      - jwt-auth: []
+     *    parameters:
+     *      - in: path
+     *        name: pid
+     *        description: post id
+     *        required: true
+     *        schema:
+     *          type: string
+     *      - in: path
+     *        name: cid
+     *        description: comment id
+     *        required: true
+     *        schema:
+     *          type: string
+     *    responses:
+     *      200:
+     *        description: success reply comment
+     *      400:
+     *        description: validation error 
+     *      401:
+     *        description: unauthorized
+     *      404:
+     *        description: post not found 
+     *      500:
+     *        description: something went wrong
+     */
+  .post(jwtVerify, controller.replyComment)
+
+routes.route("/post/comment/reply")
+  /**
+     * @swagger
+     * /api/v1/post/comment/reply:
+     *  patch:
+     *    summary: update comment reply
+     *    tags: [Comment]
+     *    description: api for update comment reply
+     *    security:
+     *     - jwt-auth: [] 
+     *    requestBody:
+     *     description: data for update comment reply
+     *     required: true
+     *     content:
+     *       application/json:
+     *         schema:
+     *           type: object
+     *           properties:
+     *             title:
+     *               type: string
+     *             id:
+     *               type: object
+     *               properties:
+     *                parentCommentId:
+     *                  type: string
+     *                replyCommentId:
+     *                  type: string
+     *                postId:
+     *                  type: string
+     *    responses:
+     *      200:
+     *        description: success update comment
+     *      400:
+     *        description: validation error, comment doest belong to post
+     *      403:
+     *        description: cant update this user comment
+     *      401:
+     *        description: unauthorized
+     *      404:
+     *        description: post not found, comment not found
+     *      500:
+     *        description: something went wrong
+     */
+  .patch(jwtVerify, controller.updateCommentReply)
+
+routes.route("/post/comment/reply")
+  /**
+      * @swagger
+      * /api/v1/post/comment/reply:
+      *  delete:
+      *    summary: delete comment reply
+      *    tags: [Comment]
+      *    description: api for delete comment reply
+      *    security:
+      *     - jwt-auth: [] 
+      *    requestBody:
+      *     description: data for delete comment reply
+      *     required: true
+      *     content:
+      *       application/json:
+      *         schema:
+      *           type: object
+      *           properties:
+      *             parentCommentId:
+      *               type: string
+      *             replyCommentId:
+      *               type: string
+      *             postId:
+      *               type: string
+      *    responses:
+      *      200:
+      *        description: success delete comment reply
+      *      400:
+      *        description: validation error, comment doest belong to post
+      *      403:
+      *        description: cant delete this user comment
+      *      401:
+      *        description: unauthorized
+      *      404:
+      *        description: post not found, comment not found
+      *      500:
+      *        description: something went wrong
+      */
+  .delete(jwtVerify, controller.deleteReplyComment)
+
 const commentRoutes = routes
 export default commentRoutes

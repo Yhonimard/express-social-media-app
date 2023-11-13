@@ -1,3 +1,4 @@
+import CommentComponent from "@/components/comment";
 import CommentFormComponent from "@/components/comment/commentForm";
 import CommentNotFoundComponent from "@/components/comment/commentNotFound";
 import Post from "@/components/Post";
@@ -33,7 +34,6 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import ProfilePostCommentComponent from "../profilePostComment";
 
 const ProfilePostCardComponent = ({
   author,
@@ -90,9 +90,8 @@ const ProfilePostCardComponent = ({
                 size={`xl`}>
                 <Tooltip withArrow label={author?.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      author?.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${author?.photoProfile
+                      }`}
                     alt={author?.username}
                     radius="xl"
                     size="md"
@@ -160,20 +159,19 @@ const ProfilePostCardComponent = ({
           {isSuccessFetchComment &&
             commentsData?.pages.map((p, i) => {
               return (
-                <Fragment key={i}>
+                <Fragment key={p.data}>
                   {p.data.length < 1 && <CommentNotFoundComponent />}
-                  {p.data.map((p) => {
-                    return (
-                      <ProfilePostCommentComponent
-                        key={p.id}
-                        author={p.author}
-                        commentId={p.id}
+                  {p.data.length > 0 &&
+                    p?.data?.map((c) => (
+                      <CommentComponent
+                        key={c?.id}
+                        author={c?.author}
+                        createdAt={moment(c.createdAt).format("DD MMMM, YYYY")}
+                        title={c.title}
+                        commentId={c.id}
                         postId={postId}
-                        createdAt={moment(p.createdAt).format("DD MMMM, YYYY")}
-                        title={p.title}
                       />
-                    );
-                  })}
+                    ))}
                 </Fragment>
               );
             })}

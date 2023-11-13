@@ -4,7 +4,7 @@ const toPaginationResponseHelper = async (dataCount, data, query) => {
   const totalPages = Math.ceil(totalData / size);
   const currentPageData = data.length;
   const isLast = parseInt(pageNo) === parseInt(totalPages) || parseInt(totalPages) < parseInt(pageNo)
-
+  
   const mapperData = {
     currentPageData,
     totalData,

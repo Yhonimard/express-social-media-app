@@ -7,6 +7,7 @@ import paginationHelper from "../helper/pagination.helper"
 import ApiBadRequestError from "../exception/ApiBadRequestError"
 import ApiForbiddenError from "../exception/ApiForbiddenError"
 import toPaginationResponseHelper from "../helper/to-pagination-response.helper"
+import moment from "moment/moment"
 
 const CommentService = () => {
   const userRepo = db.user
@@ -51,10 +52,10 @@ const CommentService = () => {
     }
   }
 
-  const getCommentByPostId = async (postId, pageNo = 1, size = 1) => {
+  const getCommentByPostId = async (postId, query) => {
     try {
 
-      const { skip, take } = paginationHelper(pageNo, size)
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
 
       const post = await postRepo.findUnique({
         where: {
@@ -66,6 +67,7 @@ const CommentService = () => {
       const comments = await commentRepo.findMany({
         where: {
           postId: postId,
+          parentCommentId: null
         },
         select: {
           id: true,
@@ -87,23 +89,13 @@ const CommentService = () => {
       })
       if (!comments) throw new ApiNotFoundError("post not found")
 
-      const totalData = await commentRepo.count({
+      const commentsCount = await commentRepo.count({
         where: {
-          postId
+          postId,
+          parentCommentId: null
         }
       })
-      const totalPages = Math.ceil(totalData / size)
-      const currentPageData = comments.length
-      const isLast = comments.length >= 1 ? pageNo === totalPages : true
-
-      return {
-        currentPage: pageNo,
-        data: comments,
-        totalData,
-        totalPages,
-        currentPageData,
-        isLast
-      }
+      return toPaginationResponseHelper(commentsCount, comments, query)
     } catch (error) {
       throw prismaError(error)
     }
@@ -302,6 +294,199 @@ const CommentService = () => {
     }
   }
 
+  const getAllReplyCommentByCid = async (params, query) => {
+    try {
+      const { skip, take } = paginationHelper(query.pageNo, query.size)
+
+      const replyComments = await commentRepo.findMany({
+        where: {
+          parentComment: {
+            id: params.cid
+          }
+        },
+        select: {
+          id: true,
+          createdAt: true,
+          title: true,
+          author: {
+            select: {
+              username: true,
+              photoProfile: true,
+              id: true
+            }
+          },
+        },
+        skip,
+        take
+      })
+
+      const mapperReplyComments = replyComments.map(rp => ({
+        id: rp.id,
+        createdAt: moment(rp.createdAt).format("DD MMMM, YYYY"),
+        title: rp.title,
+        author: {
+          id: rp.author.id,
+          username: rp.author.username,
+          photoProfile: rp.author.photoProfile,
+        }
+      }))
+
+      const replyCommentsCount = await commentRepo.count({
+        where: {
+          parentComment: {
+            id: params.cid
+          }
+        },
+      })
+
+      return toPaginationResponseHelper(replyCommentsCount, mapperReplyComments, query)
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const replyComment = async (currentUser, params, data) => {
+    try {
+      await db.$transaction(async trx => {
+
+        await trx.comment.create({
+          data: {
+            title: data.title,
+            parentComment: {
+              connect: {
+                id: params.cid,
+              }
+            },
+            author: {
+              connect: {
+                id: currentUser.userId
+              }
+            },
+            post: {
+              connect: {
+                id: params.pid
+              }
+            },
+          }
+        })
+
+      })
+
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const updateCommentReply = async (currentUser, data) => {
+    try {
+
+      await db.$transaction(async tr => {
+        const existingPost = await tr.post.findUniqueOrThrow({
+          where: {
+            id: data.id.postId
+          }
+        })
+
+        const existingParentComment = await tr.comment.findUnique({
+          where: {
+            id: data.id.parentCommentId,
+            parentCommentId: null,
+          }
+        })
+        if (!existingParentComment) throw new ApiNotFoundError("comment you replied not found")
+
+        const existingReplyComment = await tr.comment.findUnique({
+          where: {
+            id: data.id.replyCommentId,
+            parentComment: {
+              id: data.id.parentCommentId
+            },
+          }
+        })
+
+        if (existingPost.id !== existingReplyComment.postId || existingPost.id !== existingParentComment.postId) throw new ApiBadRequestError("comment doesnt belong to post")
+
+        if (currentUser.userId !== existingReplyComment.authorId) throw new ApiForbiddenError("you cant update this user comment")
+
+        await tr.comment.update({
+          where: {
+            id: data.id.replyCommentId,
+            parentComment: {
+              id: data.id.parentCommentId,
+            },
+            author: {
+              id: currentUser.userId
+            },
+            post: {
+              id: data.id.postId
+            }
+          },
+          data: {
+            title: data.title
+          }
+        })
+      })
+
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
+  const deleteReplyComment = async (currentUser, data) => {
+    try {
+
+      await db.$transaction(async tr => {
+
+        const existingPost = await tr.post.findUniqueOrThrow({
+          where: {
+            id: data.postId,
+          }
+        })
+
+        const existingParentComment = await tr.comment.findUnique({
+          where: {
+            id: data.parentCommentId,
+            parentCommentId: null
+          }
+        })
+        if (!existingParentComment) throw new ApiBadRequestError("you cant delete this comment")
+
+        const existingReplyComment = await tr.comment.findUnique({
+          where: {
+            id: data.replyCommentId,
+            parentComment: {
+              id: data.parentCommentId
+            }
+          }
+        })
+        if (!existingParentComment) throw new ApiNotFoundError("comment not found")
+
+        if (existingPost.id !== existingReplyComment.postId || existingPost.id !== existingParentComment.postId) throw new ApiBadRequestError("comment doesnt belong to post")
+
+        if (currentUser.userId !== existingReplyComment.authorId) throw new ApiForbiddenError("you cant delete this user comment")
+
+        await tr.comment.delete({
+          where: {
+            id: data.replyCommentId,
+            author: {
+              id: currentUser.userId
+            },
+            parentComment: {
+              id: data.parentCommentId
+            },
+            post: {
+              id: data.postId
+            }
+          }
+        })
+
+      })
+
+    } catch (error) {
+      throw prismaError(error)
+    }
+  }
+
 
   return {
     createComment,
@@ -311,7 +496,11 @@ const CommentService = () => {
     getCommentHasCommentedCurrentUser,
     likeCommentByCurruser,
     unlikeCommentByCurrentUser,
-    getCurrUserHasLikeComment
+    getCurrUserHasLikeComment,
+    getAllReplyCommentByCid,
+    replyComment,
+    updateCommentReply,
+    deleteReplyComment
   }
 }
 export default CommentService

@@ -87,7 +87,7 @@ async function main() {
   await db.post.createMany({
     data: [
       {
-        authorId: user1.id,
+        authorId: user2.id,
         content: "rog strix pink",
         title: "beautiful laptop",
         image: "storage/img_seed/1.jpeg"
@@ -162,33 +162,73 @@ async function main() {
     ]
   })
 
-  const posts = await db.post.findMany()
+  const posts = await db.post.findFirst({
+    where: {
+      authorId: user2.id,
+      content: "rog rainbow",
+      title: "greats laptop"
+    }
+  })
+
+  // await db.comment.createMany({
+  //   data: [
+  //     {
+  //       authorId: user2.id,
+  //       postId: posts[0].id,
+  //       title: "wow greats 0"
+  //     },
+  //     {
+  //       authorId: user2.id,
+  //       postId: posts[1].id,
+  //       title: "wow greats 1"
+  //     },
+  //     {
+  //       authorId: user2.id,
+  //       postId: posts[2].id,
+  //       title: "wow greats 2"
+  //     },
+  //     {
+  //       authorId: user2.id,
+  //       postId: posts[3].id,
+  //       title: "wow greats 3"
+  //     },
+  //   ]
+  // })
+
+  const comments1 = await db.comment.create({
+    data: {
+      authorId: user2.id,
+      postId: posts.id,
+      title: "greatss",
+    }
+  })
+
+  await db.comment.create({
+    data: {
+      authorId: user2.id,
+      postId: posts.id,
+      title: "wow greats 2",
+    }
+  })
+
 
   await db.comment.createMany({
     data: [
       {
-        authorId: user2.id,
-        postId: posts[0].id,
-        title: "wow greats 0"
+        authorId: user1.id,
+        postId: posts.id,
+        parentCommentId: comments1.id,
+        title: "yeah its great 1"
       },
       {
-        authorId: user2.id,
-        postId: posts[1].id,
-        title: "wow greats 1"
+        authorId: user1.id,
+        postId: posts.id,
+        parentCommentId: comments1.id,
+        title: "yeah its great 2"
       },
-      {
-        authorId: user2.id,
-        postId: posts[2].id,
-        title: "wow greats 2"
-      },
-      {
-        authorId: user2.id,
-        postId: posts[3].id,
-        title: "wow greats 3"
-      },
+
     ]
   })
-
 
 }
 

@@ -1,3 +1,4 @@
+
 export const GET_POST_NAME = "post/get"
 
 export const GET_POST_LIKE_NAME = "postLike/get"
@@ -27,3 +28,5 @@ export const SEARCH_POST_QUERY_NAME = "searchpost"
 export const SEARCH_USER_QUERY_NAME = "searchUser"
 
 export const GET_USER_HAS_LIKE_COMMENT_QUERY_NAME = "hasLikeComment"
+
+export const GET_COMMENT_REPLY_QUERY_NAME = "commentreply"

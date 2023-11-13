@@ -24,10 +24,8 @@ const CommentController = () => {
 
   const getCommentByPostId = async (req, res, next) => {
     const { params: { postId }, query } = req
-    const size = parseInt(query.size)
-    const pageNo = parseInt(query.pageNo)
     try {
-      const response = await service.getCommentByPostId(postId, pageNo, size)
+      const response = await service.getCommentByPostId(postId, req.query)
       res.json(response)
     } catch (error) {
       return next(error)
@@ -100,9 +98,58 @@ const CommentController = () => {
 
   const getCurrUserHasLikeComment = async (req, res, next) => {
     try {
-      const response = await service.getCurrUserHasLikeComment(req.user, req.params)
-      res.json({ hasLike: response })
+      const { error } = validation.getCurrUserHasLikeCommentValidation.params.validate(req.params)
+      if (error) throw ApiBadRequestError(error.message)
 
+      const response = await service.getCurrUserHasLikeComment(req.user, req.params)
+
+      res.json({ hasLike: response })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const getAllReplyCommentByCid = async (req, res, next) => {
+    try {
+
+      const response = await service.getAllReplyCommentByCid(req.params, req.query)
+
+      res.json(response)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const replyComment = async (req, res, next) => {
+    try {
+      const { error: errorParam } = validation.replyComment.params.validate(req.params)
+      const { error: errorBody } = validation.replyComment.body.validate(req.body)
+      if (errorParam || errorBody) throw new ApiBadRequestError(errorParam?.message || errorBody?.message)
+
+      await service.replyComment(req.user, req.params, req.body)
+      res.json({ message: "success reply comment" })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const updateCommentReply = async (req, res, next) => {
+    try {
+      const { error } = validation.updateCommentReply.body.validate(req.body)
+      if (error) throw new ApiBadRequestError(error.message)
+      await service.updateCommentReply(req.user, req.body)
+      res.json({ message: "success update comment" })
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  const deleteReplyComment = async (req, res, next) => {
+    try {
+      const { error } = validation.deleteCommentReply.body.validate(req.body)
+      if (error) throw new ApiBadRequestError(error.message)
+      await service.deleteReplyComment(req.user, req.body)
+      res.json({ message: "success delete comment" })
     } catch (error) {
       return next(error)
     }
@@ -116,7 +163,11 @@ const CommentController = () => {
     getCommentHasCommentedCurrentUser,
     likeCommentByCurruser,
     unlikeCommentByCurrentUser,
-    getCurrUserHasLikeComment
+    getCurrUserHasLikeComment,
+    getAllReplyCommentByCid,
+    replyComment,
+    updateCommentReply,
+    deleteReplyComment
   }
 }
 export default CommentController

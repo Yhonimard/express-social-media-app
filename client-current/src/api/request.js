@@ -296,7 +296,7 @@ const getCurrentUserHasLikeComment = async ({ cid }) => {
 const likeComment = async ({ cid }) => {
   const res = await api.instance.request.post('/post/comment/like',
     {
-      coommentId: cid
+      commentId: cid
     }
   )
   return res.data
@@ -310,6 +310,44 @@ const unlikeComment = async ({ cid }) => {
   })
   return res.data
 }
+
+const getCommentReply = async ({ cid }, { pageNo, size }) => {
+  const res = await api.instance.request.get(`/post/comment/${cid}/reply`, {
+    params: {
+      pageNo,
+      size
+    }
+  })
+  return res.data
+}
+
+const updateCommentReply = async ({ title, parentCommentId, replyCommentId, postId }) => {
+  const res = await api.instance.request.patch(`/post/comment/reply`, {
+    title: title,
+    id: {
+      parentCommentId,
+      replyCommentId,
+      postId
+    }
+
+  })
+  return res.data
+}
+
+
+
+const deleteCommentReply = async ({ parentCommentId, replyCommentId, postId }) => {
+  const res = await api.instance.request.delete(`/post/comment/reply`, {
+    data: {
+      parentCommentId,
+      replyCommentId,
+      postId
+    }
+  })
+  return res.data
+}
+
+
 
 export default {
   login,
@@ -352,4 +390,7 @@ export default {
   getCurrentUserHasLikeComment,
   likeComment,
   unlikeComment,
+  getCommentReply,
+  updateCommentReply,
+  deleteCommentReply
 };

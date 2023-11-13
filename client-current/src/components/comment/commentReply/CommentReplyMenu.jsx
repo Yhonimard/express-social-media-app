@@ -1,5 +1,5 @@
-import useDeleteComment from "@/features/comment/useDeleteComment";
-import useUpdateComment from "@/features/comment/useUpdateComment";
+import useDeleteCommentReply from "@/features/comment/useDeleteCommentReply";
+import useUpdateCommentReply from "@/features/comment/useUpdateCommentReply";
 import commentValidation from "@/helpers/validation/comment.validation";
 import {
   ActionIcon,
@@ -14,7 +14,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Delete as IconDelete, Edit as IconEdit, MoreVert as IconMoreVert } from "@mui/icons-material";
 import { useFormik } from "formik";
 
-const CommentMenuComponent = ({ data, postId }) => {
+const CommentMenuReply = ({ data, parentCommentId, postId }) => {
   const [isOpenEditModal, { toggle: toggleEditModal }] = useDisclosure(false);
   const [isOpenDeleteModal, { toggle: toggleDeleteModal }] =
     useDisclosure(false);
@@ -32,24 +32,19 @@ const CommentMenuComponent = ({ data, postId }) => {
     },
     validationSchema: commentValidation.updateComment,
     onSubmit: (data) => {
-      updateComment(data, {
-        onSuccess: () => {
-          updateCommentFormik.handleReset();
-        },
-      });
+      updateReplyComment(data)
     },
   });
-  const { mutate: updateComment } = useUpdateComment(
-    postId,
-    data.commentId,
-    toggleEditModal
-  );
 
-  const deletePost = (postId) => {
-    deleteComment(postId);
+  const { mutate: updateReplyComment } = useUpdateCommentReply({ parentCommentId, replyCommentId: data.commentId, pid: postId })
+  
+  const { mutate: deleteReplyComment } = useDeleteCommentReply({ parentCommentId, postId, replyCommentId: data.commentId })
+
+  const deletePost = () => {
+    deleteReplyComment(null)
   };
 
-  const { mutate: deleteComment } = useDeleteComment(postId, data.commentId);
+
   return (
     <>
       <Menu position="left-start">
@@ -114,11 +109,11 @@ const CommentMenuComponent = ({ data, postId }) => {
           <Button onClick={toggleDeleteModal} color="red">
             no
           </Button>
-          <Button onClick={() => deletePost(postId)}>yes</Button>
+          <Button onClick={deletePost}>yes</Button>
         </Group>
       </Modal>
     </>
   );
 };
 
-export default CommentMenuComponent;
+export default CommentMenuReply;
