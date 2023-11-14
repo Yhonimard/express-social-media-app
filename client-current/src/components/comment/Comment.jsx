@@ -13,15 +13,19 @@ import {
   Text,
   Tooltip
 } from "@mantine/core";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import CommentMenuComponent from "./commentMenu";
 import CommentReply from "./commentReply";
+import CommentReplyForm from "./commentReply/CommentReplyForm";
+import scrollIntoViewHelper from "@/helpers/scroll-into-view-helper";
+import { COMMENT_REPLY_ID } from "@/fixtures/global";
 
 const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
   const currentUser = useSelector((state) => state.auth.user);
   const { mutate: likeComment } = useLikeComment({ cid: commentId, uid: currentUser.id })
   const { mutate: unlikeComment } = useUnlikeComment({ cid: commentId, uid: currentUser.id })
+  const [isOpenReplyComment, setIsOpenReplyComment] = useState(false)
 
   const commentReplyQuery = useGetCommentReply({ pid: postId, cid: commentId, size: 2 })
 
@@ -31,6 +35,11 @@ const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
   const likeOrUnlikeComment = () => {
     if (userHasLikeQuery.data.hasLike) unlikeComment(null)
     if (!userHasLikeQuery.data.hasLike) likeComment(null)
+  }
+
+  const openReplyCommentInput = () => {
+    setIsOpenReplyComment((state) => !state)
+    scrollIntoViewHelper(`${COMMENT_REPLY_ID}_${commentId}`)
   }
 
   return (
@@ -73,7 +82,7 @@ const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
             </Box>
             <Stack gap={7}>
               <Text lineClamp={3}>{title}</Text>
-              <ActionIcon size={`sm`} color="gray" variant="subtle">
+              <ActionIcon size={`sm`} color="gray" variant="subtle" onClick={openReplyCommentInput}>
                 <Icon.Reply sx={{ width: 20 }} color="inherit" />
               </ActionIcon>
             </Stack>
@@ -94,6 +103,9 @@ const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
                 ))}
               </Fragment>
             ))}
+            {isOpenReplyComment && (
+              <CommentReplyForm parentCommentId={commentId} />
+            )}
           </Stack>
         </Group>
       </Group>

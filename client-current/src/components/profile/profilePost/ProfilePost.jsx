@@ -1,6 +1,8 @@
+import Icon from "@/assets/icon";
 import useCreatePostByUser from "@/features/post/useCreatePostByUser";
 import useGetPostListByUser from "@/features/post/useGetPostListByUser";
 import postValidation from "@/helpers/validation/post.validation";
+import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import {
   ActionIcon,
   Button,
@@ -14,16 +16,11 @@ import {
   Text,
   TextInput
 } from "@mantine/core";
-import {
-  AddPhotoAlternate as IconAddPhoto,
-  Send as IconSend,
-} from "@mui/icons-material";
 import { useFormik } from "formik";
 import { Fragment } from "react";
 import { useSelector } from "react-redux";
 import classes from "./ProfilePost.module.css";
 import ProfilePostCardComponent from "./profilePostCard";
-import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 
 const ProfilePost = () => {
 
@@ -92,7 +89,7 @@ const ProfilePost = () => {
               size={`xl`}
               radius={`xl`}
               component="button">
-              <IconSend />
+              <Icon.Send />
             </ActionIcon>
           </div>
           <Group align="center" mt={`xs`}>
@@ -100,7 +97,7 @@ const ProfilePost = () => {
               onChange={(e) => createPostFormik.setFieldValue("image", e)}>
               {(props) => (
                 <ActionIcon variant="subtle" color="gray" {...props}>
-                  <IconAddPhoto />
+                  <Icon.AddPhotoAlternate />
                 </ActionIcon>
               )}
             </FileButton>

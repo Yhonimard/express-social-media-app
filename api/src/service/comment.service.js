@@ -449,6 +449,7 @@ const CommentService = () => {
             parentCommentId: null
           }
         })
+        
         if (!existingParentComment) throw new ApiBadRequestError("you cant delete this comment")
 
         const existingReplyComment = await tr.comment.findUnique({

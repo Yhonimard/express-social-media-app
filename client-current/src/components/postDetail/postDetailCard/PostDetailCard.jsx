@@ -93,9 +93,8 @@ const PostDetailCardComponent = ({ postData, postId }) => {
                 size={`xl`}>
                 <Tooltip withArrow label={postData?.author.username}>
                   <Avatar
-                    src={`${import.meta.env.VITE_API_BASE_URL}/${
-                      postData?.author.photoProfile
-                    }`}
+                    src={`${import.meta.env.VITE_API_BASE_URL}/${postData?.author.photoProfile
+                      }`}
                     alt={postData?.author.username}
                     radius="xl"
                     size="md"
@@ -187,6 +186,9 @@ const PostDetailCardComponent = ({ postData, postId }) => {
               size="xs">
               see more comment
             </Button>
+          )}
+          {!hasNextPage && (
+            <Text style={{ padding: 15, textAlign: "center" }} >no more comment</Text>
           )}
         </CardSection>
       </Card>

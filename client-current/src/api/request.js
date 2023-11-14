@@ -347,6 +347,10 @@ const deleteCommentReply = async ({ parentCommentId, replyCommentId, postId }) =
   return res.data
 }
 
+const replyComment = async ({ pid, pcid }, data) => {
+  const res = await api.instance.request.post(`/post/${pid}/comment/${pcid}/reply`, data)
+}
+
 
 
 export default {

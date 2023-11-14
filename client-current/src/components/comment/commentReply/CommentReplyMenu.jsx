@@ -37,7 +37,7 @@ const CommentMenuReply = ({ data, parentCommentId, postId }) => {
   });
 
   const { mutate: updateReplyComment } = useUpdateCommentReply({ parentCommentId, replyCommentId: data.commentId, pid: postId })
-  
+
   const { mutate: deleteReplyComment } = useDeleteCommentReply({ parentCommentId, postId, replyCommentId: data.commentId })
 
   const deletePost = () => {
@@ -48,7 +48,6 @@ const CommentMenuReply = ({ data, parentCommentId, postId }) => {
   return (
     <>
       <Menu position="left-start">
-
         <Menu.Target>
           <ActionIcon
             color="gray"

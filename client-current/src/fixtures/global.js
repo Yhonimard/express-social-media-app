@@ -9,3 +9,6 @@ export const listNavbar = [
   //   { icon: IconFingerprint, label: "Security" },
   //   { icon: IconSettings, label: "Settings" },
 ]
+
+
+export const COMMENT_REPLY_ID = "comment-reply"
