@@ -7,7 +7,7 @@ const useGetCurrentUserHasLikeComment = ({ uid, cid }) => {
     const res = await api.request.getCurrentUserHasLikeComment({ cid })
     return res
   }, {
-
+    retry: true,
   })
 }
 

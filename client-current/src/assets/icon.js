@@ -21,7 +21,8 @@ import {
   WhatsApp,
   Reply,
   Send,
-  AddPhotoAlternate
+  AddPhotoAlternate,
+  Close
 
 } from "@mui/icons-material";
 
@@ -51,6 +52,7 @@ export default {
   WhatsApp,
   Reply,
   Send,
-  AddPhotoAlternate
+  AddPhotoAlternate,
+  Close
 
 }

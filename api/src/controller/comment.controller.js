@@ -99,10 +99,8 @@ const CommentController = () => {
   const getCurrUserHasLikeComment = async (req, res, next) => {
     try {
       const { error } = validation.getCurrUserHasLikeCommentValidation.params.validate(req.params)
-      if (error) throw ApiBadRequestError(error.message)
-
+      if (error) throw new ApiBadRequestError(error.message)
       const response = await service.getCurrUserHasLikeComment(req.user, req.params)
-
       res.json({ hasLike: response })
     } catch (error) {
       return next(error)

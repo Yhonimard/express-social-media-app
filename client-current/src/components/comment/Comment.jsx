@@ -82,9 +82,20 @@ const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
             </Box>
             <Stack gap={7}>
               <Text lineClamp={3}>{title}</Text>
-              <ActionIcon size={`sm`} color="gray" variant="subtle" onClick={openReplyCommentInput}>
-                <Icon.Reply sx={{ width: 20 }} color="inherit" />
-              </ActionIcon>
+              {isOpenReplyComment && (
+                <Tooltip label={`close`} withArrow>
+                  <ActionIcon size={`sm`} color="gray" variant="subtle" onClick={() => setIsOpenReplyComment(state => !state)}>
+                    <Icon.Close sx={{ width: 20 }} color="inherit" />
+                  </ActionIcon>
+                </Tooltip>
+              )}
+              {!isOpenReplyComment && (
+                <Tooltip label={`reply comment`} withArrow>
+                  <ActionIcon size={`sm`} color="gray" variant="subtle" onClick={openReplyCommentInput}>
+                    <Icon.Reply sx={{ width: 20 }} color="inherit" />
+                  </ActionIcon>
+                </Tooltip>
+              )}
             </Stack>
             {commentReplyQuery.data.pages.map((p, i) => (
               <Fragment key={i}>
@@ -104,7 +115,7 @@ const CommentComponent = ({ author, createdAt, title, commentId, postId }) => {
               </Fragment>
             ))}
             {isOpenReplyComment && (
-              <CommentReplyForm parentCommentId={commentId} />
+              <CommentReplyForm parentCommentId={commentId} setIsOpenReplyComment={setIsOpenReplyComment} postId={postId} />
             )}
           </Stack>
         </Group>
