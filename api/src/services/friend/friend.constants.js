@@ -1,0 +1,1 @@
+export const USER_ATTRIBUTES = ['id', 'username', 'photo_profile']

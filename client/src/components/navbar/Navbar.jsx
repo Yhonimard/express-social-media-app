@@ -1,63 +1,51 @@
-import { Menu } from "@mui/icons-material";
-import {
-  AppBar,
-  Avatar,
-  Box,
-  IconButton,
-  InputBase,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import global from "../../redux/global";
-import NavbarLeftDrawerComponent from "../navbarLeftDrawer";
-
-const Navbar = () => {
-  const dispatch = useDispatch();
-  const { username, photoProfile } = useSelector((state) => state.auth.data);
+import Icon from "@/assets/Icon"
+import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, Tooltip } from "@mui/material"
+import { Link } from "react-router-dom"
+const Navbar = ({ drawerWidth }) => {
 
   return (
-    <AppBar>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box>
-          <Box sx={{ display: { xs: "block", md: "none" } }}>
-            <IconButton
-              onClick={() => dispatch(global.action.showNavbarLeftDrawer(true))}
-            >
-              <Menu />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "none", md: "block" } }}>
-            <Typography>sosmed app</Typography>
-          </Box>
-        </Box>
-        <Box
-          width="35%"
-          px={1}
-          bgcolor="white"
-          color="black"
-          borderRadius="3px"
-        >
-          <InputBase
-            placeholder="search..."
-            sx={{ width: "100%", color: "black" }}
-          />
-        </Box>
-        <Box>
-          <Tooltip title={username}>
-            <IconButton>
-              <Avatar
-                sx={{ width: 30, height: 30 }}
-                src={`${import.meta.env.VITE_API_BASE_URL}/${photoProfile}`}
-              />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Toolbar>
-      <NavbarLeftDrawerComponent />
-    </AppBar>
-  );
-};
+    <Drawer variant="permanent" sx={{ width: drawerWidth, position: "fixed" }} >
 
-export default Navbar;
+      <Box sx={{ mt: "65px", width: drawerWidth }}>
+
+        <List sx={{}}>
+
+          <ListItem disablePadding>
+            <Tooltip title="Home">
+              <ListItemButton sx={{ minHeight: 48, justifyContent: "center" }} LinkComponent={Link} to="/" >
+                <ListItemIcon sx={{ justifyContent: "center", minWidth: 0 }}>
+                  <Icon.Home />
+                </ListItemIcon>
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <Tooltip title="Profile">
+              <ListItemButton sx={{ minHeight: 48, justifyContent: "center" }} LinkComponent={Link} to="profile">
+                <ListItemIcon sx={{ justifyContent: "center", minWidth: 0 }}>
+                  <Icon.AccountCircle />
+                </ListItemIcon>
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <Tooltip title="Chat">
+              <ListItemButton sx={{ minHeight: 48, justifyContent: "center" }} LinkComponent={Link} to="chat">
+                <ListItemIcon sx={{ justifyContent: "center", minWidth: 0 }}>
+                  <Icon.Chat />
+                </ListItemIcon>
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+        </List>
+
+
+      </Box>
+
+    </Drawer>
+  )
+}
+
+export default Navbar

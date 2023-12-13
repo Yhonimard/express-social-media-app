@@ -1,0 +1,6 @@
+.msg_container {
+    height: 85%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}

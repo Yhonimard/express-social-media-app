@@ -1,35 +1,21 @@
-import { Backdrop, CircularProgress, Container, Paper } from "@mui/material";
-import { useSearchParams } from "react-router-dom";
-import LoginForm from "../../components/auth/LoginForm";
-import SignupForm from "../../components/auth/SignupForm";
-import { useSelector } from "react-redux";
+import Login from "@/components/auth/Login"
+import Signup from "@/components/auth/Signup"
+import { Container, Paper, Typography } from "@mui/material"
+import { useSearchParams } from "react-router-dom"
 
-const Auth = () => {
-  const [urlSearchParam] = useSearchParams();
-
-  const { isSendingData } = useSelector((state) => state.auth);
-
-  const isLoginParam = urlSearchParam.get("mode") === "login";
+const AuthPage = () => {
+  const [searchParams] = useSearchParams("")
+  const loginParam = searchParams.get("mode") === "login"
 
   return (
-    <Container
-      maxWidth="xs"
-      sx={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Paper sx={{ p: 3, width: "100%" }}>
-        {isLoginParam && <LoginForm />}
-        {!isLoginParam && <SignupForm />}
+    <Container sx={{ minHeight: "100vh", justifyContent: "center", alignItems: "center", display: "flex" }} maxWidth="sm">
+      <Paper sx={{ width: "100%", px: 4, py: 3 }} >
+        <Typography variant="h5" textAlign={`center`}>{loginParam ? "Login" : "Signup"}</Typography>
+        {loginParam && <Login />}
+        {!loginParam && <Signup />}
       </Paper>
-      <Backdrop open={isSendingData} sx={{ color: "#fff", zIndex: 100000 }}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </Container>
-  );
-};
+  )
+}
 
-export default Auth;
+export default AuthPage

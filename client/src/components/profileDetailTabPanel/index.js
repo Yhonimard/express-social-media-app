@@ -1,2 +1,0 @@
-import ProfileDetailTabPanelComponent from "./ProfileDetailTabPanel";
-export default ProfileDetailTabPanelComponent

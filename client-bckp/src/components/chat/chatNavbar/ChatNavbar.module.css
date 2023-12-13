@@ -1,0 +1,10 @@
+.wrapper {
+  padding: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.status_online {
+  line-height: 0;
+}
