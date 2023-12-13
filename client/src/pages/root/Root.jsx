@@ -1,43 +1,51 @@
-import PostFloatingButtonComponent from "@/components/postFloatingButton";
-import PostModalComponent from "@/components/postModal";
-import RootSidebarComponent from "@/components/rootSidebar";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
-import { Outlet } from "react-router-dom";
-import Navbar from "../../components/navbar";
+import Header from "@/components/header"
+import Navbar from "@/components/navbar"
+import ProfileFollowersModal from "@/components/profile/ProfileFollowersModal"
+import ProfileFollowingModal from "@/components/profile/ProfileFollowingModal"
+import profile from "@/config/profile/profile"
+import { Box } from "@mui/material"
+import { useCallback, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Outlet, useLocation } from "react-router-dom"
 
-const Root = () => {
-  const theme = useTheme();
-  const mdUp = useMediaQuery(theme.breakpoints.up("md"));
-  
+const drawerSize = "80px"
+const RootPage = () => {
+
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  const dispatch = useDispatch()
+  const isOpenFollowersModal = useSelector(s => s.profile.isOpenFollowersModal)
+
+  const isOpenFollowingModal = useSelector(s => s.profile.isOpenFollowingModal)
+
+  const closeFollowersModal = useCallback(() => {
+    dispatch(profile.reducer.action.toggleFollowersModal())
+  }, [dispatch])
+
+  const toggleFollowingModal = useCallback(() => {
+    dispatch(profile.reducer.action.toggleFollowingModal())
+  }, [dispatch])
+
   return (
     <>
-      <Navbar />
-      <Container sx={{ mt: 10 }} maxWidth={mdUp ? "xl" : "md"}>
-        <Grid container spacing={3}>
-          <Grid item md={3} sx={{ display: { xs: "none", md: "block" } }}>
-            <Box sx={{ position: "sticky", top: 70 }}>
-              <RootSidebarComponent />
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Outlet />
-          </Grid>
-          <Grid item xs={12} md={3} sx={{ display: { xs: "none", md: "block" } }}>
-            <Paper>friend</Paper>
-          </Grid>
-        </Grid>
-      </Container>
-      <PostFloatingButtonComponent />
-      <PostModalComponent />
-    </>
-  );
-};
+      <Box minHeight={`100vh`}>
+        <Header />
+        <Box display={{ xs: "none", md: "block" }}>
+          <Navbar drawerWidth={drawerSize} />
+        </Box>
 
-export default Root;
+        <Box ml={{ xs: 0, md: drawerSize }}  >
+          <Outlet />
+        </Box>
+      </Box >
+      <ProfileFollowersModal open={isOpenFollowersModal} toggle={closeFollowersModal} />
+      <ProfileFollowingModal open={isOpenFollowingModal} toggle={toggleFollowingModal} />
+    </>
+
+  )
+
+}
+
+export default RootPage

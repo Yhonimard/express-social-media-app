@@ -1,2 +1,2 @@
-import CommentComponent from "./Comment";
-export default CommentComponent
+import Comment from "./Comment";
+export default Comment

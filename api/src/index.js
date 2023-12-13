@@ -1,18 +1,17 @@
-import db from "./config/db";
-import server from "./config/server";
+import config from "./config";
+import server from "./config/express";
 
 async function init() {
   try {
-    const PORT = process.env.PORT || 3000
-    server.listen(PORT, () => {
-      console.log(`run on port ${PORT}`);
+    const { port, host } = config("/");
+    const express = server()
+    express.listen(port, () => {
+      console.log(`run on port ${port}`);
     })
-    db.$disconnect()
   } catch (error) {
-    console.log("error from index", error);
-    db.$disconnect()
-    process.exit(1)
+    console.log(`error from index ${error}`);
+    process.exit(1);
   }
 }
 
-init()
+init();

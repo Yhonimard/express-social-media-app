@@ -1,25 +1,26 @@
-import axios from "axios";
+import axios from "axios"
 
-const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+const request = axios.create({
+  baseURL: `${import.meta.env.VITE_API_URL}`
 })
 
-let token
+let token;
 
-const setup = _token => {
-  token = _token
-}
+const setup = _token => token = _token
 
-
-instance.interceptors.request.use((req) => {
-  if (req.url.startsWith("/post") || req.url.startsWith("/user/post")) {
-    req.headers.setAuthorization(`Bearer ${token}`)
+request.interceptors.request.use(config => {
+  if (
+    config.url.startsWith("/post") ||
+    config.url.startsWith("/user") ||
+    config.url.startsWith('/friend')||
+    config.url.startsWith('/chat')
+  ) {
+    config.headers.setAuthorization(`Bearer ${token}`)
   }
-  return req
+  return config
 })
-
 
 export default {
-  instance,
+  request,
   setup
 }

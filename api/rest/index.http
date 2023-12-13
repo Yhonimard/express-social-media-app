@@ -1,0 +1,35 @@
+@base_url = http://localhost:3000/api/v1
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlob25pIiwiaWQiOjEsImlhdCI6MTcwMTgyMTQ0MX0.mRku-4hOwJBHfyiGbtq7HlKbq2tupD6Za2oySHFjSIo
+
+# POST
+GET {{base_url}}/post?size=4&pageNo=1 HTTP/1.1
+
+### get current user posts
+GET {{base_url}}/user/post?pageNo=1&size=4 HTTP/1.1
+Authorization: {{token}}
+
+
+
+################ AUTH ################
+
+### 
+POST {{base_url}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username":"yhoni",
+    "password":"yhoni"
+}
+
+
+
+################ FRIEND ################
+
+### get requested user follower
+GET {{base_url}}/user/friend/request?pageNo=1&size=4 HTTP/1.1
+Authorization: {{token}}
+
+
+
+
+
