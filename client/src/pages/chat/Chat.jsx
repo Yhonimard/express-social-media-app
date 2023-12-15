@@ -1,13 +1,13 @@
 import { ChatMobile } from "@/components/chat/Chat";
+import ChatCreate from "@/components/chat/ChatCreate";
 import useCustomMediaQuery from "@/hooks/useCustomMediaQuery";
 import { Container } from "@mui/material";
-import moment from "moment";
+import { useSelector } from "react-redux";
 
 const ChatPage = () => {
   const mediaQuery = useCustomMediaQuery()
-
-  console.log(moment("21-03-2004", "DD-MM-YYYY").toISOString());
-
+  const msgState = useSelector(s => s.chat.message)
+  
   return (
     <>
       <Container>
@@ -15,6 +15,9 @@ const ChatPage = () => {
           <ChatMobile />
         )}
       </Container>
+      {!msgState.isOpen && (
+        <ChatCreate />
+      )}
     </>
   );
 };

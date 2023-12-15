@@ -14,3 +14,10 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+.message-container .react-scroll-to-bottom--css-chznc-1n7m0yu {
+    display: flex;
+    flex-direction: column-reverse;
+    height: 100%;
+    width: 100%;
+}

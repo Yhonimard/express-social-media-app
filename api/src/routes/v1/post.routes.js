@@ -26,13 +26,14 @@ import {
   User
 } from "../../models"
 import PostService from "../../services/post/post.service"
+import shuffleAndPaginateDataHelper from "../../helper/shuffle-and-paginate-data-helper"
 
 const routes = Router()
 const service = PostService({
   postRepo: Post,
   sequelize: sequelize,
   userLikePostRepo: UserLikePost,
-  userRepo : User
+  userRepo: User
 })
 const controller = PostController(service)
 const validation = PostValidation()
@@ -495,7 +496,12 @@ routes.route(API_POST_USER_TOTAL_ID)
     */
   .get(jwtVerify, controller.getUserTotalPost)
 
+routes.route('/post/test/testing').get(async (req, res, next) => {
+  const posts = await Post.findAll()
 
+  const result = shuffleAndPaginateDataHelper(posts, req.query)
+  res.json(result)
+})
 const postRoutes = routes
 
 export default postRoutes

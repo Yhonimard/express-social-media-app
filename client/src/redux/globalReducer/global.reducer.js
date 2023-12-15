@@ -8,7 +8,7 @@ const globalReducer = createSlice({
     headerSearch: {
       searchValue: "",
       tabsLocation: 0
-    }
+    },
   },
 
 
@@ -29,10 +29,8 @@ const globalReducer = createSlice({
     setHeaderSearchInputValue: (state, { payload }) => {
       const { searchValue } = payload
       state.headerSearch.searchValue = searchValue
-    }
-
+    },
   }
-
 })
 
 export default globalReducer

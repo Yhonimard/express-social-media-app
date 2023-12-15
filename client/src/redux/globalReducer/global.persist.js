@@ -5,7 +5,7 @@ import globalReducer from "./global.reducer"
 const globalPersist = persistReducer({
   key: "global",
   storage,
-  blacklist: ["isOpenLoadingOverlay"]
+  blacklist: ["isOpenLoadingOverlay", 'socket']
 }, globalReducer.reducer)
 
 

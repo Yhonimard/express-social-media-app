@@ -20,22 +20,25 @@ async () => {
       through:
     }],
   })
-user.destroy({})
+  user.destroy({})
   user.findByPk("", {
-    include :[
+    include: [
       {
-        through : {
-          
+        through: {
+
         },
-        
+
       }
     ],
   })
-  user.bulkCreate([],{})
+  user.bulkCreate([], {})
+user.findOrCreate({
+  defa
+})
 
-  
   user.findAndCountAll({
-    
+
   })
+
 }
 

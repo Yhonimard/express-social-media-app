@@ -82,7 +82,7 @@ const ChatService = ({
           ]
         },
         attributes: ['id'],
-        order: [[Sequelize.literal('messages.created_at'), 'DESC'],],
+
         include: [
           {
             association: CHAT_BELONGS_TO_MANY_USER_CHAT_ALIAS,
@@ -98,7 +98,7 @@ const ChatService = ({
           },
           {
             association: CHAT_HAS_MANY_MESSAGE_ALIAS,
-            attributes: ['text', 'media', 'created_at'],
+            attributes: ['text', 'media'],
             where: {
               [Op.or]: [
                 {
@@ -111,7 +111,9 @@ const ChatService = ({
             },
           },
         ],
-        subQuery: false,
+        order: [
+          ['messages', 'created_at', 'DESC']
+        ],
         distinct: true,
         limit,
         offset
@@ -123,7 +125,6 @@ const ChatService = ({
         last_message: c.dataValues.messages[0]
       }))
 
-      console.log(chats.count);
       return toPaginationHelper(mappedResult, chats.count, query, 'chats')
     } catch (error) {
       throw sequelizeError(error)
@@ -143,25 +144,38 @@ const ChatService = ({
       })
       if (users.length < 2) throw new ApiNotFoundError('user not found')
 
-      const chat = await chatRepo.findOne({
-        where: {
-          [Op.or]: [
-            {
-              sender_id: user.id,
-              receiver_id: receiver_id
-            },
-            {
-              sender_id: receiver_id,
-              receiver_id: user.id
-            },
-          ]
-        },
-        attributes: ['sender_id', 'receiver_id', 'id']
-      })
-
-      if (!chat) throw new ApiNotFoundError('please create chat first')
-
       await sequelize.transaction(async trx => {
+
+        const [chat, isCreatedChat] = await chatRepo.findOrCreate({
+          where: {
+            [Op.or]: [
+              {
+                sender_id: user.id,
+                receiver_id: receiver_id
+              },
+              {
+                sender_id: receiver_id,
+                receiver_id: user.id
+              },
+            ]
+          },
+          defaults: {
+            sender_id: user.id,
+            receiver_id
+          },
+          attributes: ['sender_id', 'receiver_id', 'id'],
+          transaction: trx
+        })
+
+        if (isCreatedChat) {
+          const mappedUserChat = users.map(u => ({
+            user_id: u.dataValues.id,
+            chat_id: chat.id,
+          }))
+
+          await userChatRepo.bulkCreate(mappedUserChat, { transaction: trx })
+
+        }
 
         await messageRepo.create({
           chat_id: chat.id,
@@ -181,6 +195,7 @@ const ChatService = ({
   const getMessages = async (user, params, query) => {
     try {
       const { user_id } = params
+      console.log(query);
       const chat = await chatRepo.findOne({
         where: {
           [Op.or]: [
@@ -197,6 +212,7 @@ const ChatService = ({
       })
 
       if (!chat) throw new ApiNotFoundError('please create chat with that user first')
+      
       const { limit, offset } = paginationHelper(query)
       const result = await messageRepo.findAndCountAll({
         where: {

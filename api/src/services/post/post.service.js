@@ -10,6 +10,8 @@ import toPaginationHelper from "../../helper/to-pagination-helper"
 import deleteFileHelper from "../../middlewares/delete-file-helper"
 import { POST_ATTRIBUTES, USER_ATTRIBUTES } from "./post.constants"
 import { Op, Sequelize } from "sequelize"
+import _ from "lodash"
+import shuffleAndPaginateDataHelper from "../../helper/shuffle-and-paginate-data-helper"
 
 const PostService = ({
   postRepo,
@@ -21,10 +23,7 @@ const PostService = ({
   const getPosts = async (query) => {
     try {
 
-      const { limit, offset } = paginationHelper(query)
-      const posts = await postRepo.findAndCountAll({
-        limit,
-        offset,
+      const posts = await postRepo.findAll({
         attributes: POST_ATTRIBUTES,
         include: [
           {
@@ -32,18 +31,15 @@ const PostService = ({
             attributes: USER_ATTRIBUTES
           }
         ],
-        order: [
-          ["created_at", "DESC"]
-        ]
       })
 
-      const mapped = await Promise.all(posts.rows.map(async p => ({
+      const mapped = await Promise.all(posts.map(async p => ({
         ...p.dataValues,
         created_at: moment(p.created_at).format("DD MMMM, YYYY")
       })))
 
 
-      return toPaginationHelper(mapped, posts.count, query)
+      return shuffleAndPaginateDataHelper(mapped, query)
     } catch (error) {
       throw sequelizeError(error)
     }

@@ -29,7 +29,8 @@ import {
   Logout,
   GroupAdd,
   Upload,
-  ArrowBack
+  ArrowBack,
+  Message
 } from "@mui/icons-material"
 
 export default {
@@ -63,5 +64,6 @@ export default {
   Logout,
   GroupAdd,
   Upload,
-  ArrowBack
+  ArrowBack,
+  Message
 }

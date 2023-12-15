@@ -1,20 +1,13 @@
 import LoadingOverlay from "@/components/loadingOverlay/LoadingOverlay"
 import chat from "@/config/chat"
-import { createContext, useCallback, useEffect, useState } from "react"
+import { createContext, useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-
 export const chatContext = createContext({
   chatsQuery: {},
   setIsLoading: () => { },
   isLoading: false,
   openMessageLayout: (user) => { },
-  getMessages: (userId) => ({
-    data: { pages: null },
-    fetchNextPage: null,
-    hasNextPage: null,
-    isFetchingNextPage: null,
-  }),
-  sendMessage: (userId) => { }
+  scrollIntoEndMessage: () => { }
 })
 
 
@@ -26,29 +19,18 @@ const ChatContextProvider = ({ children }) => {
 
 
   const openMessageLayout = useCallback((user) => {
-    console.log(user);
     dispatch(chat.reducer.action.openMessageLayout(user))
   }, [dispatch])
 
 
-  const getMessages = useCallback((userId) => {
-    const { isLoading, data, fetchNextPage, hasNextPage, isFetchingNextPage } = chat.query.GetMessages({ currentUserId: currentUser.id, userId, size: 6 })
-    return {
-      data,
-      isLoading,
-      fetchNextPage,
-      hasNextPage,
-      isFetchingNextPage
-
-    }
-  }, [currentUser.id])
-
-  const sendMessage = useCallback((userId) => {
-    const { mutate } = chat.query.SendMessage({ userId, currentUserId: currentUser.id })
-    return mutate
-  }, [currentUser.id])
 
   const isLoadings = chatQuery.isLoading || isLoading
+
+  const scrollIntoEndMessage = () => {
+    const element = document.getElementById('last-msg')
+    if (element) element.scrollIntoView()
+  }
+
 
   return (
     <>
@@ -57,8 +39,7 @@ const ChatContextProvider = ({ children }) => {
         setIsLoading,
         openMessageLayout,
         isLoading: isLoadings,
-        getMessages,
-        sendMessage
+        scrollIntoEndMessage
       }}>
         {isLoadings && <LoadingOverlay />}
         {!isLoadings && children}

@@ -1,13 +1,18 @@
 import moment from "moment/moment"
+import { Op, Sequelize } from "sequelize"
 import ApiBadRequestError from "../../exceptions/ApiBadRequestError"
 import ApiConflictError from "../../exceptions/ApiConflictError"
 import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
 import sequelizeError from "../../exceptions/sequelize-error"
-import { USER_BELONGS_TO_MANY_FRIEND_ALIAS, USER_BELONGS_TO_MANY_USER_FRIEND_ALIAS, USER_FRIEND_BELONGS_TO_USER_FOLLOWER_ALIAS, USER_FRIEND_BELONGS_TO_USER_FOLLOWING_ALIAS, USER_HAS_ONE_USER_PROFILE_ALIAS } from "../../fixtures/models"
+import {
+  USER_FRIEND_BELONGS_TO_USER_FOLLOWER_ALIAS,
+  USER_FRIEND_BELONGS_TO_USER_FOLLOWING_ALIAS,
+  USER_HAS_ONE_USER_PROFILE_ALIAS
+} from "../../fixtures/models"
 import paginationHelper from "../../helper/pagination-helper"
 import toPaginationHelper from "../../helper/to-pagination-helper"
 import { USER_ATTRIBUTES } from "./friend.constants"
-import { Op, Sequelize } from "sequelize"
+import _ from "lodash"
 
 const FriendService = ({
   userRepo,
@@ -445,7 +450,6 @@ const FriendService = ({
       throw sequelizeError(error)
     }
   }
-
 
   return {
     follow,

@@ -53,7 +53,7 @@ const ProfileFollowersModal = ({ open, toggle }) => {
           value={followersState.searchValue}
           onChange={onSearchInputChange}
         />
-        <Grid container spacing={1} sx={{ maxHeight: "372px", overflowY: 'auto' }} >
+      <Grid container spacing={1} sx={{ maxHeight: "372px", overflowY: 'auto' }} >
           {followersQuery.data.pages.map((p, i) => (
             <Fragment key={i}>
               {p.followers.map(f => (

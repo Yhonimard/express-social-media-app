@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import MessageMobile from "./Message";
 import useFetchWhenScroll from "@/hooks/useFetchWhenScroll";
 
+
 const ChatUserCard = ({ user, last_message }) => {
   const { isLoading, openMessageLayout } = useContext(chatContext)
   return (
@@ -27,6 +28,7 @@ const ChatUserCard = ({ user, last_message }) => {
 
 export const ChatMobile = () => {
   const { chatsQuery } = useContext(chatContext)
+  
   const messageState = useSelector(s => s.chat.message)
   const fetchChat = useFetchWhenScroll(chatsQuery.fetchNextPage)
   

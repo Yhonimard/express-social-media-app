@@ -1,9 +1,8 @@
-import config from "../config"
-import ApiUnauthorizedError from "../exceptions/ApiUnauthorizedError"
 import jwt from "jsonwebtoken"
-import { User } from "../models"
-import ApiNotFoundError from "../exceptions/ApiNotFoundError"
+import config from "../config"
 import ApiErrorResponse from "../exceptions/ApiErrorResponse"
+import ApiUnauthorizedError from "../exceptions/ApiUnauthorizedError"
+import { User } from "../models"
 
 /**
  * 

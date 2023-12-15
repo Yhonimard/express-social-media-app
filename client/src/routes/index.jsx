@@ -9,13 +9,16 @@ import ProfilePage from "@/pages/profile"
 import UserDetailPage from "@/pages/userDetail"
 import ChatPage from "@/pages/chat"
 import ChatContextProvider from "@/context/Chat.context"
+import RootContextProvider from "@/context/Root.context"
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: (
       <Unauthorized>
-        <RootPage />
+        <RootContextProvider >
+          <RootPage />
+        </RootContextProvider>
       </Unauthorized>
     ),
     children: [

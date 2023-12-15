@@ -135,7 +135,6 @@ const ConfirmFollower = ({ uid, senderId }) => {
       await queryClient.cancelQueries([GET_CURRENT_USER_FOLLOWERS_QUERY_NAME, uid])
       const prevFollowersData = queryClient.getQueryData([GET_CURRENT_USER_FOLLOWERS_QUERY_NAME, uid])
 
-      console.log(prevReqFriendsData);
 
       queryClient.setQueryData([FRIEND_QUERY_NAME, uid], (oldData) => {
         const newPagesData = oldData.pages.map(p => ({

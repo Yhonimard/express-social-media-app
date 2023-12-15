@@ -1,7 +1,7 @@
 import moment from "moment"
 import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
 import sequelizeError from "../../exceptions/sequelize-error"
-import { USER_HAS_ONE_USER_PROFILE_ALIAS } from "../../fixtures/models"
+import { USER_BELONGS_TO_MANY_FRIEND_ALIAS, USER_BELONGS_TO_MANY_USER_FRIEND_ALIAS, USER_HAS_ONE_USER_PROFILE_ALIAS } from "../../fixtures/models"
 import { USER_ATTRIBUTES, USER_PROFILE_ATTRIBUTES } from "./user.constants"
 import { Op, Sequelize } from "sequelize"
 import paginationHelper from "../../helper/pagination-helper"
@@ -156,8 +156,22 @@ const UserService = ({
 
       const result = await userRepo.findAndCountAll({
         where: {
-          ...searchUser
+          ...searchUser,
         },
+        include: [
+          {
+            association: USER_BELONGS_TO_MANY_FRIEND_ALIAS,
+            through: { where: { confirmed: true } },
+            required: false
+          },
+          {
+            association: USER_BELONGS_TO_MANY_USER_FRIEND_ALIAS,
+            through: { where: { confirmed: true } },
+            required: false
+          }
+
+
+        ],
         attributes: USER_ATTRIBUTES,
         limit,
         offset
