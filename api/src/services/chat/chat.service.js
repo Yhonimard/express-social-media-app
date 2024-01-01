@@ -81,7 +81,7 @@ const ChatService = ({
             }
           ]
         },
-        attributes: ['id'],
+        attributes: ['id', 'created_at'],
 
         include: [
           {
@@ -99,6 +99,7 @@ const ChatService = ({
           {
             association: CHAT_HAS_MANY_MESSAGE_ALIAS,
             attributes: ['text', 'media'],
+            required: false,
             where: {
               [Op.or]: [
                 {
@@ -112,13 +113,13 @@ const ChatService = ({
           },
         ],
         order: [
-          ['messages', 'created_at', 'DESC']
+          ['messages', 'created_at', 'DESC'],
+          ['created_at', 'DESC']
         ],
         distinct: true,
         limit,
         offset
       })
-
       const mappedResult = chats.rows.map(c => ({
         id: c.dataValues.id,
         user: c.dataValues.user.reduce((acc, obj) => ({ ...acc, ...obj })),
@@ -195,7 +196,6 @@ const ChatService = ({
   const getMessages = async (user, params, query) => {
     try {
       const { user_id } = params
-      console.log(query);
       const chat = await chatRepo.findOne({
         where: {
           [Op.or]: [
@@ -212,7 +212,7 @@ const ChatService = ({
       })
 
       if (!chat) throw new ApiNotFoundError('please create chat with that user first')
-      
+
       const { limit, offset } = paginationHelper(query)
       const result = await messageRepo.findAndCountAll({
         where: {

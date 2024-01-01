@@ -1,20 +1,17 @@
 const express = require("express")
 const { Server } = require("socket.io")
+const http = require('http')
 const config = require("./config")
 const jwt = require('jsonwebtoken')
 if (process.env.NODE_ENV === "dev") require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
-
+const app = express()
+const server = http.createServer(app)
 const { port, client_url, constants } = config("/")
 
-express.Router().use("/", (req, res, next) => {
-  res.send()
-})
-
-
-const io = new Server({
+const io = new Server(server, {
   cors: {
-    origin: client_url
-  },
+    origin: client_url  
+  }
 })
 
 io.use((socket, next) => {
@@ -26,7 +23,6 @@ io.use((socket, next) => {
 
 const user = new Set()
 
-
 io.on('connection', (socket) => {
   if (!Array.from(user).some(u => u.id === socket.user.id)) {
     user.add({ ...socket.user, socketId: socket.id })
@@ -34,12 +30,10 @@ io.on('connection', (socket) => {
 
   socket.on('send-message', (data) => {
     const receiver = Array.from(user).find(u => u.id === data.receiver_id)
-    console.log(data);
     if (receiver) {
-      console.log("run");
       socket.to(receiver.socketId).emit('get-messages', data)
     }
-  })
+  })    
 
   socket.on('disconnect', () => {
     const deletedUser = Array.from(user).find(u => u.id === socket.user.id)
@@ -48,9 +42,6 @@ io.on('connection', (socket) => {
 })
 
 
-
-
 const PORT = port || 3001
-io.listen(PORT, () => {
-  console.log('run on port 3001');
-})
+
+server.listen(PORT, () => { console.log(`run on port ${PORT}`); })

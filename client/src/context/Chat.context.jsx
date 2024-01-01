@@ -27,7 +27,7 @@ const ChatContextProvider = ({ children }) => {
   const isLoadings = chatQuery.isLoading || isLoading
 
   const scrollIntoEndMessage = () => {
-    const element = document.getElementById('last-msg')
+    const element = document.getElementById('bottom-msg')
     if (element) element.scrollIntoView()
   }
 

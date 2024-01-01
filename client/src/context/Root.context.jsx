@@ -8,12 +8,17 @@ export const rootContext = createContext({
 
 const RootContextProvider = ({ children }) => {
   const currentUser = useSelector(s => s.auth.user)
-  
-  const socket = io(import.meta.env.VITE_API_SOCKET_URL, {
-    auth: {
-      token: currentUser.token
-    },
-  })
+  const [socket, setSocket] = useState(null)
+
+  useEffect(() => {
+    const socket = io(import.meta.env.VITE_API_SOCKET_URL, {
+      auth: {
+        token: currentUser.token
+      },
+    })
+    setSocket(socket)
+  }, [currentUser.token])
+
 
   return (
     <rootContext.Provider value={{

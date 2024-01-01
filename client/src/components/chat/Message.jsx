@@ -1,17 +1,14 @@
-import api from "@/api";
 import Icon from "@/assets/Icon";
 import chat from "@/config/chat";
 import { chatContext } from "@/context/Chat.context";
 import { rootContext } from "@/context/Root.context";
-import { GET_MESSAGE_QUERY_NAME } from "@/fixtures/api-query";
+import { GET_CURRENT_USER_CHATS_QUERY_NAME, GET_MESSAGE_QUERY_NAME } from "@/fixtures/api-query";
 import { GET_MESSAGE_E_NAME } from "@/fixtures/socket-chat-message";
 import useFetchWhenScroll from "@/hooks/useFetchWhenScroll";
-import chatThunk from "@/redux/chatReducer/chat.thunk";
 import { AppBar, Avatar, Box, Button, IconButton, Paper, Skeleton, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { Fragment, useCallback, useContext, useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
+import { Fragment, useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const MessageInput = () => {
@@ -26,8 +23,8 @@ const MessageInput = () => {
       text: '',
     },
     onSubmit: data => {
-      chatCtx.scrollIntoEndMessage()
       send(data)
+      chatCtx.scrollIntoEndMessage()
       formik.resetForm()
     }
   })
@@ -89,46 +86,42 @@ export const MessageMobile = () => {
   const { socket } = useContext(rootContext)
   const msgState = useSelector(s => s.chat.message)
   const dispatch = useDispatch()
-  const { scrollIntoEndMessage } = useContext(chatContext)
-
-  const userReceiver = useSelector(s => s.chat.message.user)
   const currentUser = useSelector(s => s.auth.user)
+  const userReceiver = useSelector(s => s.chat.message.user)
 
-  const messageData = useSelector(s => s.chat.messageData)
+  const messageQuery = chat.query.GetMessages({ currentUserId: currentUser.id, userId: userReceiver.id, size: 30 })
+  const { inViewRef: refLastMsg, isShowBtn } = useFetchWhenScroll(messageQuery.fetchNextPage, 300)
 
   const backToChat = () => {
     dispatch(chat.reducer.action.closeMessageLayout())
   }
-
-  const [msgRef, inView] = useInView({
-    delay: 300
-  })
-
-  const fetchNextPage = useCallback(async () => {
-    dispatch(chat.reducer.action.fetchNextMessage())
-  }, [dispatch])
-
+  const queryClient = useQueryClient()
 
   useEffect(() => {
-    scrollIntoEndMessage()
-  }, [scrollIntoEndMessage])
+    socket.on(GET_MESSAGE_E_NAME, async (newData) => {
+      await queryClient.cancelQueries([GET_MESSAGE_QUERY_NAME, currentUser.id, userReceiver.id])
 
+      queryClient.setQueryData([GET_MESSAGE_QUERY_NAME, currentUser.id, userReceiver.id], oldData => {
+        const newPages = oldData.pages.map(p => {
+          return {
+            ...p,
+            data: [newData, ...p.data]
+          }
+        })
 
-  useEffect(() => {
-    dispatch(chatThunk.getMessages({ query: { pageNo: messageData.pageNo, size: 20 }, userId: userReceiver.id }))
-  }, [messageData.pageNo, userReceiver.id, dispatch])
-
-
-  useEffect(() => {
-    socket.on('get-messages', (newMsg) => {
-      dispatch(chat.reducer.action.receiveNewMessage(newMsg))
+        return {
+          ...oldData,
+          pages: newPages
+        }
+      })
     })
-  }, [socket, dispatch])
+    queryClient.invalidateQueries([GET_CURRENT_USER_CHATS_QUERY_NAME, currentUser.id])
+    
+    return () => {
+      socket.off(GET_MESSAGE_E_NAME)
+    }
+  }, [socket, currentUser.id, userReceiver.id])
 
-
-  useEffect(() => {
-    if (inView) fetchNextPage()
-  }, [inView, fetchNextPage])
 
   return (
     <>
@@ -151,42 +144,23 @@ export const MessageMobile = () => {
       </AppBar>
       <Stack height={`100%`} >
         <Stack height={`85%`} sx={{ overflowY: 'auto' }} mt={1} spacing={1} direction={`column-reverse`} >
-          <div id="last-msg" />
-
-          {messageData.messages.map((m, i) => (
-            <MsgBuble
-              key={i}
-              created_at={m.created_at}
-              sender_id={m.sender_id}
-              text={m.text}
-              isLoading={false}
-            />
-          ))}
-          {!messageData.isLast && (
-            <Button ref={msgRef} disabled={messageData.isLast} sx={{ visibility: "hidden" }}></Button>
-          )}
-
-          {/* {messagesQuery.data?.pages.map((p, i) => (
+          <div id="bottom-msg" />
+          {!messageQuery.isLoading && messageQuery.data.pages.map((p, i) => (
             <Fragment key={i}>
-              {p?.data?.map((m, i) => (
+              {p.data.filter((data, i, s) => i === s.findIndex(t => t.id === data.id)).map(m => (
                 <MsgBuble
                   key={m.id}
                   created_at={m.created_at}
                   sender_id={m.sender_id}
                   text={m.text}
-                  isLoading={(messagesQuery.isLoading || messagesQuery.isFetchingNextPage)}
+                  isLoading={(messageQuery.isLoading || messageQuery.isFetchingNextPage)}
                 />
               ))}
             </Fragment>
           ))}
-          {fetchNextMessage.isShowBtn && (
-            <button
-              ref={fetchNextMessage.inViewRef}
-              disabled={!messagesQuery.hasNextPage || messagesQuery.isFetchingNextPage}
-              style={{ visibility: 'hidden' }}
-            />
-          )} */}
-
+          {!messageQuery.isLoading && isShowBtn && (
+            <Button ref={refLastMsg} fullWidth style={{ visibility: 'hidden' }} disabled={!messageQuery.hasNextPage || messageQuery.isFetchingNextPage}></Button>
+          )}
         </Stack>
         <Box >
           <MessageInput />

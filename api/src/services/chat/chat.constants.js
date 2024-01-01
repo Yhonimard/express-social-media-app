@@ -1,1 +1,1 @@
-export const MESSAGE_ATTRIBUTES = ['id', 'text', 'media', 'receiver_id', 'sender_id']
+export const MESSAGE_ATTRIBUTES = ['id', 'text', 'media', 'receiver_id', 'sender_id', 'created_at']
