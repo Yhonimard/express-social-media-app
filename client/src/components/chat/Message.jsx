@@ -8,8 +8,9 @@ import useFetchWhenScroll from "@/hooks/useFetchWhenScroll";
 import { AppBar, Avatar, Box, Button, IconButton, Paper, Skeleton, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { Fragment, useContext, useEffect } from "react";
+import { Fragment, useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as yup from "yup";
 
 const MessageInput = () => {
   const chatCtx = useContext(chatContext)
@@ -24,9 +25,11 @@ const MessageInput = () => {
     },
     onSubmit: data => {
       send(data)
-      chatCtx.scrollIntoEndMessage()
       formik.resetForm()
-    }
+    },
+    validationSchema: yup.object().shape({
+      text: yup.string().required(),
+    })
   })
 
   return (
@@ -55,7 +58,7 @@ const MessageInput = () => {
 };
 
 
-const MsgBuble = ({ text, created_at, sender_id, isLoading }) => {
+const MsgBuble = ({ text, created_at, sender_id, isLoading, ref }) => {
   const currentUser = useSelector(s => s.auth.user)
 
   return (
@@ -81,20 +84,18 @@ const MsgBuble = ({ text, created_at, sender_id, isLoading }) => {
 };
 
 
-
-export const MessageMobile = () => {
+const MsgBubleList = () => {
   const { socket } = useContext(rootContext)
-  const msgState = useSelector(s => s.chat.message)
-  const dispatch = useDispatch()
+  const { scrollIntoEndMessage } = useContext(chatContext)
+  const scrollRef = useRef()
+
   const currentUser = useSelector(s => s.auth.user)
   const userReceiver = useSelector(s => s.chat.message.user)
 
   const messageQuery = chat.query.GetMessages({ currentUserId: currentUser.id, userId: userReceiver.id, size: 30 })
+
   const { inViewRef: refLastMsg, isShowBtn } = useFetchWhenScroll(messageQuery.fetchNextPage, 300)
 
-  const backToChat = () => {
-    dispatch(chat.reducer.action.closeMessageLayout())
-  }
   const queryClient = useQueryClient()
 
   useEffect(() => {
@@ -114,14 +115,57 @@ export const MessageMobile = () => {
           pages: newPages
         }
       })
+
     })
     queryClient.invalidateQueries([GET_CURRENT_USER_CHATS_QUERY_NAME, currentUser.id])
-    
+
     return () => {
       socket.off(GET_MESSAGE_E_NAME)
     }
-  }, [socket, currentUser.id, userReceiver.id])
+  }, [socket, currentUser.id, userReceiver.id, queryClient])
 
+  console.log(messageQuery.isFetchingNextPage);
+  useEffect(() => {
+    if (!messageQuery.isFetchingNextPage) {
+      scrollIntoEndMessage()
+    }
+  }, [messageQuery.data, scrollIntoEndMessage, messageQuery.isFetchingNextPage])
+
+  return (
+    <>
+      <Stack height={`85%`} sx={{ overflowY: 'auto' }} mt={1} spacing={1} direction={`column-reverse`} >
+        <div id="bottom-msg"></div>
+        {!messageQuery.isLoading && messageQuery.data.pages.map((p, i) => (
+          <Fragment key={i}>
+            {p.data.filter((data, i, s) => i === s.findIndex(t => t.id === data.id)).map(m => (
+              <MsgBuble
+                ref={scrollRef}
+                key={m.id}
+                created_at={m.created_at}
+                sender_id={m.sender_id}
+                text={m.text}
+                isLoading={(messageQuery.isLoading || messageQuery.isFetchingNextPage)}
+              />
+            ))}
+          </Fragment>
+        ))}
+        {!messageQuery.isLoading && isShowBtn && (
+          <Button ref={refLastMsg} fullWidth style={{ visibility: 'hidden' }} disabled={!messageQuery.hasNextPage || messageQuery.isFetchingNextPage}></Button>
+        )}
+      </Stack>
+    </>
+  );
+};
+
+
+
+export const MessageMobile = () => {
+  const msgState = useSelector(s => s.chat.message)
+  const dispatch = useDispatch()
+
+  const backToChat = () => {
+    dispatch(chat.reducer.action.closeMessageLayout())
+  }
 
   return (
     <>
@@ -143,25 +187,7 @@ export const MessageMobile = () => {
         </Toolbar>
       </AppBar>
       <Stack height={`100%`} >
-        <Stack height={`85%`} sx={{ overflowY: 'auto' }} mt={1} spacing={1} direction={`column-reverse`} >
-          <div id="bottom-msg" />
-          {!messageQuery.isLoading && messageQuery.data.pages.map((p, i) => (
-            <Fragment key={i}>
-              {p.data.filter((data, i, s) => i === s.findIndex(t => t.id === data.id)).map(m => (
-                <MsgBuble
-                  key={m.id}
-                  created_at={m.created_at}
-                  sender_id={m.sender_id}
-                  text={m.text}
-                  isLoading={(messageQuery.isLoading || messageQuery.isFetchingNextPage)}
-                />
-              ))}
-            </Fragment>
-          ))}
-          {!messageQuery.isLoading && isShowBtn && (
-            <Button ref={refLastMsg} fullWidth style={{ visibility: 'hidden' }} disabled={!messageQuery.hasNextPage || messageQuery.isFetchingNextPage}></Button>
-          )}
-        </Stack>
+        <MsgBubleList />
         <Box >
           <MessageInput />
         </Box>
@@ -171,5 +197,47 @@ export const MessageMobile = () => {
 };
 
 
+export const MessageDesktop = () => {
+  const msgState = useSelector(s => s.chat.message)
+  const dispatch = useDispatch()
+  const closeMsg = () => dispatch(chat.reducer.action.closeMessageLayout())
 
-export default MessageMobile;
+  return (
+    <Box>
+      <AppBar position="sticky">
+        <Toolbar>
+          <Stack direction={`row`} alignItems={`center`} gap={1}>
+            <IconButton onClick={closeMsg} >
+              <Icon.ArrowBack />
+            </IconButton>
+            <Stack direction={`row`} gap={2} alignItems={`center`}>
+              <IconButton size="small">
+                <Avatar sx={{ width: 35, height: 35 }} src={`${import.meta.env.VITE_API_BASE_URL}/${msgState.user.photo_profile}`} />
+              </IconButton>
+              <Stack direction={`column`}>
+                <Typography sx={{ alignSelf: 'flex-start' }} variant="body1">
+                  {msgState.user.username}
+                </Typography>
+                <Typography sx={{ alignSelf: 'flex-start' }} variant="body2" color={`text.secondary`}>
+                  {/* {msgState.user.username} */}
+                  online
+                </Typography>
+              </Stack>
+            </Stack>
+          </Stack>
+        </Toolbar>
+      </AppBar>
+      <Box height={`79vh`}>
+        <MsgBubleList />
+        <MessageInput />
+      </Box>
+    </Box>
+  );
+};
+
+const AlwaysScrollToBottom = ({ socket }) => {
+  const elementRef = useRef();
+  useEffect(() => elementRef.current.scrollIntoView(), [socket]);
+  useEffect(() => elementRef.current.scrollIntoView(), []);
+  return <div ref={elementRef} id="bottom-msg" />;
+};

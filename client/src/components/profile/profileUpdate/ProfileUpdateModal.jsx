@@ -1,7 +1,5 @@
-import TextArea from "@/components/TextArea"
-import LoadingOverlay from "@/components/loadingOverlay/LoadingOverlay"
 import user from "@/config/user"
-import { Button, Divider, Modal, Paper, TextField, TextareaAutosize, Typography } from "@mui/material"
+import { Button, Divider, Modal, Paper, TextField, Typography } from "@mui/material"
 import { DatePicker } from "@mui/x-date-pickers"
 import { useFormik } from "formik"
 import moment from "moment"

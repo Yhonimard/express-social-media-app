@@ -8,7 +8,7 @@ const PostList = ({ query }) => {
   
   return (
     <Grid container spacing={1}>
-      {query.data.pages.map((p, i) => (
+      {query.data?.pages.map((p, i) => (
         <Fragment key={i}>
           {p.data.map(p => (
             <Grid key={p.id} item xs={12}>

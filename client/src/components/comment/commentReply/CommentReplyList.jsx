@@ -1,16 +1,14 @@
-import LoadingOverlay from "@/components/loadingOverlay/LoadingOverlay"
 import comment from "@/config/comment"
 import { Collapse } from "@mui/material"
+import { memo } from "react"
 import { TransitionGroup } from "react-transition-group"
 import CommentReply from "./CommentReply"
-import { memo } from "react"
 
 const CommentReplyList = ({ cid, pid, size }) => {
   const commentReplyQuery = comment.query.GetCommentReply({ cid, pid, size })
 
   return (
     <>
-      {commentReplyQuery.isLoading && <LoadingOverlay />}
       {!commentReplyQuery.isLoading &&
         commentReplyQuery.data.pages.map((p, i) => (
           <TransitionGroup key={i}>

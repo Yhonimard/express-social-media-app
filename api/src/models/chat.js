@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     sender_id: {
       type: Sequelize.INTEGER,

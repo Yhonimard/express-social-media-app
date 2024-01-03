@@ -1,15 +1,16 @@
 import { chatContext } from "@/context/Chat.context";
-import { Avatar, Box, Card, CardActionArea, CardHeader, Grid, Skeleton } from "@mui/material";
+import { Avatar, Box, Card, CardActionArea, CardHeader, Grid, Skeleton, Stack } from "@mui/material";
 import { Fragment, useContext } from "react";
 import { useSelector } from "react-redux";
-import MessageMobile from "./Message";
+import { MessageDesktop, MessageMobile } from "./Message";
 import useFetchWhenScroll from "@/hooks/useFetchWhenScroll";
 
 
 const ChatUserCard = ({ user, last_message }) => {
   const { isLoading, openMessageLayout } = useContext(chatContext)
+  const chatCtx = useContext(chatContext)
   return (
-    <Card>
+    <Card onClick={chatCtx.scrollIntoEndMessage}>
       <CardActionArea onClick={() => openMessageLayout(user)}>
         <CardHeader
           avatar={
@@ -26,36 +27,44 @@ const ChatUserCard = ({ user, last_message }) => {
   );
 };
 
-export const ChatMobile = () => {
+const ChatUserCardList = () => {
   const { chatsQuery } = useContext(chatContext)
-  
-  const messageState = useSelector(s => s.chat.message)
   const fetchChat = useFetchWhenScroll(chatsQuery.fetchNextPage)
-  
+  return (
+    <>
+      <Grid container spacing={1}>
+        {chatsQuery.data.pages.map((p, i) => (
+          <Fragment key={i}>
+            {p.chats.map(c => (
+              <Grid item xs={12} key={c.id} >
+                <ChatUserCard
+                  id={c.id}
+                  last_message={c.last_message}
+                  user={c.user}
+                />
+              </Grid>
+            ))}
+          </Fragment>
+        ))}
+        {fetchChat.isShowBtn && (
+          <button ref={fetchChat.inViewRef} style={{ visibility: 'hidden' }} disabled={!chatsQuery.hasNextPage || chatsQuery.isFetchingNextPage}></button>
+        )}
+      </Grid>
+    </>
+  );
+};
+
+
+
+export const ChatMobile = () => {
+  const messageState = useSelector(s => s.chat.message)
   return (
     <Box mt={1} height={`81vh`}>
       {messageState.isOpen && (
         <MessageMobile />
       )}
       {!messageState.isOpen && (
-        <Grid container spacing={1}>
-          {chatsQuery.data.pages.map((p, i) => (
-            <Fragment key={i}>
-              {p.chats.map(c => (
-                <Grid item xs={12} key={c.id} >
-                  <ChatUserCard
-                    id={c.id}
-                    last_message={c.last_message}
-                    user={c.user}
-                  />
-                </Grid>
-              ))}
-            </Fragment>
-          ))}
-          {fetchChat.isShowBtn && (
-            <button ref={fetchChat.inViewRef} style={{ visibility: 'hidden' }} disabled={!chatsQuery.hasNextPage || chatsQuery.isFetchingNextPage}></button>
-          )}
-        </Grid>
+        <ChatUserCardList />
       )}
     </Box>
   );
@@ -63,3 +72,25 @@ export const ChatMobile = () => {
 
 
 
+export const ChatDesktop = () => {
+  const msgState = useSelector(s => s.chat.message)
+  return (
+    <Box mt={1} height={`81vh`}>
+      <Stack direction={`row`} height={`81vh`} gap={3}>
+        <Box sx={{ flex: "0 0 40%" }}>
+          <ChatUserCardList />
+        </Box>
+        <Box sx={{ flex: "1 0" }}>
+          {msgState.isOpen && (
+            <MessageDesktop />
+          )}
+          {!msgState.isOpen && (
+            <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              you dont have any opened chat
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Box>
+  );
+};

@@ -1,13 +1,17 @@
 import config from "./config";
-import server from "./config/express";
+import express from "./config/express"
+
+
 
 async function init() {
   try {
+    const server = express()
     const { port, host } = config("/");
-    const express = server()
-    express.listen(port, () => {
+
+    server.listen(port, host, () => {
       console.log(`run on port ${port}`);
     })
+
   } catch (error) {
     console.log(`error from index ${error}`);
     process.exit(1);

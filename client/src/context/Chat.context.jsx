@@ -1,4 +1,3 @@
-import LoadingOverlay from "@/components/loadingOverlay/LoadingOverlay"
 import chat from "@/config/chat"
 import { createContext, useCallback, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -41,7 +40,6 @@ const ChatContextProvider = ({ children }) => {
         isLoading: isLoadings,
         scrollIntoEndMessage
       }}>
-        {isLoadings && <LoadingOverlay />}
         {!isLoadings && children}
       </chatContext.Provider>
     </>

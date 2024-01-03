@@ -11,6 +11,7 @@ import { User } from "../models"
  * @param {import("express").NextFunction} next 
  * @returns 
  */
+
 const jwtVerify = async (req, res, next) => {
   try {
     const { jwtkey } = config("/")
@@ -27,5 +28,6 @@ const jwtVerify = async (req, res, next) => {
     return next(new ApiErrorResponse(error.message, error.code))
   }
 }
+
 
 export default jwtVerify

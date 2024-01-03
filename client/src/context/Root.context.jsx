@@ -11,7 +11,7 @@ const RootContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null)
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_SOCKET_URL, {
+    const socket = io(import.meta.env.VITE_API_BASE_URL, {
       auth: {
         token: currentUser.token
       },

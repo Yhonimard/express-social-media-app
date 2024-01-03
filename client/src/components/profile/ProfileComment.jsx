@@ -1,8 +1,7 @@
 import comment from "@/config/comment"
-import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText, Stack, Typography } from "@mui/material"
-import { useSelector } from "react-redux"
-import LoadingOverlay from "../loadingOverlay/LoadingOverlay"
+import { Avatar, Box, Divider, IconButton, List, ListItem, Stack, Typography } from "@mui/material"
 import { Fragment } from "react"
+import { useSelector } from "react-redux"
 
 const ProfileCommentListItem = ({ author, created_at, id, title, child, isLast }) => {
   return (
@@ -82,10 +81,9 @@ const ProfileCommentListItemChild = ({ author, created_at, id, title }) => {
 const ProfileComment = () => {
   const currentUser = useSelector(s => s.auth.user)
   const commentQuery = comment.query.GetUserComment(currentUser.id)
-  if (commentQuery.isLoading) return <LoadingOverlay />
   return (
     <List>
-      {commentQuery.data.pages.map((p, i) => (
+      {!commentQuery.isLoading && commentQuery.isSuccess && commentQuery.data.pages.map((p, i) => (
         <Fragment key={i}>
           {p.data.map((c, i) => (
             <ProfileCommentListItem key={c.child ? c.child.id : c.id} author={c.author} created_at={c.created_at} id={c.id} title={c.title} child={c.child} isLast={(p.data.length - 1) === i} />

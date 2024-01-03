@@ -27,7 +27,7 @@ const config = {
       path: path.join('storage', "img_seed"),
       url: "/storage/img_seed"
     }
-  }
+  },
 }
 
 const store = new confidence.Store(config)
