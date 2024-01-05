@@ -11,7 +11,7 @@ const PostDetailPage = () => {
   if (postDetailQuery.isLoading) return <LoadingOverlay />
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ mb: 2 }}>
       <PostDetailCard
         author={postDetailQuery.data.author}
         content={postDetailQuery.data.content}

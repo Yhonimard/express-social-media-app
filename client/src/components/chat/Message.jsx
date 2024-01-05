@@ -58,7 +58,7 @@ const MessageInput = () => {
 };
 
 
-const MsgBuble = ({ text, created_at, sender_id, isLoading, ref }) => {
+const MsgBuble = ({ text, created_at, sender_id, isLoading }) => {
   const currentUser = useSelector(s => s.auth.user)
 
   return (
@@ -87,14 +87,13 @@ const MsgBuble = ({ text, created_at, sender_id, isLoading, ref }) => {
 const MsgBubleList = () => {
   const { socket } = useContext(rootContext)
   const { scrollIntoEndMessage } = useContext(chatContext)
-  const scrollRef = useRef()
 
   const currentUser = useSelector(s => s.auth.user)
   const userReceiver = useSelector(s => s.chat.message.user)
 
   const messageQuery = chat.query.GetMessages({ currentUserId: currentUser.id, userId: userReceiver.id, size: 30 })
 
-  const { inViewRef: refLastMsg, isShowBtn } = useFetchWhenScroll(messageQuery.fetchNextPage, 300)
+  const { inViewRef: refLastMsg, isShowBtn, inView } = useFetchWhenScroll(messageQuery.fetchNextPage, 300)
 
   const queryClient = useQueryClient()
 
@@ -124,12 +123,11 @@ const MsgBubleList = () => {
     }
   }, [socket, currentUser.id, userReceiver.id, queryClient])
 
-  console.log(messageQuery.isFetchingNextPage);
   useEffect(() => {
-    if (!messageQuery.isFetchingNextPage) {
+    if (!inView) {
       scrollIntoEndMessage()
     }
-  }, [messageQuery.data, scrollIntoEndMessage, messageQuery.isFetchingNextPage])
+  }, [messageQuery.data, scrollIntoEndMessage, messageQuery.isFetchingNextPage, inView])
 
   return (
     <>
@@ -139,7 +137,6 @@ const MsgBubleList = () => {
           <Fragment key={i}>
             {p.data.filter((data, i, s) => i === s.findIndex(t => t.id === data.id)).map(m => (
               <MsgBuble
-                ref={scrollRef}
                 key={m.id}
                 created_at={m.created_at}
                 sender_id={m.sender_id}

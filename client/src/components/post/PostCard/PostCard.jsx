@@ -84,7 +84,7 @@ const PostCard = ({ author, created_at, title, content, image, isFetching, pid }
           title={isLoading ? <Skeleton animation="wave" height={10} width={`80%`} sx={{ mb: "6px" }} /> : author.username}
           subheader={isLoading ? <Skeleton animation="wave" height={10} width="40%" /> : created_at}
         />
-        <Box sx={{ cursor: "pointer" }} onClick={() => navigate(`post/${pid}`)}>
+        <Box sx={{ cursor: "pointer" }} onClick={() => navigate(`/post/${pid}`)}>
           {isLoading ?
             <Skeleton animation="wave" variant="rectangular" height={380} />
             : (

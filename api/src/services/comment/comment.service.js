@@ -1,15 +1,15 @@
 import moment from "moment"
+import ApiBadRequestError from "../../exceptions/ApiBadRequestError"
+import ApiForbiddenError from "../../exceptions/ApiForbiddenError"
+import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
 import sequelizeError from "../../exceptions/sequelize-error"
-import { COMMENT_BELONGS_TO_PARENT_ALIAS, COMMENT_BELONGS_TO_USER_ALIAS, COMMENT_HAS_MANY_CHILD_ALIAS } from "../../fixtures/models"
+import { COMMENT_BELONGS_TO_PARENT_ALIAS, COMMENT_BELONGS_TO_USER_ALIAS } from "../../fixtures/models"
 import paginationHelper from "../../helper/pagination-helper"
 import toPaginationHelper from "../../helper/to-pagination-helper"
 import {
   COMMENT_ATTRIBUTES,
   USER_ATTRIBUTES
 } from "./comment.constants"
-import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
-import ApiForbiddenError from "../../exceptions/ApiForbiddenError"
-import ApiBadRequestError from "../../exceptions/ApiBadRequestError"
 
 const CommentService = ({
   commentRepo,
@@ -203,7 +203,7 @@ const CommentService = ({
 
   }
 
-  const getRepliesComment = async (query, params) => {
+  const   getRepliesComment = async (query, params) => {
     try {
       const { limit, offset } = paginationHelper(query)
       const { parent_id } = params
@@ -215,7 +215,7 @@ const CommentService = ({
           parent_id,
         },
         order: [
-          ["created_at", "DESC"]
+          ["created_at", "ASC"]
         ],
         attributes: COMMENT_ATTRIBUTES,
         include: [

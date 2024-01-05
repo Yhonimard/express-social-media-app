@@ -20,7 +20,8 @@ const useFetchWhenScroll = (fetchNextPage, delay) => {
 
   return {
     inViewRef,
-    isShowBtn
+    isShowBtn,
+    inView
   }
 }
 

@@ -129,7 +129,7 @@ const ChatService = ({
         user: c.dataValues.user.reduce((acc, obj) => ({ ...acc, ...obj })),
         last_message: c.dataValues.messages[0]
       }))
-      
+
       return toPaginationHelper(mappedResult, chats.count, query, 'chats')
     } catch (error) {
       throw sequelizeError(error)
