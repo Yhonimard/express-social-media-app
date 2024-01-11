@@ -150,7 +150,6 @@ const ChatService = ({
       if (users.length < 2) throw new ApiNotFoundError('user not found')
 
       await sequelize.transaction(async trx => {
-
         const [chat, isCreatedChat] = await chatRepo.findOrCreate({
           where: {
             [Op.or]: [
@@ -197,9 +196,10 @@ const ChatService = ({
     }
   }
 
-  const getMessages = async (user, params, query) => {
+  const getMessages = async (user, params) => {
     try {
       const { user_id } = params
+
       const chat = await chatRepo.findOne({
         where: {
           [Op.or]: [
@@ -215,29 +215,25 @@ const ChatService = ({
         }
       })
 
-      if (!chat) throw new ApiNotFoundError('please create chat with that user first')
+      if (!chat) return { isLast: true }
 
-      const { limit, offset } = paginationHelper(query)
       const result = await messageRepo.findAndCountAll({
         where: {
           chat_id: chat.id,
         },
         attributes: MESSAGE_ATTRIBUTES,
-        limit,
-        offset,
         order: [
           ["created_at", 'DESC']
         ]
       })
 
-      const lastId = await messageRepo.max('id')
 
       const mappedResult = result.rows.map(m => ({
         ...m.dataValues,
         created_at: moment(m.dataValues.created_at).format("DD/MM/YYYY")
       }))
 
-      return toPaginationHelper(mappedResult, result.count, query, null, lastId)
+      return mappedResult
     } catch (error) {
       throw sequelizeError(error)
     }

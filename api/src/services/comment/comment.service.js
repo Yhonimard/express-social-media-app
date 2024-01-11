@@ -225,6 +225,7 @@ const CommentService = ({
           }
         ]
       })
+      
       const mappedResults = repliesComment.rows.map(rc => ({
         ...rc.get(),
         created_at: moment(rc.created_at).format("DD MMMM, YYYY")

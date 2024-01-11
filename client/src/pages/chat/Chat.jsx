@@ -10,7 +10,7 @@ const ChatPage = () => {
 
   return (
     <>
-      <Container>
+      <Container sx={{height : '100%'}}>
         {mediaQuery.downMd && (
           <ChatMobile />
         )}

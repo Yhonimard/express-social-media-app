@@ -1,5 +1,5 @@
 import { chatContext } from "@/context/Chat.context";
-import { Avatar, Box, Card, CardActionArea, CardHeader, Grid, Skeleton, Stack } from "@mui/material";
+import { Avatar, Box, Button, Card, CardActionArea, CardHeader, Divider, Grid, Skeleton, Stack } from "@mui/material";
 import { Fragment, useContext } from "react";
 import { useSelector } from "react-redux";
 import { MessageDesktop, MessageMobile } from "./Message";
@@ -31,8 +31,8 @@ const ChatUserCardList = () => {
   const { chatsQuery } = useContext(chatContext)
   const fetchChat = useFetchWhenScroll(chatsQuery.fetchNextPage)
   return (
-    <>
-      <Grid container spacing={1}>
+    <Box pt={1}>
+      <Grid container spacing={1} height={`100%`} >
         {chatsQuery.data.pages.map((p, i) => (
           <Fragment key={i}>
             {p.chats.map(c => (
@@ -44,13 +44,16 @@ const ChatUserCardList = () => {
                 />
               </Grid>
             ))}
+            <Grid item xs={12}>
+              {p.chats.length < 1 && <Box sx={{ height: "100%", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>please create chat</Box>}
+            </Grid>
           </Fragment>
         ))}
-        {fetchChat.isShowBtn && (
-          <button ref={fetchChat.inViewRef} style={{ visibility: 'hidden' }} disabled={!chatsQuery.hasNextPage || chatsQuery.isFetchingNextPage}></button>
-        )}
       </Grid>
-    </>
+      {fetchChat.isShowBtn && (
+        <Button fullWidth ref={fetchChat.inViewRef} style={{ visibility: 'hidden', position: 'relative' }} disabled={!chatsQuery.hasNextPage || chatsQuery.isFetchingNextPage}></Button>
+      )}
+    </Box>
   );
 };
 
@@ -58,8 +61,9 @@ const ChatUserCardList = () => {
 
 export const ChatMobile = () => {
   const messageState = useSelector(s => s.chat.message)
+
   return (
-    <Box mt={1} height={`81vh`}>
+    <Box height={`100%`}>
       {messageState.isOpen && (
         <MessageMobile />
       )}
@@ -75,11 +79,13 @@ export const ChatMobile = () => {
 export const ChatDesktop = () => {
   const msgState = useSelector(s => s.chat.message)
   return (
-    <Box mt={1} height={`81vh`}>
-      <Stack direction={`row`} height={`81vh`} gap={3}>
+    <Box height={`100%`}>
+      <Stack direction={`row`} height={`99%`} gap={3}>
         <Box sx={{ flex: "0 0 40%" }}>
           <ChatUserCardList />
         </Box>
+        <Divider orientation="vertical" />
+
         <Box sx={{ flex: "1 0" }}>
           {msgState.isOpen && (
             <MessageDesktop />

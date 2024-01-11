@@ -9,7 +9,8 @@ module.exports = {
   database: db.dbName,
   host: db.host,
   dialect: db.dialect || "postgres",
-  logging: (...msg) => console.log(msg)
+  // logging: (msg) => console.log(msg)
+  logging: false
 }
 // module.exports = {
 //   dev: {

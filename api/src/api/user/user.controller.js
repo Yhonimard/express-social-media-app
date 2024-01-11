@@ -49,7 +49,7 @@ const UserController = (service) => {
 
   const searchUser = async (req, res, next) => {
     try {
-      const result = await service.searchUser(req.query)
+      const result = await service.searchUser(req.query, req.user)
       res.json(result)
     } catch (error) {
       return next(error)

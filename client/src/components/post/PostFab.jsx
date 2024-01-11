@@ -1,6 +1,6 @@
 import Icon from "@/assets/Icon"
 import { Fab, Modal, Paper } from "@mui/material"
-import React, { memo, useState } from "react"
+import { memo, useState } from "react"
 import PostForm from "./PostForm"
 
 const PostFab = () => {

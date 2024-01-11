@@ -46,7 +46,7 @@ routes.route("/auth/register")
    *      500:
    *        description: something went wrong
    */
-  .post(upload.single("photo_profile"), celebrate(validation.register), controller.register)
+  .post(upload.single("image/photo_profile"), celebrate(validation.register), controller.register)
 
 routes.route("/auth/login")
   /**

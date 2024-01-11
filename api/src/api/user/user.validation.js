@@ -27,7 +27,7 @@ const UserValidation = () => {
     query: Joi.object().keys({
       pageNo: Joi.number().required().min(1).default(1),
       size: Joi.number().required().min(1).default(4),
-      search: Joi.string().required().allow('')
+      search: Joi.string().allow('').allow(null)
     })
   }
 

@@ -30,15 +30,17 @@ const RootPage = () => {
 
   return (
     <>
-      <Box minHeight={`100vh`}>
+      <Box height={`100vh`}>
         <Header />
+
         <Box display={{ xs: "none", md: "block" }}>
           <Navbar drawerWidth={drawerSize} />
         </Box>
 
-        <Box ml={{ xs: 0, md: drawerSize }}  >
+        <Box ml={{ xs: 0, md: drawerSize }} height={`100%`} pt={8} >
           <Outlet />
         </Box>
+
       </Box >
       <ProfileFollowersModal open={isOpenFollowersModal} toggle={closeFollowersModal} />
       <ProfileFollowingModal open={isOpenFollowingModal} toggle={toggleFollowingModal} />

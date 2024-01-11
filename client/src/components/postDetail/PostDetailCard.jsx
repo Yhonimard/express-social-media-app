@@ -1,7 +1,7 @@
 import Icon from "@/assets/Icon"
 import postLike from "@/config/post-like"
 import useOpenMenu from "@/hooks/useOpenMenu"
-import { Avatar, Box, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, Skeleton, Typography } from "@mui/material"
+import { Avatar, Badge, Box, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, Skeleton, Typography } from "@mui/material"
 import Image from "mui-image"
 import { memo, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -9,6 +9,9 @@ import CommentInput from "@/components/comment/CommentInput"
 import CommentList from "@/components/comment/CommentList"
 import comment from "@/config/comment"
 import PostDetailCardMenu from "./PostDetailCardMenu"
+import useGetUserIsOnline from "@/hooks/useGetUserOnline"
+import { Link } from "react-router-dom"
+import BadgeOnline from "../BadgeOnline"
 
 const PostDetailCard = ({ author, created_at, title, content, image, isFetching, pid }) => {
   const [isLoading, setIsLoading] = useState(true || isFetching)
@@ -52,7 +55,6 @@ const PostDetailCard = ({ author, created_at, title, content, image, isFetching,
     if (isOpenUpdateCommentInput) dispatch(comment.reducer.action.closeUpdateCommentInput())
   }, [dispatch, isOpenUpdateCommentInput, isOpenCommentInput])
 
-
   return (
     <>
       <Card>
@@ -60,7 +62,13 @@ const PostDetailCard = ({ author, created_at, title, content, image, isFetching,
           avatar={
             <>
               {isLoading && <Skeleton width={40} height={40} animation="wave" variant="circular" />}
-              {!isLoading && <Avatar sx={{ width: 40, height: 40 }} src={`${import.meta.env.VITE_API_BASE_URL}/${author.photo_profile}`} />}
+              {!isLoading && (
+                <IconButton to={author.id === currentUser.id ? '/profile' : `/user/${author.id}`} LinkComponent={Link}>
+                  <BadgeOnline userId={author.id}>
+                    <Avatar sx={{ width: 40, height: 40 }} src={`${import.meta.env.VITE_API_BASE_URL}/${author.photo_profile}`} />
+                  </BadgeOnline>
+                </IconButton>
+              )}
             </>
           }
           action={

@@ -172,9 +172,11 @@ routes.route(API_USER_SEARCH)
    * @swagger
    * /api/v1/user/search:
    *  get:
-   *    summary: get posts
+   *    summary: search user
    *    tags: [User]
-   *    description: api for get posts
+   *    description: api for search user
+   *    security:
+   *      - jwt-auth: []
    *    parameters:
    *      - in: query
    *        name: pageNo
@@ -201,8 +203,7 @@ routes.route(API_USER_SEARCH)
    *      500:
    *        description: something went wrong
    */
-  .get(celebrate(validation.searchUser), controller.searchUser)
-
+  .get(jwtVerify, celebrate(validation.searchUser), controller.searchUser)
 
 const userRoutes = routes
 export default userRoutes

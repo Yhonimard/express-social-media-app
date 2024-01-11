@@ -9,7 +9,6 @@ import {
   API_POST_ID,
   API_POST_LIKE,
   API_POST_SEARCH,
-  API_POST_TOTAL,
   API_POST_UNLIKE,
   API_POST_USER,
   API_POST_USER_ID,
@@ -21,12 +20,11 @@ import jwtVerify from "../../middlewares/jwt-verify"
 import upload from "../../middlewares/upload"
 import {
   Post,
-  sequelize,
+  User,
   UserLikePost,
-  User
+  sequelize
 } from "../../models"
 import PostService from "../../services/post/post.service"
-import shuffleAndPaginateDataHelper from "../../helper/shuffle-and-paginate-data-helper"
 
 const routes = Router()
 const service = PostService({
@@ -109,7 +107,7 @@ routes.route(API_POST)
    *      500:
    *        description: something went wrong
    */
-  .post(jwtVerify, upload.single("image"), celebrate(validation.createPost), controller.createPost)
+  .post(jwtVerify, upload.single("image/post"), celebrate(validation.createPost), controller.createPost)
 
 routes.route(API_POST_ID)
   /**
@@ -496,12 +494,6 @@ routes.route(API_POST_USER_TOTAL_ID)
     */
   .get(jwtVerify, controller.getUserTotalPost)
 
-routes.route('/post/test/testing').get(async (req, res, next) => {
-  const posts = await Post.findAll()
-
-  const result = shuffleAndPaginateDataHelper(posts, req.query)
-  res.json(result)
-})
 const postRoutes = routes
 
 export default postRoutes

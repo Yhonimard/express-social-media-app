@@ -25,16 +25,17 @@ async () => {
     include: [
       {
         through: {
-
+          
         },
+        
 
       }
     ],
   })
   user.bulkCreate([], {})
-user.findOrCreate({
-  defa
-})
+  user.findOrCreate({
+    defa
+  })
 
   user.findAndCountAll({
 

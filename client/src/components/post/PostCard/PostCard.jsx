@@ -1,7 +1,7 @@
 import Icon from "@/assets/Icon"
 import postLike from "@/config/post-like"
 import useOpenMenu from "@/hooks/useOpenMenu"
-import { Avatar, Box, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, Skeleton, Typography } from "@mui/material"
+import { Avatar, Badge, Box, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, Skeleton, Typography } from "@mui/material"
 import Image from "mui-image"
 import { memo, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -10,6 +10,8 @@ import CommentList from "../../comment/CommentList"
 import PostCardMenu from "./PostCardMenu"
 import comment from "@/config/comment"
 import { useNavigate } from "react-router-dom"
+import useGetUserIsOnline from "@/hooks/useGetUserOnline"
+import BadgeOnline from "@/components/BadgeOnline"
 
 const PostCard = ({ author, created_at, title, content, image, isFetching, pid }) => {
   const [isLoading, setIsLoading] = useState(true || isFetching)
@@ -55,7 +57,7 @@ const PostCard = ({ author, created_at, title, content, image, isFetching, pid }
     if (isOpenUpdateCommentInput)
       dispatch(comment.reducer.action.closeUpdateCommentInput())
   }, [dispatch, isOpenCommentInput, isOpenUpdateCommentInput])
-
+  
 
   return (
     <>
@@ -66,7 +68,9 @@ const PostCard = ({ author, created_at, title, content, image, isFetching, pid }
               {isLoading && <Skeleton width={40} height={40} animation="wave" variant="circular" />}
               {!isLoading && (
                 <IconButton onClick={() => navigate(author.id === currentUser.id ? '/profile' : `/user/${author.id}`)}>
-                  <Avatar sx={{ width: 40, height: 40 }} src={`${import.meta.env.VITE_API_BASE_URL}/${author.photo_profile}`} />
+                  <BadgeOnline userId={author.id}>
+                    <Avatar sx={{ width: 40, height: 40 }} src={`${import.meta.env.VITE_API_BASE_URL}/${author.photo_profile}`} />
+                  </BadgeOnline>
                 </IconButton>
               )}
             </>

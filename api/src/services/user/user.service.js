@@ -1,11 +1,13 @@
 import moment from "moment"
+import { Op, Sequelize } from "sequelize"
 import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
 import sequelizeError from "../../exceptions/sequelize-error"
 import { USER_BELONGS_TO_MANY_FRIEND_ALIAS, USER_BELONGS_TO_MANY_USER_FRIEND_ALIAS, USER_HAS_ONE_USER_PROFILE_ALIAS } from "../../fixtures/models"
-import { USER_ATTRIBUTES, USER_PROFILE_ATTRIBUTES } from "./user.constants"
-import { Op, Sequelize } from "sequelize"
 import paginationHelper from "../../helper/pagination-helper"
 import toPaginationHelper from "../../helper/to-pagination-helper"
+import { USER_ATTRIBUTES, USER_PROFILE_ATTRIBUTES } from "./user.constants"
+import _, { shuffle } from "lodash"
+import jsPaginationHelper from "../../helper/js-pagination-helper"
 
 const UserService = ({
   userRepo,
@@ -140,12 +142,9 @@ const UserService = ({
     }
   }
 
-  const searchUser = async (query) => {
+  const searchUser = async (query, user) => {
     try {
-      const { limit, offset } = paginationHelper(query)
-
       let searchUser = {}
-
       if (query.search) {
         searchUser = {
           username: {
@@ -154,30 +153,66 @@ const UserService = ({
         }
       }
 
-      const result = await userRepo.findAndCountAll({
+      // const result = await userRepo.findAndCountAll({
+      //   where: {
+      //     ...searchUser,
+      //   },
+      //   attributes: USER_ATTRIBUTES,
+      //   limit,
+      //   offset
+      // })
+
+      const followerUser = await userRepo.findAll({
         where: {
           ...searchUser,
-        },
-        include: [
-          {
-            association: USER_BELONGS_TO_MANY_FRIEND_ALIAS,
-            through: { where: { confirmed: true } },
-            required: false
-          },
-          {
-            association: USER_BELONGS_TO_MANY_USER_FRIEND_ALIAS,
-            through: { where: { confirmed: true } },
-            required: false
+          id: {
+            [Op.ne]: user.id
           }
-
-
-        ],
+        },
         attributes: USER_ATTRIBUTES,
-        limit,
-        offset
+        include: [{
+          association: USER_BELONGS_TO_MANY_FRIEND_ALIAS,
+          attributes: [],
+          through: {
+            where: { friend_id: user.id, confirm: true },
+            attributes: []
+          },
+          required: true
+        }]
       })
 
-      return toPaginationHelper(result.rows, result.count, query, 'users')
+      const followingUser = await userRepo.findAll({
+        where: {
+          ...searchUser,
+          id: {
+            [Op.ne]: user.id
+          }
+        },
+        attributes: USER_ATTRIBUTES,
+        include: [
+          {
+            attributes: [],
+            association: USER_BELONGS_TO_MANY_USER_FRIEND_ALIAS,
+            through: { attributes: [], where: { user_id: user.id, confirm: true } },
+            required: true
+          }
+        ]
+      })
+      const currentUserFriendsId = [...followerUser, ...followingUser].map(u => u.id)
+
+      const anotherUser = await userRepo.findAll({
+        where: {
+          ...searchUser,
+          id: {
+            [Op.notIn]: currentUserFriendsId.concat(user.id),
+          }
+        },
+        attributes: USER_ATTRIBUTES
+      })
+
+      const shuffle = Array.from(new Set([..._.shuffle(followerUser), ..._.shuffle(followingUser), ..._.shuffle(anotherUser)]))
+
+      return jsPaginationHelper(shuffle, query, 'users')
     } catch (error) {
       throw sequelizeError(error)
     }

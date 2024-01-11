@@ -15,7 +15,7 @@ const Header = () => {
 
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Box>
             <IconButton sx={{ display: { md: "none" } }} size="large" onClick={() => setOpenDrawer(s => !s)} >
@@ -25,9 +25,9 @@ const Header = () => {
           </Box>
           <HeaderSearch />
           {/* <Tooltip title={currentUser.username}>
-            <IconButton>
+            <IcnButton>
               <Avatar sx={{ width: 30, height: 30 }} src={`${import.meta.env.VITE_API_BASE_URL}/${currentUser.photo_profile}`} />
-            </IconButton>
+            </IcnButton>
           </Tooltip> */}
           <HeaderAvatar
             currentUser={currentUser}

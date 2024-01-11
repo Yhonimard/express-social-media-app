@@ -222,8 +222,6 @@ const FriendService = ({
         followers
       }
 
-      console.log(mappedResult);
-
       return mappedResult
     } catch (error) {
       throw sequelizeError(error)

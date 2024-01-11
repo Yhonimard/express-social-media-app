@@ -8,7 +8,7 @@ const register = async (data) => {
   const formData = new FormData();
   formData.append("username", data.username);
   formData.append("password", data.confirmPassword);
-  formData.append("photo_profile", data.photo_profile);
+  formData.append("image/photo_profile", data.photo_profile);
 
   const res = await api.instance.request.post("/auth/register", formData, {
     headers: {
@@ -22,7 +22,7 @@ const createPost = async (data) => {
   const formData = new FormData();
   formData.append("title", data.title);
   formData.append("content", data.content);
-  formData.append("image", data.image);
+  formData.append("image/post", data.image);
 
   const res = await api.instance.request.post("/post", formData, {
     headers: {
@@ -112,7 +112,7 @@ const createPostByUser = async (data) => {
   const formData = new FormData();
   formData.append("title", data.title);
   formData.append("content", data.content);
-  formData.append("image", data.image);
+  formData.append("image/post", data.image);
 
   const res = await api.instance.request.post(`/user/post`, formData, {
     headers: {
@@ -360,10 +360,8 @@ const getUserFollowing = async (userId, params) => {
   return res.data
 }
 
-const getMessages = async (userId, query) => {
-  const res = await api.instance.request.get(`/chat/message/${userId}`, {
-    params: query
-  })
+const getMessages = async (userId) => {
+  const res = await api.instance.request.get(`/chat/message/${userId}`)
   return res.data
 }
 

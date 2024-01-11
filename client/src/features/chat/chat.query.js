@@ -1,10 +1,13 @@
 import api from "@/api"
+import chat from "@/config/chat"
 import { rootContext } from "@/context/Root.context"
 import { GET_CURRENT_USER_CHATS_QUERY_NAME, GET_MESSAGE_QUERY_NAME } from "@/fixtures/api-query"
-import { SEND_MESSAGE_E_NAME } from "@/fixtures/socket-chat-message"
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { SEND_MESSAGE_E_NAME } from "@/fixtures/socket"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { uniqueId } from "lodash"
 import moment from "moment"
 import { useContext } from "react"
+import { useDispatch, useSelector } from "react-redux"
 
 const GetUserChats = ({ userId }) => {
   return useInfiniteQuery([GET_CURRENT_USER_CHATS_QUERY_NAME, userId], async ({ pageParam = 1 }) => {
@@ -22,19 +25,10 @@ const GetUserChats = ({ userId }) => {
   })
 }
 
-const GetMessages = ({ currentUserId, userId, size }) => {
-  return useInfiniteQuery([GET_MESSAGE_QUERY_NAME, currentUserId, userId], async ({ pageParam = 1 }) => {
-    const query = {
-      pageNo: pageParam,
-      size
-    }
-    const res = await api.request.getMessages(userId, query)
+const GetMessages = ({ currentUserId, userId }) => {
+  return useQuery([GET_MESSAGE_QUERY_NAME, currentUserId, userId], async () => {
+    const res = await api.request.getMessages(userId)
     return res
-  }, {
-    getNextPageParam: (data, pages) => {
-      if (!data.isLast) return pages.length + 1
-      else return undefined
-    },
   })
 }
 
@@ -63,7 +57,7 @@ const CreateChat = ({ currentUserId, userId }) => {
 const SendMessage = ({ userId, currentUserId }) => {
   const queryClient = useQueryClient()
   const { socket } = useContext(rootContext)
-
+  const dispatch = useDispatch()
   return useMutation(async (data) => {
     await api.request.sendMessage({ receiverId: userId, text: data.text })
   }, {
@@ -73,11 +67,9 @@ const SendMessage = ({ userId, currentUserId }) => {
       const prevMsgData = queryClient.getQueryData([GET_MESSAGE_QUERY_NAME, currentUserId, userId])
 
       queryClient.setQueryData([GET_MESSAGE_QUERY_NAME, currentUserId, userId], oldData => {
-
         const newPages = oldData.pages.map(p => {
-
           const newMsg = {
-            id: p.lastId + 1,
+            id: Date.now(),
             created_at: moment().format("DD/MM/YYYY"),
             text: newData.text,
             media: newData.media,
@@ -97,7 +89,6 @@ const SendMessage = ({ userId, currentUserId }) => {
           ...oldData,
           pages: newPages
         }
-
       })
 
       return {
@@ -106,11 +97,12 @@ const SendMessage = ({ userId, currentUserId }) => {
     },
     onError: (err, _var, ctx) => {
       queryClient.setQueryData([GET_MESSAGE_QUERY_NAME, currentUserId, userId])
+
     },
     onSettled: () => {
       queryClient.invalidateQueries([GET_MESSAGE_QUERY_NAME, currentUserId, userId])
       queryClient.invalidateQueries([GET_CURRENT_USER_CHATS_QUERY_NAME, currentUserId])
-    }
+    },
   })
 
 }

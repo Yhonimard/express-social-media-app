@@ -12,6 +12,9 @@ const chatReducer = createSlice({
         photo_profile: null,
       }
     },
+    search: {
+      value: ''
+    }
   },
   reducers: {
     openMessageLayout: (state, { payload }) => {
@@ -26,6 +29,9 @@ const chatReducer = createSlice({
       state.message.user.username = null
       state.message.user.photo_profile = null
       state.message.isOpen = false
+    },
+    setSearchValue: (state, { payload }) => {
+      state.search.value = payload
     },
   },
 })

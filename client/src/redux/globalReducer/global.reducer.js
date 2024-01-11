@@ -6,9 +6,10 @@ const globalReducer = createSlice({
   initialState: {
     isOpenLoadingOverlay: false,
     headerSearch: {
-      searchValue: "",
+      searchValue: '',
       tabsLocation: 0
     },
+    usersOnline: []
   },
 
 
@@ -30,6 +31,11 @@ const globalReducer = createSlice({
       const { searchValue } = payload
       state.headerSearch.searchValue = searchValue
     },
+    setUsersOnline: (state, { payload }) => {
+      state.usersOnline = payload
+    },
+    
+
   }
 })
 

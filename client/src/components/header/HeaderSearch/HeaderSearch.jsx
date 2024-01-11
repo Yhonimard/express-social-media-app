@@ -25,7 +25,6 @@ const HeaderSearch = () => {
   }
 
   const [searchValue] = useDebounce(headerSearchState.searchValue, HEADER_SEARCH_DEBOUNCE_TIME)
-
   return (
     <>
       <HeaderSearchStyled.Search onClick={toggleModal}>

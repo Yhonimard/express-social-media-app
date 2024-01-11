@@ -31,14 +31,15 @@ export default {
           model: {
             tableName: USER_TABLE_NAME
           }
-        }
+        },
+        onDelete: 'CASCADE',
       },
       ...TABLE_META_ATTRIBUTES
     }, {
       uniqueKeys: {
         unique_sender_id_receiver_id: {
           fields: ['sender_id', 'receiver_id'],
-          customIndex: false
+          customIndex: true
         }
       }
     });

@@ -9,6 +9,7 @@ const config = {
   host: process.env.SERVICE_HOST,
   port: process.env.SERVICE_PORT,
   jwtkey: process.env.JWT_KEY,
+  clientUrl: process.env.CLIENT_URL,
   database: {
     [DB_PRIMARY]: {
       username: process.env.PG_USERNAME,
@@ -20,8 +21,8 @@ const config = {
   },
   storage: {
     image: {
-      url: "/storage/image",
       path: path.join('storage', 'image'),
+      url: "/storage/image",
     },
     img_seed: {
       path: path.join('storage', "img_seed"),

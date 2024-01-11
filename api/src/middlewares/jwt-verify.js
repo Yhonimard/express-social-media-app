@@ -19,7 +19,7 @@ const jwtVerify = async (req, res, next) => {
     if (!token) return next(new ApiUnauthorizedError())
     const { username, id } = jwt.verify(token, jwtkey)
 
-    const user = await User.findByPk(id)
+    const user = await User.findByPk(id, { attributes: ['id'] })
     if (!user) throw new ApiUnauthorizedError()
 
     req.user = { id, username }

@@ -10,6 +10,7 @@ import UserDetailPage from "@/pages/userDetail"
 import ChatPage from "@/pages/chat"
 import ChatContextProvider from "@/context/Chat.context"
 import RootContextProvider from "@/context/Root.context"
+import Test from "@/pages/Test"
 
 const routes = createBrowserRouter([
   {
@@ -55,8 +56,13 @@ const routes = createBrowserRouter([
             <ChatPage />
           </ChatContextProvider>
         )
+      },
+      {
+        path: '/test',
+        element: <Test />
       }
     ]
+
   },
   {
     path: "/auth",

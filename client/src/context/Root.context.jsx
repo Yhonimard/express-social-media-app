@@ -1,5 +1,7 @@
-import { createContext, useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+import global from "@/config/global"
+import { SOCKET_USER_IS_ONLINE_GET } from "@/fixtures/socket"
+import { createContext, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import io from "socket.io-client"
 
 export const rootContext = createContext({
@@ -8,17 +10,18 @@ export const rootContext = createContext({
 
 const RootContextProvider = ({ children }) => {
   const currentUser = useSelector(s => s.auth.user)
-  const [socket, setSocket] = useState(null)
+  const dispatch = useDispatch()
+  const socket = io(import.meta.env.VITE_API_BASE_URL, {
+    auth: {
+      token: currentUser.token
+    },
+  })
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_BASE_URL, {
-      auth: {
-        token: currentUser.token
-      },
+    socket.on(SOCKET_USER_IS_ONLINE_GET, (data) => {
+      dispatch(global.reducer.action.setUsersOnline(data))
     })
-    setSocket(socket)
-  }, [currentUser.token])
-
+  }, [socket, dispatch])
 
   return (
     <rootContext.Provider value={{

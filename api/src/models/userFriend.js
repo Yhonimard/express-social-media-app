@@ -3,6 +3,7 @@ import { USER_TABLE_NAME, TABLE_META_ATTRIBUTES, USER_FRIEND_MODEL_NAME, USER_FR
 module.exports = (sequelize) => {
   class userFriend extends Model {
     static associate(models) {
+      
       userFriend.belongsTo(models[USER_MODEL_NAME], {
         as: USER_FRIEND_BELONGS_TO_USER_FOLLOWER_ALIAS,
         foreignKey: USER_FRIEND_BELONGS_TO_USER_FOLLOWER_FK,

@@ -1,17 +1,20 @@
+import BadgeOnline from "@/components/BadgeOnline"
 import CustomTabPanel from "@/components/CustomTabPanel"
 import LoadingOverlay from "@/components/loadingOverlay/LoadingOverlay"
 import UserDetailFollowersModal from "@/components/userDetail/UserDetailFollowersModal"
 import UserDetailFollowingModal from "@/components/userDetail/UserDetailFollowingModal"
 import UserDetailPost from "@/components/userDetail/UserDetailPost"
 import UserDetailProfile from "@/components/userDetail/UserDetailProfile"
+import chat from "@/config/chat"
 import friend from "@/config/friend"
 import post from "@/config/post"
 import user from "@/config/user"
+import combinePaginateDataHelper from "@/helper/combine-paginate-data-helper"
 import useCustomMediaQuery from "@/hooks/useCustomMediaQuery"
 import useDisclosure from "@/hooks/useDisclosure"
-import { Avatar, Box, Button, Container, Divider, Stack, Tab, Tabs, Typography } from "@mui/material"
+import { Avatar, Badge, Box, Button, Container, Divider, Stack, Tab, Tabs, Typography } from "@mui/material"
 import { useCallback, useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 
 const UserDetailPage = () => {
@@ -20,6 +23,7 @@ const UserDetailPage = () => {
   const [isOpenFollowingModal, { toggle: toggleFollowingModal }] = useDisclosure(false)
   const params = useParams()
   const currentUser = useSelector(s => s.auth.user)
+  const dispatch = useDispatch()
 
   const mediaQuery = useCustomMediaQuery()
 
@@ -40,8 +44,10 @@ const UserDetailPage = () => {
   const postTotalQuery = post.query.GetUserTotalPost(params.userId)
   const friendTotalQuery = friend.query.GetUserTotalFollowersAndFollowing(params.userId)
 
-  if (userQuery.isLoading || isLoading || postTotalQuery.isLoading || friendTotalQuery.isLoading || userProfileQuery.isLoading) return <LoadingOverlay />
 
+  const openChatMsg = () => {
+  }
+  if (userQuery.isLoading || isLoading || postTotalQuery.isLoading || friendTotalQuery.isLoading || userProfileQuery.isLoading) return <LoadingOverlay />
 
   return (
     <>
@@ -50,13 +56,15 @@ const UserDetailPage = () => {
           <Stack gap>
 
             <Stack direction={`row`} gap={5} m={'20px 14px'}>
-              <Avatar src={`${import.meta.env.VITE_API_BASE_URL}/${userQuery.data.photo_profile}`} sx={{ width: 80, height: 80 }} />
+              <BadgeOnline userId={userQuery.data.id}>
+                <Avatar src={`${import.meta.env.VITE_API_BASE_URL}/${userQuery.data.photo_profile}`} sx={{ width: 80, height: 80 }} />
+              </BadgeOnline>
 
               <Stack gap={2} justifyItems={`center`} >
                 <Typography variant="h6" fontWeight={400} noWrap>{userQuery.data.username}</Typography>
                 <Stack direction={`row`} gap={2}>
                   <Button color="inherit" variant="contained" size="small" onClick={followOrUnfollow} >{hasFollow ? 'unfollow' : 'follow'}</Button>
-                  <Button color="inherit" variant="contained" size="small" >Message</Button>
+                  <Button color="inherit" variant="contained" size="small" onClick={openChatMsg} >Message</Button>
                 </Stack>
               </Stack>
             </Stack>
@@ -96,7 +104,9 @@ const UserDetailPage = () => {
             <Stack gap={4} >
               <Stack mt={7} direction={`row`} gap={7} alignItems={`flex-start`} >
                 <Box>
-                  <Avatar sx={{ width: 130, height: 130 }} src={`${import.meta.env.VITE_API_BASE_URL}/${userQuery.data.photo_profile}`} />
+                  <BadgeOnline userId={userQuery.data.id}>
+                    <Avatar sx={{ width: 130, height: 130 }} src={`${import.meta.env.VITE_API_BASE_URL}/${userQuery.data.photo_profile}`} />
+                  </BadgeOnline>
                 </Box>
                 <Stack gap={2.5}>
                   <Stack direction={'row'} gap={4} >
@@ -106,7 +116,7 @@ const UserDetailPage = () => {
                     </Stack>
                     <Stack gap={3} direction={`row`}>
                       <Button variant="contained" size="small" color="inherit" onClick={followOrUnfollow}>{hasFollow ? 'Unfollow' : 'Follow'}</Button>
-                      <Button variant="contained" size="small" color="inherit">Message</Button>
+                      <Button variant="contained" size="small" color="inherit" onClick={openChatMsg} >Message</Button>
                     </Stack >
                   </Stack>
                   <Box>

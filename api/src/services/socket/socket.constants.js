@@ -7,3 +7,7 @@ export const SOCKET_MESSAGE_GET = `${SOCKET_MESSAGE}:get`
 
 export const SOCKET_USER = 'user'
 export const SOCKET_USER_IS_ONLINE = `${SOCKET_USER}:is-online`
+export const SOCKET_USER_IS_ONLINE_SEND = `${SOCKET_USER_IS_ONLINE}:send`
+export const SOCKET_USER_IS_ONLINE_GET = `${SOCKET_USER_IS_ONLINE}:get`
+
+export const SOCKET_USER_CONNECT = `${SOCKET_USER}:connect`
