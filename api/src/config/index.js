@@ -17,6 +17,7 @@ const config = {
       dbName: process.env.PG_DATABASE,
       host: process.env.PG_HOST,
       dialect: process.env.DB_DIALECT,
+      port: process.env.PG_PORT
     }
   },
   storage: {

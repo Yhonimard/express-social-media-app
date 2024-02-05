@@ -10,9 +10,9 @@ const Test = () => {
     },
     onSubmit: async data => {
       const formData = new FormData()
-      data.image.forEach((f) => {
-      })
-      formData.append('video/test', data.image[0])
+      // data.image.forEach((f) => {
+      // })
+      formData.append('image/test', data.image, 'chat')
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/test`, formData)
       console.log(res);
     }
@@ -27,12 +27,12 @@ const Test = () => {
 
   return (
     <>
-      {formik.values.image.map((p, i) => (
-        <img src={p || null} height={100} key={i} />
-      ))}
+      {/* {formik.values?.image?.map((p, i) => ( */}
+      {/* <img src={p || null} height={100} key={i} /> */}
+      {/* ))} */}
       <Container sx={{ mt: 20 }}>
         <form onSubmit={formik.handleSubmit}>
-          <MuiFileInput onChange={uploadImg} multiple />
+          <MuiFileInput onChange={uploadImg} />
           <Button type="submit">submit</Button>
         </form>
       </Container>

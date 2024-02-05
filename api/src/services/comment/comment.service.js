@@ -203,7 +203,7 @@ const CommentService = ({
 
   }
 
-  const   getRepliesComment = async (query, params) => {
+  const getRepliesComment = async (query, params) => {
     try {
       const { limit, offset } = paginationHelper(query)
       const { parent_id } = params
@@ -225,7 +225,7 @@ const CommentService = ({
           }
         ]
       })
-      
+
       const mappedResults = repliesComment.rows.map(rc => ({
         ...rc.get(),
         created_at: moment(rc.created_at).format("DD MMMM, YYYY")

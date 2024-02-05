@@ -1,13 +1,10 @@
 import api from "@/api"
-import chat from "@/config/chat"
 import { rootContext } from "@/context/Root.context"
 import { GET_CURRENT_USER_CHATS_QUERY_NAME, GET_MESSAGE_QUERY_NAME } from "@/fixtures/api-query"
 import { SEND_MESSAGE_E_NAME } from "@/fixtures/socket"
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { uniqueId } from "lodash"
 import moment from "moment"
 import { useContext } from "react"
-import { useDispatch, useSelector } from "react-redux"
 
 const GetUserChats = ({ userId }) => {
   return useInfiniteQuery([GET_CURRENT_USER_CHATS_QUERY_NAME, userId], async ({ pageParam = 1 }) => {
@@ -57,7 +54,6 @@ const CreateChat = ({ currentUserId, userId }) => {
 const SendMessage = ({ userId, currentUserId }) => {
   const queryClient = useQueryClient()
   const { socket } = useContext(rootContext)
-  const dispatch = useDispatch()
   return useMutation(async (data) => {
     await api.request.sendMessage({ receiverId: userId, text: data.text })
   }, {
@@ -67,28 +63,20 @@ const SendMessage = ({ userId, currentUserId }) => {
       const prevMsgData = queryClient.getQueryData([GET_MESSAGE_QUERY_NAME, currentUserId, userId])
 
       queryClient.setQueryData([GET_MESSAGE_QUERY_NAME, currentUserId, userId], oldData => {
-        const newPages = oldData.pages.map(p => {
-          const newMsg = {
-            id: Date.now(),
-            created_at: moment().format("DD/MM/YYYY"),
-            text: newData.text,
-            media: newData.media,
-            sender_id: currentUserId,
-            receiver_id: userId
-          }
 
-          socket.emit(SEND_MESSAGE_E_NAME, newMsg)
-
-          return {
-            ...p,
-            data: [newMsg, ...p.data]
-          }
-        })
-
-        return {
-          ...oldData,
-          pages: newPages
+        const newMsg = {
+          id: Date.now(),
+          created_at: moment().format("DD/MM/YYYY"),
+          text: newData.text,
+          media: newData.media,
+          sender_id: currentUserId,
+          receiver_id: userId
         }
+
+        socket.emit(SEND_MESSAGE_E_NAME, newMsg)
+        
+        if (!oldData) return [newMsg]
+        return [newMsg, ...oldData]
       })
 
       return {
@@ -96,7 +84,7 @@ const SendMessage = ({ userId, currentUserId }) => {
       }
     },
     onError: (err, _var, ctx) => {
-      queryClient.setQueryData([GET_MESSAGE_QUERY_NAME, currentUserId, userId])
+      queryClient.setQueryData([GET_MESSAGE_QUERY_NAME, currentUserId, userId], ctx.prevMsgData)
 
     },
     onSettled: () => {

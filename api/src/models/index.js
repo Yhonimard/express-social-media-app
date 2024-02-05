@@ -7,7 +7,7 @@ const config = require(__dirname + "/../database/config.js")
 
 const db = {};
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize(config);
 
 fs
   .readdirSync(__dirname)

@@ -1,11 +1,11 @@
-import { Op, Sequelize } from "sequelize"
+import moment from "moment"
+import { Op } from "sequelize"
 import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
 import sequelizeError from "../../exceptions/sequelize-error"
 import { CHAT_BELONGS_TO_MANY_USER_CHAT_ALIAS, CHAT_HAS_MANY_MESSAGE_ALIAS } from "../../fixtures/models"
 import paginationHelper from "../../helper/pagination-helper"
 import toPaginationHelper from "../../helper/to-pagination-helper"
 import { MESSAGE_ATTRIBUTES } from "./chat.constants"
-import moment from "moment"
 
 const ChatService = ({
   chatRepo,
@@ -214,9 +214,7 @@ const ChatService = ({
           ]
         }
       })
-
-      if (!chat) return { isLast: true }
-
+      if (!chat) return
       const result = await messageRepo.findAndCountAll({
         where: {
           chat_id: chat.id,

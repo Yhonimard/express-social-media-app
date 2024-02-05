@@ -5,19 +5,24 @@ import { chatContext } from "@/context/Chat.context";
 import { rootContext } from "@/context/Root.context";
 import { GET_CURRENT_USER_CHATS_QUERY_NAME, GET_MESSAGE_QUERY_NAME } from "@/fixtures/api-query";
 import { GET_MESSAGE_E_NAME } from "@/fixtures/socket";
+import convertToBase64Helper from "@/helper/convert-to-base64-helper";
 import { AppBar, Avatar, Box, Button, IconButton, Paper, Skeleton, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
+import { slice } from "lodash";
 import { useContext, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
+import HiddenFileInput from "../HiddenFileInput";
+import SwipeableMedia from "../SwiepableMedia";
 
 const MessageInput = () => {
   const chatCtx = useContext(chatContext)
   const receiver = useSelector(s => s.chat.message.user)
   const currentUser = useSelector(s => s.auth.user)
+  const [previewImg, setPreviewImg] = useState(null)
   const { mutate: send } = chat.query.SendMessage({ currentUserId: currentUser.id, userId: receiver.id })
 
 
@@ -34,34 +39,64 @@ const MessageInput = () => {
     })
   })
 
+  const mediaHandler = async (file) => {
+    const base64media = await Promise.all(file.map(async d => await convertToBase64Helper(d)))
+    if (base64media) setPreviewImg(base64media)
+
+  }
+
+
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <Stack
-        direction={`row`}
-        alignItems={`center`}
-        justifyContent={`center`}
-      >
-        <TextField
-          name="text"
-          autoComplete="off"
-          onChange={formik.handleChange}
-          variant="standard"
-          value={formik.values.text}
-          fullWidth
-          label='chat'
-          onClick={chatCtx.scrollIntoEndMessage}
-        />
-        <IconButton type="submit"  >
-          <Icon.Send />
-        </IconButton>
-      </Stack>
-    </form>
+    <Box position="relative">
+      {previewImg && (
+        <Box position="absolute" bottom={50} left="50%" sx={{ transform: 'translateX(-50%)' }} maxWidth={400} minWidth={300}>
+          <SwipeableMedia media={previewImg} />
+        </Box>
+      )}
+      <form onSubmit={formik.handleSubmit}>
+        <Stack
+          direction={`row`}
+          alignItems={`center`}
+          justifyContent={`center`}
+        >
+          <TextField
+            name="text"
+            autoComplete="off"
+            onChange={formik.handleChange}
+            variant="standard"
+            value={formik.values.text}
+            fullWidth
+            label='chat'
+            disabled={Boolean(previewImg)}
+            onClick={chatCtx.scrollIntoEndMessage}
+          />
+
+          <HiddenFileInput onChange={mediaHandler} multiple>
+            <IconButton>
+              <Icon.Attachment />
+            </IconButton>
+          </HiddenFileInput>
+          <IconButton type="submit"  >
+            <Icon.Send />
+          </IconButton>
+        </Stack>
+      </form>
+    </Box>
+
   );
 };
 
 
 const MsgBuble = ({ text, created_at, sender_id, isLoading }) => {
   const currentUser = useSelector(s => s.auth.user)
+  const [showSkel, setShowSkel] = useState(true)
+  useEffect(() => {
+    if (!isLoading)
+      setTimeout(() => {
+        setShowSkel(false)
+      }, 500);
+
+  }, [isLoading])
 
   return (
     <>
@@ -69,12 +104,17 @@ const MsgBuble = ({ text, created_at, sender_id, isLoading }) => {
         sx={{ maxWidth: '70%', minWidth: '50%', alignSelf: sender_id === currentUser.id ? 'flex-end' : 'flex-start', flexGrow: 0, p: 1 }}
       >
         <Stack >
-          {isLoading ? <Skeleton animation="wave" height={13} width={`80%`} sx={{ mb: 1 }} /> : (
+          {showSkel ? (
+            <>
+              <Skeleton animation="wave" height={13} width={`80%`} sx={{}} />
+              <Skeleton animation="wave" height={13} width={`80%`} sx={{ mb: 1 }} />
+            </>
+          ) : (
             <Typography>
               {text}
             </Typography>
           )}
-          {isLoading ? <Skeleton animation="wave" height={10} width={`30%`} /> : (
+          {showSkel ? <Skeleton animation="wave" height={10} width={`30%`} sx={{ alignSelf: 'flex-end' }} /> : (
             <Typography variant="caption" alignSelf={`flex-end`}>
               {created_at}
             </Typography>
@@ -93,7 +133,6 @@ const MsgBubleList = () => {
   const currentUser = useSelector(s => s.auth.user)
   const userReceiver = useSelector(s => s.chat.message.user)
 
-
   const messageQuery = chat.query.GetMessages({ currentUserId: currentUser.id, userId: userReceiver.id, size: 30 })
 
   if (messageQuery.isError) {
@@ -105,19 +144,8 @@ const MsgBubleList = () => {
   useEffect(() => {
     socket.on(GET_MESSAGE_E_NAME, async (newData) => {
       await queryClient.cancelQueries([GET_MESSAGE_QUERY_NAME, currentUser.id, userReceiver.id])
-
       queryClient.setQueryData([GET_MESSAGE_QUERY_NAME, currentUser.id, userReceiver.id], oldData => {
-        const newPages = oldData.pages.map(p => {
-          return {
-            ...p,
-            data: [newData, ...p.data]
-          }
-        })
-
-        return {
-          ...oldData,
-          pages: newPages
-        }
+        return [newData, ...oldData]
       })
 
     })
@@ -131,23 +159,23 @@ const MsgBubleList = () => {
     }
   }, [])
 
-  const { index, ref, isShowBtn } = useMsgInfiniteScroll()
-  console.log(index);
+  const { ref, isShowBtn, data, isLoading, islast } = useMsgInfiniteScroll(messageQuery.data, messageQuery.isLoading)
+
   return (
     <>
       <Stack sx={{ overflowY: 'auto' }} mt={1} spacing={1} direction={`column-reverse`} minHeight={`100%`} maxHeight={`50%`}>
         <div id="bottom-msg"></div>
-        {!messageQuery.isLoading && messageQuery.data.map(m => (
+        {data.map(m => (
           <MsgBuble
             key={m.id}
             created_at={m.created_at}
             sender_id={m.sender_id}
             text={m.text}
-            isLoading={(messageQuery.isLoading || messageQuery.isFetchingNextPage)}
+            isLoading={isLoading}
           />
         ))}
-        {!messageQuery.isLoading && isShowBtn && (
-          <Button ref={ref} fullWidth style={{ visibility: 'hidden' }} disabled={!messageQuery.hasNextPage || messageQuery.isFetchingNextPage}></Button>
+        {!islast && isShowBtn && (
+          <Button ref={ref} fullWidth style={{ visibility: 'hidden' }} disabled={isLoading || islast}></Button>
         )}
       </Stack>
     </>
@@ -243,27 +271,56 @@ export const MessageDesktop = () => {
 };
 
 
-const useMsgInfiniteScroll = () => {
-  const [index, setIndex] = useState(30)
-  const [inView, ref] = useInView({})
+const useMsgInfiniteScroll = (dataMsg, queryIsLoading) => {
+  const [index, setIndex] = useState(15)
+  const [ref, inView] = useInView({})
   const [isShowBtn, setIsShowBtn] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState([])
+  const id = useSelector(s => s.chat.message.user.id)
 
   useEffect(() => {
-    if (inView) setIndex(s => s + 30)
+    if (inView) {
+      setIsLoading(true)
+      setIndex(s => s + 15)
+    }
+
+    const timeout = setTimeout(() => {
+      setIsLoading(false)
+    }, 1000);
+
+    return () => {
+      timeout
+    }
   }, [inView])
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsShowBtn(true)
-    }, 2000)
+      setIsLoading(false)
+    }, 1000)
+
     return () => {
       timeout
     }
   }, [])
 
+
+  useEffect(() => {
+    if (!queryIsLoading)
+      setData(slice(dataMsg, 0, index))
+  }, [index, dataMsg, queryIsLoading])
+
+  useEffect(() => {
+    setData([])
+  }, [id])
+
   return {
     ref,
-    index,
-    isShowBtn
+    isShowBtn,
+    data,
+    islast: dataMsg?.length === data.map(p => p.messages).length,
+    isLoading: isLoading
   }
 }

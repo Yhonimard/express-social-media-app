@@ -30,7 +30,8 @@ import {
   GroupAdd,
   Upload,
   ArrowBack,
-  Message
+  Message,
+  Attachment
 } from "@mui/icons-material"
 
 export default {
@@ -65,5 +66,6 @@ export default {
   GroupAdd,
   Upload,
   ArrowBack,
-  Message
+  Message,
+  Attachment
 }

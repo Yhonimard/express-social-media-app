@@ -1,17 +1,24 @@
 import { chatContext } from "@/context/Chat.context";
 import { Avatar, Box, Button, Card, CardActionArea, CardHeader, Divider, Grid, Skeleton, Stack } from "@mui/material";
 import { Fragment, useContext } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MessageDesktop, MessageMobile } from "./Message";
 import useFetchWhenScroll from "@/hooks/useFetchWhenScroll";
+import chat from "@/config/chat";
 
 
 const ChatUserCard = ({ user, last_message }) => {
-  const { isLoading, openMessageLayout } = useContext(chatContext)
+  const { isLoading, } = useContext(chatContext)
+  const dispatch = useDispatch()
   const chatCtx = useContext(chatContext)
+  
+  const openMsgLayout = () => {
+    dispatch(chat.reducer.action.openMessageLayout(user))
+  }
+
   return (
     <Card onClick={chatCtx.scrollIntoEndMessage}>
-      <CardActionArea onClick={() => openMessageLayout(user)}>
+      <CardActionArea onClick={openMsgLayout}>
         <CardHeader
           avatar={
             <>
@@ -85,7 +92,6 @@ export const ChatDesktop = () => {
           <ChatUserCardList />
         </Box>
         <Divider orientation="vertical" />
-
         <Box sx={{ flex: "1 0" }}>
           {msgState.isOpen && (
             <MessageDesktop />

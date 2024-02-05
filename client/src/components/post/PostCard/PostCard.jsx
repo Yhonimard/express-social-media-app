@@ -1,17 +1,16 @@
 import Icon from "@/assets/Icon"
+import BadgeOnline from "@/components/BadgeOnline"
+import comment from "@/config/comment"
 import postLike from "@/config/post-like"
 import useOpenMenu from "@/hooks/useOpenMenu"
-import { Avatar, Badge, Box, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, Skeleton, Typography } from "@mui/material"
+import { Avatar, Box, Card, CardActions, CardContent, CardHeader, Collapse, Divider, IconButton, Skeleton, Typography } from "@mui/material"
 import Image from "mui-image"
 import { memo, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import CommentInput from "../../comment/CommentInput"
 import CommentList from "../../comment/CommentList"
 import PostCardMenu from "./PostCardMenu"
-import comment from "@/config/comment"
-import { useNavigate } from "react-router-dom"
-import useGetUserIsOnline from "@/hooks/useGetUserOnline"
-import BadgeOnline from "@/components/BadgeOnline"
 
 const PostCard = ({ author, created_at, title, content, image, isFetching, pid }) => {
   const [isLoading, setIsLoading] = useState(true || isFetching)

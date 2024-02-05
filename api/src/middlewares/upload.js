@@ -8,6 +8,7 @@ const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
       const folder = file.fieldname.split('/').shift()
+      console.log(file);
       cb(null, `storage/${folder}`)
     },
     filename: (req, file, cb) => {

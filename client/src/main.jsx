@@ -37,15 +37,14 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       notifyOnChangeProps: ["data", 'error'],
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
+      // refetchOnMount: false,
+      // refetchOnWindowFocus: false,
+      staleTime: Infinity
     },
 
   },
   queryCache: new QueryCache({
     onError: (err, queryKey) => {
-      console.log(err);
-      console.log(queryKey.meta);
     },
 
   })
