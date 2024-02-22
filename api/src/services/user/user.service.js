@@ -3,7 +3,9 @@ import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
 import sequelizeError from "../../exceptions/sequelize-error"
 import { USER_BELONGS_TO_MANY_FRIEND_ALIAS, USER_BELONGS_TO_MANY_USER_FRIEND_ALIAS, USER_FRIEND_AS_NAME, USER_HAS_ONE_USER_PROFILE_ALIAS } from "../../fixtures/models"
 import { USER_ATTRIBUTES, USER_PROFILE_ATTRIBUTES } from "./user.constants"
+import { Op, Sequelize } from "sequelize"
 import jsPaginationHelper from "../../helper/js-pagination-helper"
+import _ from "lodash"
 
 const UserService = ({
   userRepo,
@@ -13,7 +15,6 @@ const UserService = ({
 
   const getCurrentUser = async (user) => {
     try {
-
       const result = await userRepo.findByPk(user.id, {
         attributes: USER_ATTRIBUTES,
         include: [

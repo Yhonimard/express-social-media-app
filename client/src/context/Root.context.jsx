@@ -5,13 +5,17 @@ import { useDispatch, useSelector } from "react-redux"
 import io from "socket.io-client"
 
 export const rootContext = createContext({
-  socket: null
+  socket: {
+    emit: null,
+    on: null
+  }
 })
 
 const RootContextProvider = ({ children }) => {
   const currentUser = useSelector(s => s.auth.user)
   const dispatch = useDispatch()
-  const socket = io(import.meta.env.VITE_API_BASE_URL, {
+  const socket = io(import.meta.env.VITE_API_SOCKET_URL, {
+    path: '/api/socket.io',
     auth: {
       token: currentUser.token
     },

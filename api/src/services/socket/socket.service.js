@@ -4,9 +4,11 @@ import { SOCKET_CONNECT, SOCKET_DISCONNECT, SOCKET_MESSAGE_GET, SOCKET_MESSAGE_S
 
 const SocketService = (server) => {
   const io = new Server(server, {
+    path: '/api/socket.io',
     cors: {
       origin: '*'
-    }
+    },
+    transports: ['websocket', 'polling']
   })
 
   io.use(jwtSocketVerify)
@@ -17,6 +19,8 @@ const SocketService = (server) => {
     if (!Array.from(user).some(u => u.id === socket.user.id)) {
       user.add({ ...socket.user, socketId: socket.id })
     }
+
+    console.log(socket.id);
 
     const user_online = Array.from(user).map(u => u.id)
     socket.emit(SOCKET_USER_IS_ONLINE_GET, user_online)
