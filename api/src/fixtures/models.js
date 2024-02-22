@@ -85,6 +85,7 @@ export const USER_PROFILE_BELONGS_TO_USER_FK = "user_id"
 // USER FRIEND
 export const USER_FRIEND_MODEL_NAME = "UserFriend"
 export const USER_FRIEND_TABLE_NAME = "user_friends"
+export const USER_FRIEND_AS_NAME = 'user_friend'
 export const USER_FRIEND_BELONGS_TO_USER_FOLLOWER_ALIAS = "follower"
 export const USER_FRIEND_BELONGS_TO_USER_FOLLOWER_FK = "user_id"
 export const USER_FRIEND_BELONGS_TO_USER_FOLLOWING_ALIAS = 'following'

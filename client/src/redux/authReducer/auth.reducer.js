@@ -20,7 +20,7 @@ const authReducer = createSlice({
       state.user.token = token
       state.user.isAuthorized = true
     },
-    logoutUser: (state, { payload }) => {
+    logoutUser: (state,) => {
       state.user.id = null
       state.user.username = null
       state.user.photo_profile = null

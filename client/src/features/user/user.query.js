@@ -1,6 +1,6 @@
 import api from "@/api"
 import global from "@/config/global"
-import { GET_CURRENT_USER_PROFILE_NAME, GET_CURRENT_USER_QUERY_NAME, GET_USER_DETAIL_NAME, GET_USER_NAME, GET_USER_PROFILE_BY_UID, SEARCH_USER_QUERY_NAME } from "@/fixtures/api-query"
+import { GET_CURRENT_USER_PROFILE_NAME, GET_CURRENT_USER_QUERY_NAME, GET_USER_DETAIL_NAME, GET_USER_PROFILE_BY_UID, SEARCH_USER_QUERY_NAME } from "@/fixtures/api-query"
 import { GET_SEARCH_USER_SIZE } from "@/fixtures/global"
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import moment from "moment"

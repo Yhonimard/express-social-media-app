@@ -5,16 +5,14 @@ import UserDetailFollowersModal from "@/components/userDetail/UserDetailFollower
 import UserDetailFollowingModal from "@/components/userDetail/UserDetailFollowingModal"
 import UserDetailPost from "@/components/userDetail/UserDetailPost"
 import UserDetailProfile from "@/components/userDetail/UserDetailProfile"
-import chat from "@/config/chat"
 import friend from "@/config/friend"
 import post from "@/config/post"
 import user from "@/config/user"
-import combinePaginateDataHelper from "@/helper/combine-paginate-data-helper"
 import useCustomMediaQuery from "@/hooks/useCustomMediaQuery"
 import useDisclosure from "@/hooks/useDisclosure"
-import { Avatar, Badge, Box, Button, Container, Divider, Stack, Tab, Tabs, Typography } from "@mui/material"
+import { Avatar, Box, Button, Container, Divider, Stack, Tab, Tabs, Typography } from "@mui/material"
 import { useCallback, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 
 const UserDetailPage = () => {
@@ -23,7 +21,6 @@ const UserDetailPage = () => {
   const [isOpenFollowingModal, { toggle: toggleFollowingModal }] = useDisclosure(false)
   const params = useParams()
   const currentUser = useSelector(s => s.auth.user)
-  const dispatch = useDispatch()
 
   const mediaQuery = useCustomMediaQuery()
 

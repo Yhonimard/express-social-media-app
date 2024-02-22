@@ -137,6 +137,18 @@ routes.route(API_CHAT_MESSAGE_ID)
    *        description: user id
    *        schema:
    *          type: number
+   *      - in: query 
+   *        name: pageNo 
+   *        description: the page number
+   *        schema:
+   *          type: number
+   *          example:  1
+   *      - in: query 
+   *        name: size
+   *        description: the size of page
+   *        schema:
+   *          type: number
+   *          example: 4 
    *    responses:
    *      200:
    *        description: success

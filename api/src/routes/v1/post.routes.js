@@ -95,7 +95,7 @@ routes.route(API_POST)
    *                type: string
    *              content:
    *                type: string
-   *              image:
+   *              image-post:
    *                type: file
    *    responses:
    *      200:
@@ -107,7 +107,7 @@ routes.route(API_POST)
    *      500:
    *        description: something went wrong
    */
-  .post(jwtVerify, upload.single("image"), celebrate(validation.createPost), controller.createPost)
+  .post(jwtVerify, upload.single("image-post"), celebrate(validation.createPost), controller.createPost)
 
 routes.route(API_POST_ID)
   /**

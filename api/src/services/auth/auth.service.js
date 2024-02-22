@@ -9,16 +9,14 @@ import ApiConflictError from "../../exceptions/ApiConflictError"
 
 const AuthService = ({ userRepo }) => {
   const { jwtkey } = config("/")
-
   const register = async (data) => {
     try {
-      
+
       const userExist = await userRepo.findOne({
         where: {
           username: data.username
         }
       })
-
       if (userExist) throw new ApiConflictError("user already exists")
       const signData = {
         ...data,

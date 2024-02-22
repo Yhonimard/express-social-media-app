@@ -1,4 +1,3 @@
-import { withFormik } from "formik"
 import { useEffect, useState } from "react"
 
 const usePreviewImg = (file) => {

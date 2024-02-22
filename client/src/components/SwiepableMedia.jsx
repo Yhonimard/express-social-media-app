@@ -1,42 +1,18 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
-import MobileStepper from '@mui/material/MobileStepper';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { TextField } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import MobileStepper from '@mui/material/MobileStepper';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
 
-// const steps = [
-//   {
-//     label: 'Select campaign settings',
-//     description: `For each ad campaign that you create, you can control how much
-//               you're willing to spend on clicks and conversions, which networks
-//               and geographical locations you want your ads to show on, and more.`,
-//   },
-//   {
-//     label: 'Create an ad group',
-//     description:
-//       'An ad group contains one or more ads which target a shared set of keywords.',
-//   },
-//   {
-//     label: 'Create an ad',
-//     description: `Try out different ad text to see what brings in the most customers,
-//               and learn how to enhance your ads using features like ad extensions.
-//               If you run into any problems with your ads, find out how to tell if
-//               they're running and how to resolve approval issues.`,
-//   },
-// ];
 
 export default function SwipeableMedia({ media }) {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = media.length;
 
-
-  
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -50,15 +26,15 @@ export default function SwipeableMedia({ media }) {
       <Box sx={{ height: 255, maxWidth: 400, width: '100%', position: 'relative' }} >
         <img src={media[activeStep]} width={`100%`} height={`100%`} style={{ objectFit: 'cover' }} />
         <Box
-          sx={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', opacity: 0.5 }}
+          sx={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', opacity: 0.8 }}
           width="100%"
           bgcolor={theme.palette.background.default}
           p={1}
         >
           <TextField
             fullWidth
-            // size='small'
             variant='standard'
+            name='text'
           />
         </Box>
       </Box>

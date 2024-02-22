@@ -64,6 +64,10 @@ module.exports = (sequelize) => {
       },
       onDelete: 'CASCADE'
     },
+    render_id: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     ...TABLE_META_ATTRIBUTES
   }, {
     sequelize,

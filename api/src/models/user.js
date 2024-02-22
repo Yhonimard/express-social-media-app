@@ -64,7 +64,7 @@ module.exports = (sequelize) => {
       user.belongsToMany(models[USER_MODEL_NAME], {
         foreignKey: USER_BELONGS_TO_MANY_FRIEND_FK,
         as: USER_BELONGS_TO_MANY_FRIEND_ALIAS,
-        through: { model: USER_FRIEND_MODEL_NAME }
+        through: { model: USER_FRIEND_MODEL_NAME, }
       })
 
       user.belongsToMany(models[USER_MODEL_NAME], {

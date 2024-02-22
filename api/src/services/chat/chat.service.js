@@ -6,6 +6,7 @@ import { CHAT_BELONGS_TO_MANY_USER_CHAT_ALIAS, CHAT_HAS_MANY_MESSAGE_ALIAS } fro
 import paginationHelper from "../../helper/pagination-helper"
 import toPaginationHelper from "../../helper/to-pagination-helper"
 import { MESSAGE_ATTRIBUTES } from "./chat.constants"
+import _ from "lodash"
 
 const ChatService = ({
   chatRepo,
@@ -14,7 +15,6 @@ const ChatService = ({
   sequelize,
   messageRepo
 }) => {
-
 
   const createChat = async (user, params) => {
     try {
@@ -90,6 +90,7 @@ const ChatService = ({
             through: {
               attributes: []
             },
+            required: true,
             where: {
               id: {
                 [Op.ne]: user.id
@@ -101,7 +102,7 @@ const ChatService = ({
             attributes: ['text', 'media'],
             required: false,
             order: [
-              ['messages', 'created_at', 'DESC'],
+              ['created_at', 'DESC']
             ],
             where: {
               [Op.or]: [
@@ -116,19 +117,20 @@ const ChatService = ({
           },
         ],
         order: [
-          ['messages', 'created_at', 'DESC'],
-          ['created_at', 'DESC']
+          ['messages', 'created_at', 'DESC']
         ],
         distinct: true,
         limit,
         offset
       })
 
-      const mappedResult = chats.rows.map(c => ({
+
+      const mappedResult = _.map(chats.rows, (c) => ({
         id: c.dataValues.id,
         user: c.dataValues.user.reduce((acc, obj) => ({ ...acc, ...obj })),
         last_message: c.dataValues.messages[0]
       }))
+
 
       return toPaginationHelper(mappedResult, chats.count, query, 'chats')
     } catch (error) {
@@ -138,8 +140,7 @@ const ChatService = ({
 
   const sendMessage = async (user, data) => {
     try {
-      const { receiver_id, text, media } = data
-
+      const { receiver_id, text, media, render_id } = data
       const users = await userRepo.findAll({
         where: {
           id: {
@@ -149,7 +150,7 @@ const ChatService = ({
       })
       if (users.length < 2) throw new ApiNotFoundError('user not found')
 
-      await sequelize.transaction(async trx => {
+      const trx = await sequelize.transaction(async trx => {
         const [chat, isCreatedChat] = await chatRepo.findOrCreate({
           where: {
             [Op.or]: [
@@ -181,22 +182,25 @@ const ChatService = ({
 
         }
 
-        await messageRepo.create({
+        const newMsg = await messageRepo.create({
           chat_id: chat.id,
           sender_id: user.id,
           receiver_id,
           text,
-          media
+          media,
+          render_id: render_id
         }, { transaction: trx })
 
+        return newMsg
       })
 
+      return trx
     } catch (error) {
       throw sequelizeError(error)
     }
   }
 
-  const getMessages = async (user, params) => {
+  const getMessages = async (user, params, query) => {
     try {
       const { user_id } = params
 
@@ -215,6 +219,9 @@ const ChatService = ({
         }
       })
       if (!chat) return
+
+      const { limit, offset } = paginationHelper(query)
+
       const result = await messageRepo.findAndCountAll({
         where: {
           chat_id: chat.id,
@@ -222,7 +229,9 @@ const ChatService = ({
         attributes: MESSAGE_ATTRIBUTES,
         order: [
           ["created_at", 'DESC']
-        ]
+        ],
+        limit,
+        offset
       })
 
 
@@ -231,7 +240,7 @@ const ChatService = ({
         created_at: moment(m.dataValues.created_at).format("DD/MM/YYYY")
       }))
 
-      return mappedResult
+      return toPaginationHelper(mappedResult, result.count, query, 'chats')
     } catch (error) {
       throw sequelizeError(error)
     }

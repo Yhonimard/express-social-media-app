@@ -1,9 +1,10 @@
 import Icon from "@/assets/Icon";
 import chat from "@/config/chat";
 import user from "@/config/user";
-import useCombineDataPaginateArray from "@/hooks/useCombineDataPaginateArray";
 import useDisclosure from "@/hooks/useDisclosure";
 import { Avatar, Button, Card, CardActionArea, CardHeader, Divider, Fab, Grid, InputBase, Modal, Paper, Skeleton, Tooltip, alpha, styled } from "@mui/material";
+import _ from "lodash";
+import { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "use-debounce";
 
@@ -13,7 +14,7 @@ const UserCard = ({ user_id, username, photo_profile }) => {
 
   const dispatch = useDispatch()
 
-  const openChat = () => {  
+  const openChat = () => {
     dispatch(chat.reducer.action.openMessageLayout({ id: user_id, username, photo_profile }))
   }
   return (
@@ -44,7 +45,7 @@ const ChatCreate = () => {
   const [searchValue] = useDebounce(searchUserState.value, 500)
 
   const userQuery = user.query.SearchUser(searchValue)
-  const usersData = useCombineDataPaginateArray(userQuery.data, 'users')
+
   return (
     <>
       <Fab sx={{ position: "fixed", bottom: 35, right: 40 }} onClick={toggle} >
@@ -74,15 +75,18 @@ const ChatCreate = () => {
           <Divider sx={{ my: 1 }} />
 
           <Grid container spacing={1} sx={{ maxHeight: "372px", overflowY: 'auto' }}>
-
-            {!userQuery.isLoading && userQuery.isSuccess && usersData.map(u => (
-              <Grid item xs={12} key={u.id}>
-                <UserCard
-                  user_id={u.id}
-                  photo_profile={u.photo_profile}
-                  username={u.username}
-                />
-              </Grid>
+            {!userQuery.isLoading && _.map(userQuery.data.pages, (p, i) => (
+              <Fragment key={i}>
+                {_.map(p.users, u => (
+                  <Grid xs={12} key={u.id} item>
+                    <UserCard
+                      user_id={u.id}
+                      username={u.username}
+                      photo_profile={u.photo_profile}
+                    />
+                  </Grid>
+                ))}
+              </Fragment>
             ))}
 
             {userQuery.hasNextPage && (

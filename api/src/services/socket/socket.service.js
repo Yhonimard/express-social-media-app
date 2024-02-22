@@ -1,10 +1,12 @@
 import { Server } from "socket.io"
 import jwtSocketVerify from "../../middlewares/jwt-socket-verify"
-import { SOCKET_CONNECT, SOCKET_DISCONNECT, SOCKET_MESSAGE_GET, SOCKET_MESSAGE_SEND, SOCKET_USER_CONNECT, SOCKET_USER_IS_ONLINE, SOCKET_USER_IS_ONLINE_GET, SOCKET_USER_IS_ONLINE_SEND } from "./socket.constants"
+import { SOCKET_CONNECT, SOCKET_DISCONNECT, SOCKET_MESSAGE_GET, SOCKET_MESSAGE_SEND, SOCKET_USER_IS_ONLINE_GET } from "./socket.constants"
 
 const SocketService = (server) => {
   const io = new Server(server, {
-    cors: "*"
+    cors: {
+      origin: '*'
+    }
   })
 
   io.use(jwtSocketVerify)
@@ -23,7 +25,6 @@ const SocketService = (server) => {
     socket.on(SOCKET_MESSAGE_SEND, (data) => {
       const receiver = Array.from(user).find(u => u.id === data.receiver_id)
       if (receiver) {
-        console.log(data);
         socket.to(receiver.socketId).emit(SOCKET_MESSAGE_GET, data)
       }
     })

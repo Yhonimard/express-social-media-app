@@ -16,7 +16,7 @@ const useCreatePostByUser = (uid) => {
       onMutate: () => {
         dispatch(globalReducer.action.showLoadingOverlay(true));
       },
-      onSuccess: (data, _var, context) => {
+      onSuccess: (data) => {
         queryClient.setQueryData([GET_POST_NAME, uid], (oldData) => {
           const pages = oldData.pages.map((p) => ({
             ...p,
@@ -35,7 +35,7 @@ const useCreatePostByUser = (uid) => {
           };
         });
       },
-      onError: (err, _var, context) => {
+      onError: (err) => {
         const message = err?.response?.data?.message;
         dispatch(globalReducer.action.showLoadingOverlay(false));
         dispatch(

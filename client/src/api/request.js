@@ -8,7 +8,7 @@ const register = async (data) => {
   const formData = new FormData();
   formData.append("username", data.username);
   formData.append("password", data.confirmPassword);
-  formData.append("image/photo_profile", data.photo_profile);
+  formData.append("image-photo_profile", data.photo_profile);
 
   const res = await api.instance.request.post("/auth/register", formData, {
     headers: {
@@ -22,7 +22,7 @@ const createPost = async (data) => {
   const formData = new FormData();
   formData.append("title", data.title);
   formData.append("content", data.content);
-  formData.append("image/post", data.image);
+  formData.append("image-post", data.image);
 
   const res = await api.instance.request.post("/post", formData, {
     headers: {
@@ -287,7 +287,7 @@ const searchUser = async ({ search, pageNo, size }) => {
   return res.data
 }
 
-const getCurrentUserHasLikeComment = async ({ cid, pid }) => {
+const getCurrentUserHasLikeComment = async ({ cid }) => {
   const res = await api.instance.request.get(`/post/comment/${cid}/haslike`)
   return res.data
 }
@@ -314,7 +314,7 @@ const getCommentReply = async ({ cid }, { pageNo, size }) => {
 }
 
 
-const replyComment = async ({ pid, pcid }, data) => {
+const replyComment = async ({ pcid }, data) => {
   const res = await api.instance.request.post(`/post/comment/${pcid}/reply`, data)
   return res.data
 }
@@ -360,8 +360,14 @@ const getUserFollowing = async (userId, params) => {
   return res.data
 }
 
-const getMessages = async (userId) => {
-  const res = await api.instance.request.get(`/chat/message/${userId}`)
+const getMessages = async (userId, pageNo) => {
+  const query = {
+    pageNo,
+    size: 15
+  }
+  const res = await api.instance.request.get(`/chat/message/${userId}`, {
+    params: query
+  })
   return res.data
 }
 
@@ -370,10 +376,11 @@ const createChat = async (userId) => {
   return res.data
 }
 
-const sendMessage = async ({ receiverId, text }) => {
+const sendMessage = async ({ receiverId, text, render_id }) => {
   const data = {
     receiver_id: receiverId,
-    text
+    text,
+    render_id
   }
   const res = await api.instance.request.post(`/chat/message`, data)
   return res.data

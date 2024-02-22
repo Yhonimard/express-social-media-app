@@ -7,6 +7,7 @@ import { MuiFileInput } from "mui-file-input"
 import { memo } from "react"
 
 const PostForm = ({ toggleModal }) => {
+  
   const formik = useFormik({
     initialValues: {
       title: "",

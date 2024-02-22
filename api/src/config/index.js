@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const config = {
   host: process.env.SERVICE_HOST,
-  port: process.env.SERVICE_PORT,
+  port: process.env.SERVICE_PORT || 80,
   jwtkey: process.env.JWT_KEY,
   clientUrl: process.env.CLIENT_URL,
   database: {
@@ -23,11 +23,11 @@ const config = {
   storage: {
     image: {
       path: path.join('storage', 'image'),
-      url: "/storage/image",
+      url: "/api/storage/image",
     },
     img_seed: {
       path: path.join('storage', "img_seed"),
-      url: "/storage/img_seed"
+      url: "/api/storage/img_seed"
     }
   },
 }

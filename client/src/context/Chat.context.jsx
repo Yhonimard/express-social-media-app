@@ -1,12 +1,13 @@
 import chat from "@/config/chat"
-import { createContext, useCallback, useState } from "react"
+import { createContext, useCallback, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 export const chatContext = createContext({
   chatsQuery: {},
   setIsLoading: () => { },
   isLoading: false,
   openMessageLayout: (user) => { },
-  scrollIntoEndMessage: () => { }
+  msgEndRef: null,
+  scrollToBottomMsg: () => { },
 })
 
 
@@ -15,21 +16,19 @@ const ChatContextProvider = ({ children }) => {
   const currentUser = useSelector(s => s.auth.user)
   const chatQuery = chat.query.GetUserChats({ userId: currentUser.id })
   const dispatch = useDispatch()
+  const msgEndRef = useRef()
 
+  const scrollToBottomMsg = () => {
+    setTimeout(() => {
+      msgEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' })
+    }, 500);
+  }
 
   const openMessageLayout = useCallback((user) => {
     dispatch(chat.reducer.action.openMessageLayout(user))
   }, [dispatch])
 
-
-
   const isLoadings = chatQuery.isLoading || isLoading
-
-  const scrollIntoEndMessage = () => {
-    const element = document.getElementById('bottom-msg')
-    if (element) element.scrollIntoView()
-  }
-
 
   return (
     <>
@@ -38,7 +37,8 @@ const ChatContextProvider = ({ children }) => {
         setIsLoading,
         openMessageLayout,
         isLoading: isLoadings,
-        scrollIntoEndMessage
+        msgEndRef,
+        scrollToBottomMsg
       }}>
         {!isLoadings && children}
       </chatContext.Provider>

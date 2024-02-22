@@ -36,7 +36,7 @@ const commentReducer = createSlice({
         state.updateComment.isOpen = true
       }
     },
-    closeUpdateCommentInput: (state, { payload }) => {
+    closeUpdateCommentInput: (state) => {
       state.updateComment.commentId = null
       state.updateComment.inputId = null
       state.updateComment.isOpen = false
@@ -58,7 +58,7 @@ const commentReducer = createSlice({
       }
     },
 
-    closeReplyCommentInput: (state, { payload }) => {
+    closeReplyCommentInput: (state) => {
       state.replyComment.isOpen = false
       state.replyComment.parentId = null
       state.replyComment.repliedCommentId = null
@@ -74,7 +74,7 @@ const commentReducer = createSlice({
       if (postId) state.comment.isOpen = true
     },
 
-    closeCommentInput: (state, { payload }) => {
+    closeCommentInput: (state) => {
       state.comment = {}
     },
 
@@ -88,7 +88,7 @@ const commentReducer = createSlice({
       state.updateReplyComment.isOpen = true
     },
 
-    closeUpdateReplyCommentInput: (state, { payload }) => {
+    closeUpdateReplyCommentInput: (state) => {
       state.updateReplyComment = {}
     }
 

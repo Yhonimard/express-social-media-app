@@ -7,14 +7,14 @@ import multer from "multer"
 const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      const folder = file.fieldname.split('/').shift()
+      const folder = file.fieldname.split('-').shift()
       console.log(file);
       cb(null, `storage/${folder}`)
     },
     filename: (req, file, cb) => {
       const ext = mime.extension(file.mimetype)
-      const fieldname = file.fieldname.split('/').pop()
-      cb(null, `${fieldname}_${moment().format('DD-MM-YYYY_HH-mm')}.${ext}`)
+      const fieldname = file.fieldname.split('-').pop()
+      cb(null, `${fieldname}-${moment().format('DD-MM-YYYY-HH:mm')}.${ext}`)
     },
   }),
   fileFilter: (req, file, cb) => {

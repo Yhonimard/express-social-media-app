@@ -2,49 +2,64 @@ version: '3.9'
 
 services:
   db:
-    container_name: sosmed_db
+    container_name: sosmed-db
     image: postgres:alpine
     environment:
-      - POSTGRES_USER=${PG_USER}
-      - POSTGRES_PASSWORD=${PG_PW}
+      - POSTGRES_USER=${PG_USERNAME}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_DATABASE}
     expose:
-      - 5432
+      - ${PG_PORT}
     networks:
       - sosmed_networks
-      - web
 
-  api:
-    container_name: sosmed_api
+  backend:
+    container_name: sosmed-api
     build: api
     depends_on:
       - db
     environment:
-      - DB_URL=postgresql://${PG_USER}:${PG_PW}@${PG_HOST}:${PG_PORT}/${PG_DB}
-      - JWT_KEY=${JWT_KEY}
-      - PORT=${API_CT_PORT}
+      - PG_USERNAME=${PG_USERNAME}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DATABASE=${PG_DATABASE}
+      - PG_HOST=${PG_HOST}
+      - PG_PORT=${PG_PORT}
+      - DB_DIALECT=${API_DB_DIALECT}
+      - JWT_KEY=${API_JWT_KEY}
+      - SERVICE_PORT=${API_SERVICE_PORT}
+      - SERVICE_HOST=${API_SERVICE_HOST}
     networks:
       - sosmed_networks
-      - web
     expose:
-      - ${API_CT_PORT}
+      - ${API_SERVICE_PORT}
 
   client:
-    container_name: sosmed_nginx
+    container_name: sosmed-client
+    depends_on:
+    - backend
     build:
-      context: client-current/
+      context: client
       args:
-        - API_URL=${API_URL}
-        - API_BASE_URL=${API_BASE_URL}
+        - API_URL=${CLIENT_API_URL}
+        - API_BASE_URL=${CLIENT_API_BASE_URL}
+    networks:
+      - sosmed_networks
+  
+  server:
+    container_name: sosmed-server
+    image: nginx:alpine
+    depends_on:
+      - db
+      - backend
+      - client
     ports:
-      - ${NGINX_FORWARD_PORT}:80
+      - 40080:80
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - sosmed_networks
       - web
-    depends_on:
-      - api
-
+    
 networks:
   sosmed_networks:
   web:

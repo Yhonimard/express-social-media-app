@@ -22,8 +22,8 @@ const ChatController = (service) => {
 
   const sendMessage = async (req, res, next) => {
     try {
-      await service.sendMessage(req.user, req.body)
-      res.json({ message: 'success' })
+      const result = await service.sendMessage(req.user, req.body, req.query)
+      res.json(result)
     } catch (error) {
       return next(error)
     }

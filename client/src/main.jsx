@@ -1,19 +1,19 @@
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
-import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import 'moment/locale/en-gb'
 import { SnackbarProvider } from 'notistack'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import App from './App.jsx'
-import redux from './redux/index.js'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import "./index.css"
+import redux from './redux/index.js'
 
 
 const theme = createTheme({
@@ -37,17 +37,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       notifyOnChangeProps: ["data", 'error'],
-      // refetchOnMount: false,
-      // refetchOnWindowFocus: false,
-      staleTime: Infinity
     },
 
   },
-  queryCache: new QueryCache({
-    onError: (err, queryKey) => {
-    },
-
-  })
 })
 
 ReactDOM.createRoot(document.getElementById('root')).render(

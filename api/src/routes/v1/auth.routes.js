@@ -14,6 +14,13 @@ const service = AuthService({
 const controller = AuthController(service)
 const validation = AuthValidation()
 
+/**
+ * @swagger
+ *  tags:
+ *    name: Auth 
+ *    description: the Auth Api
+ */
+
 routes.route("/auth/register")
   /**
    * @swagger
@@ -34,7 +41,7 @@ routes.route("/auth/register")
    *                type: string
    *              password:
    *                type: string
-   *              photo_profile:
+   *              image-photo-profile:
    *                type: file
    *    responses:
    *      201:
@@ -46,7 +53,7 @@ routes.route("/auth/register")
    *      500:
    *        description: something went wrong
    */
-  .post(upload.single("image/photo_profile"), celebrate(validation.register), controller.register)
+  .post(upload.single("image-photo-profile"), celebrate(validation.register), controller.register)
 
 routes.route("/auth/login")
   /**

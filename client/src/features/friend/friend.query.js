@@ -24,7 +24,7 @@ const FollowUser = ({ currUserId, friendId }) => {
       await query.cancelQueries([FRIEND_QUERY_NAME, currUserId, friendId])
       const prevData = query.getQueryData([FRIEND_QUERY_NAME, currUserId, friendId])
 
-      query.setQueryData([FRIEND_QUERY_NAME, currUserId, friendId], (oldData) => {
+      query.setQueryData([FRIEND_QUERY_NAME, currUserId, friendId], () => {
         return true
       })
 
@@ -128,7 +128,7 @@ const ConfirmFollower = ({ uid, senderId }) => {
     const res = await api.request.confirmFollower(senderId)
     return res
   }, {
-    onMutate: async (newUser) => {
+    onMutate: async () => {
       await queryClient.cancelQueries([FRIEND_QUERY_NAME, uid])
       const prevReqFriendsData = queryClient.getQueryData([FRIEND_QUERY_NAME, uid])
 

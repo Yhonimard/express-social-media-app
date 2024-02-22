@@ -1,6 +1,6 @@
 import friend from "@/config/friend";
 import { Avatar, Button, Card, CardActionArea, CardHeader, Grid, Modal, Paper, Skeleton, TextField, Typography } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";

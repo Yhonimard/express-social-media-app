@@ -1,13 +1,13 @@
-import { AppBar, Avatar, Box, Divider, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material"
 import Icon from "@/assets/Icon"
-import React, { Fragment, memo, useState } from "react"
-import HeaderDrawer from "./Header.Drawer"
-import { useDispatch, useSelector } from "react-redux"
-import HeaderSearch from "./HeaderSearch"
-import StyledMenu from "../StyledMenu"
-import useOpenMenu from "@/hooks/useOpenMenu"
-import { useNavigate } from "react-router-dom"
 import profile from "@/config/profile/profile"
+import useOpenMenu from "@/hooks/useOpenMenu"
+import { AppBar, Avatar, Box, Divider, IconButton, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material"
+import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import StyledMenu from "../StyledMenu"
+import HeaderDrawer from "./Header.Drawer"
+import HeaderSearch from "./HeaderSearch"
 
 const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false)

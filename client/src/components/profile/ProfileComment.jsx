@@ -3,7 +3,7 @@ import { Avatar, Box, Divider, IconButton, List, ListItem, Stack, Typography } f
 import { Fragment } from "react"
 import { useSelector } from "react-redux"
 
-const ProfileCommentListItem = ({ author, created_at, id, title, child, isLast }) => {
+const ProfileCommentListItem = ({ author, created_at, title, child, isLast }) => {
   return (
     <>
       <ListItem alignItems="flex-start">
@@ -41,7 +41,7 @@ const ProfileCommentListItem = ({ author, created_at, id, title, child, isLast }
   )
 }
 
-const ProfileCommentListItemChild = ({ author, created_at, id, title }) => {
+const ProfileCommentListItemChild = ({ author, created_at, title }) => {
 
   return (
     <>

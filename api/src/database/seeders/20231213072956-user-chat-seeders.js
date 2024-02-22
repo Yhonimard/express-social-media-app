@@ -42,25 +42,25 @@ export default {
         user_id: user1.id,
         chat_id: chat1.id,
         created_at: Sequelize.literal("NOW()"),
-        updated_at: Sequelize.literal("NOW()")
+        updated_at: Sequelize.literal("NOW()"),
       },
       {
         user_id: user2.id,
         chat_id: chat1.id,
         created_at: Sequelize.literal("NOW()"),
-        updated_at: Sequelize.literal("NOW()")
+        updated_at: Sequelize.literal("NOW()"),
       },
       {
         user_id: user1.id,
         chat_id: chat2.id,
         created_at: Sequelize.literal("NOW()"),
-        updated_at: Sequelize.literal("NOW()")
+        updated_at: Sequelize.literal("NOW()"),
       },
       {
         user_id: user3.id,
         chat_id: chat2.id,
         created_at: Sequelize.literal("NOW()"),
-        updated_at: Sequelize.literal("NOW()")
+        updated_at: Sequelize.literal("NOW()"),
       },
 
     ])
