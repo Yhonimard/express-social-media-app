@@ -13,7 +13,7 @@ services:
     networks:
       - sosmed_networks
 
-  backend:
+  api:
     container_name: sosmed-api
     build: api
     depends_on:
@@ -36,7 +36,7 @@ services:
   client:
     container_name: sosmed-client
     depends_on:
-    - backend
+    - api
     build:
       context: client
       args:
@@ -50,7 +50,7 @@ services:
     image: nginx:alpine
     depends_on:
       - db
-      - backend
+      - api
       - client
     ports:
       - 40080:80

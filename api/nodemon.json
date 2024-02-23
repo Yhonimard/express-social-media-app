@@ -1,0 +1,14 @@
+{
+    "ignore": [
+        "node_modules",
+        ".vscode",
+        ".git",
+        "src/database/migrations",
+        "src/database/seeders"
+    ],
+    "watch": [
+        "src"
+    ],
+    "ext": "js",
+    "verbose": true
+}

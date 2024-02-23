@@ -53,6 +53,8 @@ export const API_CHAT_USER = `${API_USER}/chat`
 export const API_CHAT_MESSAGE = `${API_CHAT}/message`
 export const API_CHAT_MESSAGE_ID = `${API_CHAT}/message/:user_id`
 
-
+export const API_AUTH = '/auth'
+export const API_AUTH_REGISTER = `${API_AUTH}/register`
+export const API_AUTH_LOGIN = `${API_AUTH}/login`
 
 

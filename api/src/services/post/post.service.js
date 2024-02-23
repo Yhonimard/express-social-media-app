@@ -1,17 +1,16 @@
 import moment from "moment"
+import { Op, Sequelize } from "sequelize"
 import ApiBadRequestError from "../../exceptions/ApiBadRequestError"
 import ApiConflictError from "../../exceptions/ApiConflictError"
 import ApiForbiddenError from "../../exceptions/ApiForbiddenError"
 import ApiNotFoundError from "../../exceptions/ApiNotFoundError"
 import sequelizeError from "../../exceptions/sequelize-error"
-import { POST_BELONGS_TO_MANY_USER_LIKE_ALIAS, POST_BELONGS_TO_USER_ALIAS, USER_LIKE_POST_BELONGS_TO_POST_ALIAS } from "../../fixtures/models"
+import { POST_BELONGS_TO_MANY_USER_LIKE_ALIAS, POST_BELONGS_TO_USER_ALIAS } from "../../fixtures/models"
 import paginationHelper from "../../helper/pagination-helper"
+import shuffleAndPaginateDataHelper from "../../helper/shuffle-and-paginate-data-helper"
 import toPaginationHelper from "../../helper/to-pagination-helper"
 import deleteFileHelper from "../../middlewares/delete-file-helper"
 import { POST_ATTRIBUTES, USER_ATTRIBUTES } from "./post.constants"
-import { Op, Sequelize } from "sequelize"
-import _ from "lodash"
-import shuffleAndPaginateDataHelper from "../../helper/shuffle-and-paginate-data-helper"
 
 const PostService = ({
   postRepo,

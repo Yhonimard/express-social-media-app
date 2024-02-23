@@ -5,6 +5,7 @@ import AuthValidation from "../../api/auth/auth.validation";
 import upload from "../../middlewares/upload";
 import { User } from "../../models";
 import AuthService from "../../services/auth/auth.service";
+import { API_AUTH_LOGIN, API_AUTH_REGISTER } from "../../fixtures/api";
 
 
 const routes = Router()
@@ -21,7 +22,7 @@ const validation = AuthValidation()
  *    description: the Auth Api
  */
 
-routes.route("/auth/register")
+routes.route(API_AUTH_REGISTER)
   /**
    * @swagger
    * /api/v1/auth/register:
@@ -55,7 +56,7 @@ routes.route("/auth/register")
    */
   .post(upload.single("image-photo-profile"), celebrate(validation.register), controller.register)
 
-routes.route("/auth/login")
+routes.route(API_AUTH_LOGIN)
   /**
     * @swagger
     * /api/v1/auth/login:

@@ -10,23 +10,7 @@ module.exports = {
   host: db.host,
   dialect: db.dialect || "postgres",
   port: db.port,
-  logging: false
-  // logging: (msg) => console.log(msg)
+  logging: (sql) => {
+    console.log(sql)
+  },
 }
-// module.exports = {
-//   dev: {
-//     username: db.username,
-//     password: db.password,
-//     database: db.dbName,
-//     host: db.host,
-//     dialect: db.dialect || "postgres",
-//     logging: false
-//   },
-//   production: {
-//     username: db.username,
-//     password: db.password,
-//     database: db.dbName,
-//     host: db.host,
-//     dialect: db.dialect,
-//   },
-// };

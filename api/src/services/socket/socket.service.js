@@ -20,8 +20,6 @@ const SocketService = (server) => {
       user.add({ ...socket.user, socketId: socket.id })
     }
 
-    console.log(socket.id);
-
     const user_online = Array.from(user).map(u => u.id)
     socket.emit(SOCKET_USER_IS_ONLINE_GET, user_online)
     socket.broadcast.emit(SOCKET_USER_IS_ONLINE_GET, Array.from(user).map(u => u.id))
