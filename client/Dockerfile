@@ -2,11 +2,13 @@ FROM node:18.17.0-alpine as build
 WORKDIR /app
 ARG API_URL
 ARG API_BASE_URL
-COPY package* .
+ARG API_SOCKET_URL
+COPY package* ./
 RUN npm install
 COPY . .
 ENV VITE_API_URL=${API_URL}
 ENV VITE_API_BASE_URL=${API_BASE_URL}
+ENV VITE_API_SOCKET_URL=${API_SOCKET_URL}
 RUN npm i @rollup/rollup-linux-x64-gnu
 RUN npm run build
 

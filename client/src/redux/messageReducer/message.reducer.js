@@ -15,6 +15,12 @@ const messageReducer = createSlice({
       const newMsg = payload
       const chats = [newMsg, ...state.chats]
       state.chats = chats
+    },
+    closeMessage: (state) => {
+      state.isLoading = false
+      state.chats = []
+      state.isLast = false
+      state.pageNo = 1
     }
   },
   extraReducers: builder => {

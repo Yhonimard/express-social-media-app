@@ -1,17 +1,21 @@
 import chat from "@/config/chat";
 import { chatContext } from "@/context/Chat.context";
 import useFetchWhenScroll from "@/hooks/useFetchWhenScroll";
+import messageThunk from "@/redux/messageReducer/message.thunk";
 import { Avatar, Box, Button, Divider, Grid, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import { Fragment, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MessageDesktop, MessageMobile } from "./message/Message";
+import message from "@/config/message";
 
 
 const ChatUserCard = ({ user, last_message }) => {
   const { isLoading, } = useContext(chatContext)
   const dispatch = useDispatch()
-
+  const userReceiverId = useSelector(s => s.chat.message.user.id)
   const openMsgLayout = () => {
+    dispatch(message.reducer.action.closeMessage())
+    dispatch(chat.reducer.action.closeMessageLayout())
     dispatch(chat.reducer.action.openMessageLayout(user))
   }
 

@@ -13,11 +13,12 @@ const MessageBubleList = () => {
   const { socket } = useContext(rootContext)
   const { msgEndRef, scrollToBottomMsg } = useContext(chatContext)
   const msgState = useSelector(s => s.message)
+  const userReceiverId = useSelector(s => s.chat.message.user.id)
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(messageThunk.getMessages(msgState.pageNo))
   }, [dispatch])
+
 
   const inViewHandler = (inView) => {
     if (inView && !msgState.isLoading) {

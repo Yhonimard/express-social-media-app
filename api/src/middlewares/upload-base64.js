@@ -21,7 +21,7 @@ const uploadBase64 = (file) => {
       filename
     }
 
-    fs.writeFileSync(`${storage.image.path}/${response.filename}`, response.data, { encoding: 'base64' })
+    fs.writeFileSync(`${storage.file.path}/${response.filename}`, response.data, { encoding: 'base64' })
     return response.filename
   }
 
@@ -40,7 +40,7 @@ const uploadBase64 = (file) => {
         filename
       }
 
-      fs.writeFileSync(`${storage.image.path}/${result.filename}`, result.data, { encoding: 'base64' })
+      fs.writeFileSync(`${storage.file.path}/${result.filename}`, result.data, { encoding: 'base64' })
       acc.push({ filename })
       return acc
     }, [])
